@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<<<<<<< HEAD
   <meta charset="UTF-8">
-  <title>CSE </title>
+  <title>CSE Assignment and Notes</title>
   <style>
     body {
       background: #181e26;
@@ -23,31 +22,48 @@
       font-size: 2.1rem;
       letter-spacing: 1px;
     }
-    .links {
-      margin-top: 20px;
+    .pdf-container, .epub-container {
+      margin: 24px 0 40px 0;
       background: #222a35;
       padding: 24px 32px;
       border-radius: 15px;
       box-shadow: 0px 2px 6px rgba(0,0,0,0.09);
-      min-width: 312px;
+      min-width: 320px;
+      max-width: 800px;
+      width: 100%;
     }
-    .links a {
-      display: block;
-      color: #82cfff;
-      text-decoration: none;
-      font-size: 1.12em;
-      margin-bottom: 20px;
-      padding: 8px 16px;
+    iframe, .epub-note {
+      width: 100%;
+      max-width: 730px;
+      height: 470px;
+      background: #10131b;
+      border: 1px solid #313141;
       border-radius: 8px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      color: #fffc;
+      text-align: center;
+      font-size: 1.07em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .download-link {
+      display: inline-block;
+      margin: 8px 0;
+      padding: 8px 12px;
       background: #16202b;
+      color: #82cfff;
+      border-radius: 8px;
+      text-decoration: none;
       transition: background 0.2s;
     }
-    .links a:hover {
+    .download-link:hover {
       background: #1e2a38;
     }
     .footer {
-      margin-top: 32px;
-      font-size: 0.92em;
+      margin-top: 36px;
+      font-size: 0.95em;
       opacity: 0.6;
       text-align: center;
     }
@@ -62,59 +78,65 @@
 </head>
 <body>
   <h1>CSE Assignment and Notes</h1>
-  <div class="links">
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/Data_Analytics_Notes.epub" target="_blank">Download Data_Analytics_Notes.epub</a>
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/Finite Automata .epub" target="_blank">Download Finite Automata .epub</a>
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/Internet and web technology.epub" target="_blank">Download Internet and web technology.epub</a>
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/RDBMS.epub" target="_blank">Download RDBMS.epub</a>
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/DBMS_Assignment1.pdf" target="_blank">Download DBMS_Assignment1.pdf</a>
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/TOC_CS501_Assignment1.pdf" target="_blank">Download TOC_CS501_Assignment1.pdf</a>
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/Data_Analytics_Notes.epub" target="_blank">Download Data_Analytics_Notes.epub</a>
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/Data_Analytics_assignment__1.pdf" target="_blank">Download Data_Analytics_assignment__1.pdf</a>
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/Internet_and_Web_Development_Assignment.pdf" target="_blank">Download Internet_and_Web_Development_Assignment.pdf</a>
-    <a href="https://github.com/shiroonigami23-ui/class-solutions/raw/main/Toc_Assignment_Graph.pdf" target="_blank">Download Toc_Assignment_Graph.pdf</a>
+
+  <div class="pdf-container">
+    <h2>DBMS Assignment 1</h2>
+    <iframe src="DBMS_Assignment1.pdf" allowfullscreen></iframe>
+    <a href="DBMS_Assignment1.pdf" target="_blank" class="download-link">Download DBMS_Assignment1.pdf</a>
   </div>
+
+  <div class="pdf-container">
+    <h2>TOC CS 501 Assignment 1</h2>
+    <iframe src="TOC_CS501_Assignment1.pdf" allowfullscreen></iframe>
+    <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-link">Download TOC_CS501_Assignment1.pdf</a>
+  </div>
+
+  <div class="pdf-container">
+    <h2>Internet and Web Development Assignment</h2>
+    <iframe src="Internet_and_Web_Development_Assignment.pdf" allowfullscreen></iframe>
+    <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-link">Download Internet_and_Web_Development_Assignment.pdf</a>
+  </div>
+
+  <div class="pdf-container">
+    <h2>Data Analytics Assignment 1</h2>
+    <iframe src="Data_Analytics_assignment__1.pdf" allowfullscreen></iframe>
+    <a href="Data_Analytics_assignment__1.pdf" target="_blank" class="download-link">Download Data_Analytics_assignment__1.pdf</a>
+  </div>
+
+  <div class="pdf-container">
+    <h2>TOC Assignment Graph</h2>
+    <iframe src="Toc_Assignment_Graph.pdf" allowfullscreen></iframe>
+    <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-link">Download Toc_Assignment_Graph.pdf</a>
+  </div>
+
+  <!-- EPUB section for direct download (viewing in-browser is not natively supported) -->
+  <div class="epub-container">
+    <h2>Data Analytics Notes (EPUB)</h2>
+    <div class="epub-note">EPUB viewing not supported in-browser. Please download and open in any EPUB reader app.</div>
+    <a href="Data_Analytics_Notes.epub" target="_blank" class="download-link">Download Data_Analytics_Notes.epub</a>
+  </div>
+
+  <div class="epub-container">
+    <h2>Finite Automata (EPUB)</h2>
+    <div class="epub-note">EPUB viewing not supported in-browser. Please download and open in any EPUB reader app.</div>
+    <a href="Finite Automata .epub" target="_blank" class="download-link">Download Finite Automata .epub</a>
+  </div>
+
+  <div class="epub-container">
+    <h2>Internet and Web Technology (EPUB)</h2>
+    <div class="epub-note">EPUB viewing not supported in-browser. Please download and open in any EPUB reader app.</div>
+    <a href="Internet and web technology.epub" target="_blank" class="download-link">Download Internet and web technology.epub</a>
+  </div>
+
+  <div class="epub-container">
+    <h2>RDBMS (EPUB)</h2>
+    <div class="epub-note">EPUB viewing not supported in-browser. Please download and open in any EPUB reader app.</div>
+    <a href="RDBMS.epub" target="_blank" class="download-link">Download RDBMS.epub</a>
+  </div>
+
   <div class="footer">
-    By Aryan Singh Chandel &bull; <span style="opacity:0.7;">CSE SECTION -A,2025</span>
+    By Aryan Singh Chandel &bull; <span style="opacity:0.7;">CSE SECTION -A, 2025</span>
     <div class="thanks">You are welcome 😌</div>
   </div>
-=======
-    <meta charset="UTF-8" />
-    <title>Class Solution PDFs</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; }
-        h1 { text-align: center; }
-        .pdf-container { margin-bottom: 40px; }
-        iframe { width: 100%; height: 500px; border: 1px solid #ccc; }
-        .download-link { margin-top: 5px; display: block; }
-    </style>
-</head>
-<body>
-    <h1>Solution PDFs for Class</h1>
-
-    <div class="pdf-container">
-        <h2>DBMS Assignment 1</h2>
-        <iframe src="DBMS-Assignment-1.pdf" allowfullscreen></iframe>
-        <a href="DBMS-Assignment-1.pdf" target="_blank" class="download-link">Download DBMS Assignment 1</a>
-    </div>
-
-    <div class="pdf-container">
-        <h2>TOC CS 501 Assignment 1</h2>
-        <iframe src="TOC-CS-501-Assignment-1.pdf" allowfullscreen></iframe>
-        <a href="TOC-CS-501-Assignment-1.pdf" target="_blank" class="download-link">Download TOC CS 501 Assignment 1</a>
-    </div>
-
-    <div class="pdf-container">
-        <h2>Internet and Web Development Assignment</h2>
-        <iframe src="Internet_and_Web_Development_Assignment.pdf" allowfullscreen></iframe>
-        <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-link">Download Internet and Web Development Assignment</a>
-    </div>
-
-    <div class="pdf-container">
-        <h2>Data Analytics Assignment 1</h2>
-        <iframe src="Data_Analytics_assignment__1.pdf" allowfullscreen></iframe>
-        <a href="Data_Analytics_assignment__1.pdf" target="_blank" class="download-link">Download Data Analytics Assignment 1</a>
-    </div>
->>>>>>> faffd9d (Auto-sync Assignment files)
 </body>
 </html>
