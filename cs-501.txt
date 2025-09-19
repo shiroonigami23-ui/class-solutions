@@ -1,0 +1,22 @@
+Open End Assignment for CS501 (Theory Of 
+Computation) 
+1. Construct a minimal deterministic finite automaton accepting all the strings 
+starting with “aba” (and) ending with “ab” over the alphabets {a,b}. 
+2. Construct a minimal deterministic finite automaton accepting all the strings 
+starting with “aba” (and) ending with “aba” over the alphabets {a,b}. 
+3. Construct a minimal deterministic finite automaton accepting all the strings 
+starting with “aba” (and) ending with “ba” over the alphabets {a,b}. 
+4. Construct a minimal deterministic finite automaton accepting all the strings 
+starting with “aba” (and) ending with “aa” over the alphabets {a,b}. 
+5. Construct a minimal deterministic finite automaton accepting all the strings 
+starting with “aba” (and) ending with “bb” over the alphabets {a,b}. 
+6. Construct a minimal deterministic finite automaton accepting all the strings 
+starting with “aba” (or) ending with “ab” over the alphabets {a,b}. 
+7. Construct a minimal deterministic finite automaton accepting all the strings 
+starting with “aba” (or) ending with “aba” over the alphabets {a,b}. 
+8. Construct a minimal deterministic finite automaton accepting all the strings 
+starting with “aba” (or) ending with “ba” over the alphabets {a,b}. 
+9. Construct a minimal deterministic finite automaton accepting all the strings starting 
+with “aba” (or) ending with “aa” over the alphabets {a,b}. 
+10. Construct a minimal deterministic finite automaton accepting all the strings 
+starting with “aba” (or) ending with “bb” over the alphabets {a,b
