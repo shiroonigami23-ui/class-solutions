@@ -2,140 +2,136 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CSE Assignment and Notes</title>
+  <title>CSE Section-A • Notes & Assignments</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png" />
   <style>
-   body {
+    body {
       background: #181e26;
       color: #f6f7f9;
       font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+      padding: 0; margin: 0;
+      min-height: 100vh; text-align: center;
     }
-    h1 {
-      margin-top: 40px;
-      margin-bottom: 16px;
-      font-size: 2.1rem;
-      letter-spacing: 1px;
+    h1 { font-size: 2.2rem; margin-top: 26px; margin-bottom: 7px;}
+    .desc { color:#b5bac2; margin-bottom:18px; }
+    main { max-width: 710px; margin: 0 auto; padding:0 5px; }
+    section { margin:38px 0 16px 0; }
+    .section-title { margin-bottom: 20px; font-size:1.17rem; text-transform:uppercase; letter-spacing:.8px;}
+    .pdf-block {
+      margin:32px 0;
+      background: #232b36;
+      border-radius: 13px;
+      padding: 22px 10px 16px 10px;
+      box-shadow: 0 3px 11px #0003;
     }
-    .pdf-container, .epub-container {
-      margin: 24px 0 40px 0;
-      background: #222a35;
-      padding: 24px 32px;
-      border-radius: 15px;
-      box-shadow: 0px 2px 6px rgba(0,0,0,0.09);
-      min-width: 320px;
-      max-width: 800px;
-      width: 100%;
+    .pdf-title {
+      font-size:1.1em; margin-bottom: 13px; display:flex;align-items:center;justify-content:center;
     }
-    iframe, .epub-note {
-      width: 100%;
-      max-width: 730px;
-      height: 470px;
-      background: #10131b;
-      border: 1px solid #313141;
-      border-radius: 8px;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-      color: #fffc;
-      text-align: center;
-      font-size: 1.07em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .pdf-title .icon {width: 21px; height: 21px;vertical-align:middle;margin-right:10px;}
+    .pdf-frame {
+      width:99%; max-width:670px; height:370px;
+      border:1.5px solid #313141;border-radius:8px;background:#111015;margin-bottom:12px;
     }
     .download-link {
-      display: inline-block;
-      margin: 8px 0;
-      padding: 8px 12px;
-      background: #16202b;
-      color: #82cfff;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    .download-link:hover {
-      background: #1e2a38;
-    }
-    .footer {
-      margin-top: 36px;
-      font-size: 0.95em;
-      opacity: 0.6;
-      text-align: center;
-    }
-    .thanks {
-      text-align: center;
-      margin-top: 20px;
-      margin-bottom: 30px;
-      font-size: 1.08em;
-      color: #b7eab7;
+      display:inline-block; background:#203048;color:#8adcff;text-decoration:none;
+      font-weight: 500; font-size:1em; border-radius:8px;padding:7px 19px;transition: background .18s; box-shadow:0 1px 4px #0bf2;}
+    .download-link:hover { background:#1e2a39;color:#b7f3ff;}
+    .file-list { list-style:none;padding:0;margin:17px 0;}
+    .file-list li {
+      margin:11px 0; padding:11px 9px; background:#232b36;
+      border-radius:10px;display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap; box-shadow:0 2px 7px #0002;}
+    .file-list .left {display:flex;align-items:center;}
+    .file-list .icon {width:20px;height:20px;margin-right:8px;}
+    .epub-msg { font-size:.91em;color:#aef1bb;margin-top:3px;}
+    .footer {margin:38px 0 10px 0; opacity:.65; font-size:.98em;}
+    .feedback { background:#21396c;color:#e8f2fa;font-size:.98em; padding:7px 16px; border-radius:7px;display:inline-block;margin-top:11px;text-decoration:none;}
+    @media (max-width: 730px) {
+      main {padding:0 2px;}
+      .pdf-frame {height:40vw;min-height:180px;}
+      .file-list li {flex-direction: column; align-items:flex-start;}
+      .file-list .left {margin-bottom:7px;}
     }
   </style>
 </head>
 <body>
-  <h1>CSE Assignment and Notes</h1>
-
-  <div class="pdf-container">
-    <h2>DBMS Assignment 1</h2>
-    <iframe src="DBMS_Assignment1.pdf" allowfullscreen></iframe>
-    <a href="DBMS_Assignment1.pdf" target="_blank" class="download-link">Download DBMS_Assignment1.pdf</a>
-  </div>
-
-  <div class="pdf-container">
-    <h2>TOC CS 501 Assignment 1</h2>
-    <iframe src="TOC_CS501_Assignment1.pdf" allowfullscreen></iframe>
-    <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-link">Download TOC_CS501_Assignment1.pdf</a>
-  </div>
-
-  <div class="pdf-container">
-    <h2>Internet and Web Development Assignment</h2>
-    <iframe src="Internet_and_Web_Development_Assignment.pdf" allowfullscreen></iframe>
-    <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-link">Download Internet_and_Web_Development_Assignment.pdf</a>
-  </div>
-
-  <div class="pdf-container">
-    <h2>Data Analytics Assignment 1</h2>
-    <iframe src="Data_Analytics_assignment__1.pdf" allowfullscreen></iframe>
-    <a href="Data_Analytics_assignment__1.pdf" target="_blank" class="download-link">Download Data_Analytics_assignment__1.pdf</a>
-  </div>
-
-  <div class="pdf-container">
-    <h2>TOC Assignment Graph</h2>
-    <iframe src="Toc_Assignment_Graph.pdf" allowfullscreen></iframe>
-    <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-link">Download Toc_Assignment_Graph.pdf</a>
-  </div>
-
-  <div class="epub-container">
-  <h2>Data Analytics Notes (EPUB)</h2>
-  <div class="epub-note">EPUB viewing not supported in-browser. Please download and open in any EPUB reader app.</div>
-  <a href="Data_Analytics_Notes.epub" target="_blank" class="download-link">Download Data_Analytics_Notes.epub</a>
-</div>
-  
-<div class="epub-container">
-  <h2>Finite Automata (EPUB)</h2>
-  <div class="epub-note">EPUB viewing not supported in-browser. Please download and open in any EPUB reader app.</div>
-  <a href="Finite%20Automata%20.epub" target="_blank" class="download-link">Download Finite Automata .epub</a>
-</div>
-  
-<div class="epub-container">
-  <h2>Internet and Web Technology (EPUB)</h2>
-  <div class="epub-note">EPUB viewing not supported in-browser. Please download and open in any EPUB reader app.</div>
-  <a href="Internet%20and%20web%20technology.epub" target="_blank" class="download-link">Download Internet and web technology.epub</a>
-</div>
-  
-<div class="epub-container">
-  <h2>RDBMS (EPUB)</h2>
-  <div class="epub-note">EPUB viewing not supported in-browser. Please download and open in any EPUB reader app.</div>
-  <a href="RDBMS.epub" target="_blank" class="download-link">Download RDBMS.epub</a>
-</div>
-
-  <div class="footer">
-    By Aryan Singh Chandel &bull; <span style="opacity:0.7;">CSE SECTION -A, 2025</span>
-    <div class="thanks">You are welcome 😌</div>
-  </div>
+  <h1>📚 CSE Notes & Assignments</h1>
+  <div class="desc">Section-A resources: instant view, download, and share for students!</div>
+  <main>
+    <section>
+      <div class="section-title">Assignments — Inline View & Download</div>
+      
+      <div class="pdf-block">
+        <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png"/>DBMS Assignment 1</div>
+        <iframe class="pdf-frame" src="DBMS-Assignment-1.pdf"></iframe><br>
+        <a href="DBMS-Assignment-1.pdf" target="_blank" class="download-link">Download PDF</a>
+      </div>
+      
+      <div class="pdf-block">
+        <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png"/>TOC CS 501 Assignment 1</div>
+        <iframe class="pdf-frame" src="TOC-CS-501-Assignment-1.pdf"></iframe><br>
+        <a href="TOC-CS-501-Assignment-1.pdf" target="_blank" class="download-link">Download PDF</a>
+      </div>
+      
+      <div class="pdf-block">
+        <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png"/>Internet and Web Development Assignment</div>
+        <iframe class="pdf-frame" src="Internet_and_Web_Development_Assignment.pdf"></iframe><br>
+        <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-link">Download PDF</a>
+      </div>
+      
+      <div class="pdf-block">
+        <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png"/>Data Analytics Assignment 1</div>
+        <iframe class="pdf-frame" src="Data_Analytics_assignment__1.pdf"></iframe><br>
+        <a href="Data_Analytics_assignment__1.pdf" target="_blank" class="download-link">Download PDF</a>
+      </div>
+      
+      <div class="pdf-block">
+        <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png"/>TOC Assignment Graph</div>
+        <iframe class="pdf-frame" src="Toc_Assignment_Graph.pdf"></iframe><br>
+        <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-link">Download PDF</a>
+      </div>
+    </section>
+    <section>
+      <div class="section-title">Notes (EPUB format)</div>
+      <ul class="file-list">
+        <li>
+          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png"/>Data Analytics Notes</div>
+          <div>
+            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-link">Download</a>
+            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+          </div>
+        </li>
+        <li>
+          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png"/>Finite Automata</div>
+          <div>
+            <a href="Finite%20Automata%20.epub" target="_blank" class="download-link">Download</a>
+            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+          </div>
+        </li>
+        <li>
+          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png"/>Internet and Web Technology</div>
+          <div>
+            <a href="Internet%20and%20web%20technology.epub" target="_blank" class="download-link">Download</a>
+            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+          </div>
+        </li>
+        <li>
+          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png"/>RDBMS</div>
+          <div>
+            <a href="RDBMS.epub" target="_blank" class="download-link">Download</a>
+            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <section>
+      <div class="section-title">Feedback</div>
+      <a class="feedback" href="mailto:aryansingh19gh@gmail.com">💬 Suggest improvements or request files!</a>
+    </section>
+    <div class="footer">
+        &copy; Aryan Singh Chandel | CSE Section-A, 2025
+    </div>
+  </main>
 </body>
 </html>
