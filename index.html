@@ -6,232 +6,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png" />
   <style>
-    body { background: #181e26; color: #f6f7f9; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; min-height: 100vh; text-align: center; transition: background .3s, color .3s;}
-    .lightmode { background: #f6f7f9; color: #232333;}
-    .darkmode-btn { position:fixed;top:13px;right:13px;padding:6px 14px;font-size:1em;background:#253168;color:#f6f7f9;border:none;border-radius:20px;cursor:pointer;z-index:10; transition:.2s; box-shadow:0 1px 5px #0001;}
-    h1 { font-size:2.11rem;margin:30px 0 6px 0;}
-    .desc { color:#b5bac2; margin-bottom:4px; font-size:1.01em;}
-    .update-bar {background:#21396c; color:#e3ecfd; margin:20px auto 18px; padding:7px 22px; font-size:.99em; border-radius:13px; max-width:570px;}
-    main { max-width:700px;padding:0 8px;margin: 0 auto; }
-    .search-box {margin:15px 0;}
-    .search-input{padding:9px 14px;font-size:1.04em;width:72%;max-width:285px;border-radius:6px;border:1px solid #374b63;background:#21293b;color:#f6f7f9;}
-    .last-updated{margin:4px auto 18px;font-size:.94em;color:#8dacbe;}
-    .collapse-btn { margin:0 auto 3px;display:block;padding:7px 20px;font-size:1.01em;background:#183478;color:#dbe7fa;border:none;border-radius:9px;cursor:pointer;transition:.2s;}
-    section {margin:32px 0 16px 0;}
-    .section-title {margin-bottom:11px;font-size:1.11rem;text-transform:uppercase;letter-spacing:.7px;}
-    .pdf-block {margin:26px 0;background:#232b36;border-radius:13px;padding:18px 10px 13px;box-shadow:0 2.5px 9px #0003;}
-    .pdf-title {font-size:1.08em; margin-bottom:10px; display:flex;align-items:center;justify-content:center;}
-    .pdf-title .icon {width:19px;height:19px;margin-right:8px;}
-    .pdf-frame {width:99%;max-width:660px;height:340px;border:1.5px solid #313141;border-radius:8px;background:#111015;margin-bottom:10px;}
-    .download-link {display:inline-block; background:#203048;color:#8adcff;text-decoration:none;font-weight:500;font-size:1em; border-radius:8px;padding:6px 19px;transition:background .15s;box-shadow:0 1px 3.5px #0bf2;}
-    .download-link:hover {background:#1e2a39;color:#b7f3ff;}
-    .file-size {font-size:.95em;color:#bbe1d7;margin-left:9px;}
-    .file-list {list-style:none;padding:0;margin:13px 0;}
-    .file-list li { margin:9px 0; padding:9px 8px; background:#232b36; border-radius:9px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:0 1.5px 7px #0001;}
-    .file-list .left {display:flex;align-items:center;}
-    .file-list .icon {width:18px;height:18px;margin-right:7px;}
-    .epub-msg {font-size:.9em;color:#aef1bb;margin-top:2px;}
-    .footer {margin:38px 0 14px 0;opacity:.61;font-size:.97em;}
-    .feedback {background:#21396c;color:#e8f2fa;font-size:.98em;padding:7px 16px;border-radius:7px;display:inline-block;margin-top:10px;text-decoration:none;}
-    .qr-section {margin: 23px 0;}
-    .qr-img {width:108px;display:block;margin:7px auto;}
-    @media (max-width:700px) {
-      .pdf-frame {height:39vw;min-height:150px;}
-      .file-list li {flex-direction: column;align-items:flex-start;}
-      .file-list .left {margin-bottom:7px;}
-    }
+    body { background: #181e26; color: #f6f7f9; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; min-height: 100vh; text-align: center; }
+    .lightmode { background: #f6f7f9; color: #232333; }
+    h1 { font-size:2.11rem;margin:30px 0 6px 0; }
+    .update-bar { background:#21396c; color:#e3ecfd; margin:20px auto 18px; padding:7px 22px; font-size:.99em; border-radius:13px; max-width:700px; }
+    section { margin:32px 0 16px 0; }
+    .section-title { margin-bottom:11px;font-size:1.11rem;text-transform:uppercase;letter-spacing:.7px; }
+    .file-list { list-style:none;padding:0;margin:13px 0; }
+    .file-list li { margin:9px 0; padding:9px 8px; background:#232b36; border-radius:9px; display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap; }
+    .download-link { display:inline-block; background:#203048;color:#8adcff;text-decoration:none;font-weight:500;font-size:1em; border-radius:8px;padding:6px 19px; }
+    .download-link:hover { background:#1e2a39;color:#b7f3ff; }
+    .file-size { font-size:.95em;color:#bbe1d7;margin-left:9px; }
   </style>
 </head>
 <body>
-  <button class="darkmode-btn" id="modeBtn" aria-label="Toggle Dark/Light Mode">🌙</button>
-  <h1 title="Assignments & Notes Repository">CSE Notes & Assignments</h1>
-  <div class="desc">Instant download and reading for CSE students. All Assignment and Notes for you guys 😉!</div>
-  <div class="update-bar" id="update-bar">📢 Latest:Toc Penalty question updated! <span id="today"></span></div>
-  <div class="last-updated">Last updated: <span id="lastUpdate"></span></div>
+  <h1>CSE Notes & Assignments</h1>
+  <div class="update-bar">📢 Uploaded today — <a href="Data_Analytics_assignment1.pdf" target="_blank">🆕 Data_Analytics_assignment1.pdf</a>, <a href="DBMS_Assignment1.pdf" target="_blank">🆕 DBMS_Assignment1.pdf</a>, <a href="Data%20Analytics%20.epub" target="_blank">🆕 Data Analytics .epub</a>, <a href="RDBMS.epub" target="_blank">🆕 RDBMS.epub</a>, <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank">🆕 Internet_and_Web_Development_Assignment.pdf</a>, <a href="Finite%20Automata%20.epub" target="_blank">🆕 Finite Automata .epub</a>, <a href="Data_Analytics_Notes.epub" target="_blank">🆕 Data_Analytics_Notes.epub</a>, <a href="Internet%20and%20web%20technology.epub" target="_blank">🆕 Internet and web technology.epub</a>, <a href="TOC_CS501_Assignment1.pdf" target="_blank">🆕 TOC_CS501_Assignment1.pdf</a>, <a href="Toc_Assignment_Graph.pdf" target="_blank">🆕 Toc_Assignment_Graph.pdf</a></div>
   <main>
-    <div class="search-box">
-      <input class="search-input" type="text" placeholder="Type to filter assignments/notes..." oninput="filterFiles()" id="searchBox" aria-label="Filter files">
-    </div>
     <section>
-      <button class="collapse-btn" type="button" onclick="toggleSection('assignmentsSection')">Assignments (PDF) ⬇️</button>
-      <div id="assignmentsSection">
-        <!-- ✅ Your manual entries remain -->
-        <div class="pdf-block fileRow" data-keywords="dbms assignment 1 cs-502 cs502 502">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>CS-502 DBMS Assignment 1</div>
-          <iframe class="pdf-frame" src="DBMS_Assignment1.pdf" aria-label="View DBMS Assignment 1"></iframe><br>
-          <a href="DBMS_Assignment1.pdf" target="_blank" class="download-link" aria-label="Download DBMS Assignment 1">Download PDF</a>
-          <span class="file-size" id="size-dbms"></span>
-        </div>
-        <div class="pdf-block fileRow" data-keywords="toc cs 501 assignment 1 cs-501 cs501 501">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>CS-501 Toc Assignment 1</div>
-          <iframe class="pdf-frame" src="TOC_CS501_Assignment1.pdf" aria-label="View TOC CS 501 Assignment 1"></iframe><br>
-          <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-link" aria-label="Download TOC CS 501 Assignment 1">Download PDF</a>
-          <span class="file-size" id="size-toc"></span>
-        </div>
-        <div class="pdf-block fileRow" data-keywords="internet and web development assignment cs-504 cs504 504">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>CS-504 Internet and Web Development Assignment</div>
-          <iframe class="pdf-frame" src="Internet_and_Web_Development_Assignment.pdf" aria-label="View Internet and Web Development Assignment"></iframe><br>
-          <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-link" aria-label="Download Internet and Web Development Assignment">Download PDF</a>
-          <span class="file-size" id="size-internetweb"></span>
-        </div>
-        <div class="pdf-block fileRow" data-keywords="data analytics assignment 1 cs-503 cs503 503">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>CS-503 Data Analytics Assignment 1</div>
-          <iframe class="pdf-frame" src="Data_Analytics_assignment1.pdf" aria-label="View Data Analytics Assignment 1"></iframe><br>
-          <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-link" aria-label="Download Data Analytics Assignment 1">Download PDF</a>
-          <span class="file-size" id="size-analytics"></span>
-        </div>
-        <div class="pdf-block fileRow" data-keywords="toc assignment graph cs-501 cs501 501">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>CS-501 TOC Assignment Graph</div>
-          <iframe class="pdf-frame" src="Toc_Assignment_Graph.pdf" aria-label="View TOC Assignment Graph"></iframe><br>
-          <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-link" aria-label="Download TOC Assignment Graph">Download PDF</a>
-          <span class="file-size" id="size-tocgraph"></span>
-        </div>
-      </div>
+      <div class="section-title">CS-501</div>
+      <ul class="file-list">
+        <li>
+          <div>TOC_CS501_Assignment1.pdf</div>
+          <div>
+            <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-link">Download</a>
+            <span class="file-size">189 KB</span>
+          </div>
+        </li>
+      </ul>
     </section>
     <section>
-      <button class="collapse-btn" type="button" onclick="toggleSection('notesSection')">Notes (EPUB) ⬇️</button>
-      <div id="notesSection">
-        <ul class="file-list">
-          <li class="fileRow" data-keywords="data analytics notes cs-503 cs503 503">
-            <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>Data Analytics Notes</div>
-            <div>
-              <a href="Data_Analytics_Notes.epub" target="_blank" class="download-link" aria-label="Download Data Analytics Notes">Download</a>
-              <span class="file-size" id="size-danotes"></span>
-              <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
-            </div>
-          </li>
-          <li class="fileRow" data-keywords="finite automata notes cs-501 cs501 501">
-            <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>Finite Automata</div>
-            <div>
-              <a href="Finite Automata .epub" target="_blank" class="download-link" aria-label="Download Finite Automata">Download</a>
-              <span class="file-size" id="size-fa"></span>
-              <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
-            </div>
-          </li>
-          <li class="fileRow" data-keywords="internet and web technology notes cs-504 cs504 504">
-            <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>Internet and Web Technology</div>
-            <div>
-              <a href="Internet and web technology.epub" target="_blank" class="download-link" aria-label="Download Internet and Web Technology">Download</a>
-              <span class="file-size" id="size-internetnote"></span>
-              <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
-            </div>
-          </li>
-          <li class="fileRow" data-keywords="rdbms notes cs-502 cs502 502">
-            <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>RDBMS</div>
-            <div>
-              <a href="RDBMS.epub" target="_blank" class="download-link" aria-label="Download RDBMS">Download</a>
-              <span class="file-size" id="size-rdbms"></span>
-              <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
-            </div>
-          </li>
-        </ul>
-      </div>
+      <div class="section-title">Misc</div>
+      <ul class="file-list">
+        <li>
+          <div>DBMS_Assignment1.pdf</div>
+          <div>
+            <a href="DBMS_Assignment1.pdf" target="_blank" class="download-link">Download</a>
+            <span class="file-size">2.09 MB</span>
+          </div>
+        </li>
+        <li>
+          <div>Data Analytics .epub</div>
+          <div>
+            <a href="Data%20Analytics%20.epub" target="_blank" class="download-link">Download</a>
+            <span class="file-size">9 KB</span>
+          </div>
+        </li>
+        <li>
+          <div>Data_Analytics_Notes.epub</div>
+          <div>
+            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-link">Download</a>
+            <span class="file-size">7 KB</span>
+          </div>
+        </li>
+        <li>
+          <div>Data_Analytics_assignment1.pdf</div>
+          <div>
+            <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-link">Download</a>
+            <span class="file-size">82 KB</span>
+          </div>
+        </li>
+        <li>
+          <div>Finite Automata .epub</div>
+          <div>
+            <a href="Finite%20Automata%20.epub" target="_blank" class="download-link">Download</a>
+            <span class="file-size">9 KB</span>
+          </div>
+        </li>
+        <li>
+          <div>Internet and web technology.epub</div>
+          <div>
+            <a href="Internet%20and%20web%20technology.epub" target="_blank" class="download-link">Download</a>
+            <span class="file-size">8 KB</span>
+          </div>
+        </li>
+        <li>
+          <div>Internet_and_Web_Development_Assignment.pdf</div>
+          <div>
+            <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-link">Download</a>
+            <span class="file-size">5.14 MB</span>
+          </div>
+        </li>
+        <li>
+          <div>RDBMS.epub</div>
+          <div>
+            <a href="RDBMS.epub" target="_blank" class="download-link">Download</a>
+            <span class="file-size">62 KB</span>
+          </div>
+        </li>
+        <li>
+          <div>Toc_Assignment_Graph.pdf</div>
+          <div>
+            <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-link">Download</a>
+            <span class="file-size">3.38 MB</span>
+          </div>
+        </li>
+      </ul>
     </section>
-    <div class="qr-section">
-      <div style="margin-bottom:6px;font-size:1em;">Share this site: <br>Scan QR (or long-press to save)</div>
-      <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://shiroonigami23-ui.github.io/class-solutions/" alt="QR for site"/>
-    </div>
-    <section>
-      <div class="section-title">Feedback / Request</div>
-      <a class="feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank">💬 Suggest improvements or request files</a>
-    </section>
-    <div class="footer">
-        &copy; Aryan Singh Chandel | CSE Section-A, 2025
-    </div>
   </main>
-  <script>
-    function toggleSection(sectionId) {
-      var s = document.getElementById(sectionId);
-      if (s.style.display === "none") s.style.display = "block";
-      else s.style.display = "none";
-    }
-    document.getElementById('assignmentsSection').style.display = "block";
-    document.getElementById('notesSection').style.display = "block";
-    let mode = localStorage.getItem("mode") || "dark";
-    function setMode(m) {
-      if(m==="light") {
-        document.body.classList.add("lightmode");
-        document.getElementById('modeBtn').textContent="🌞";
-      } else {
-        document.body.classList.remove("lightmode");
-        document.getElementById('modeBtn').textContent="🌙";
-      }
-      localStorage.setItem("mode", m);
-    }
-    setMode(mode);
-    document.getElementById('modeBtn').onclick = function() {
-      mode = (mode === "dark") ? "light" : "dark";
-      setMode(mode);
-    };
-    function setSize(selector, url) {
-      fetch(url, {method:'HEAD'}).then(r=>{
-        if(r.ok){
-          let s = r.headers.get('Content-Length');
-          if(s) document.getElementById(selector).textContent = "• " + (s/1024).toFixed(1) + " KB";
-        }
-      }).catch(()=>{});
-    }
-    // ✅ manual files
-    setSize("size-dbms", "DBMS_Assignment1.pdf");
-    setSize("size-toc", "TOC_CS501_Assignment1.pdf");
-    setSize("size-internetweb", "Internet_and_Web_Development_Assignment.pdf");
-    setSize("size-analytics", "Data_Analytics_assignment1.pdf");
-    setSize("size-tocgraph", "Toc_Assignment_Graph.pdf");
-    setSize("size-danotes", "Data_Analytics_Notes.epub");
-    setSize("size-fa", "Finite Automata.epub");
-    setSize("size-internetnote", "Internet and web technology.epub");
-    setSize("size-rdbms", "RDBMS.epub");
-    function filterFiles() {
-      let v = document.getElementById('searchBox').value.toLowerCase();
-      document.querySelectorAll('.fileRow').forEach(function(row) {
-        let keys = row.getAttribute('data-keywords') || '';
-        row.style.display = (keys.includes(v) || v === "") ? "" : "none";
-      });
-    }
-    var update = new Date(document.lastModified);
-    document.getElementById("lastUpdate").textContent = update.toLocaleDateString() + " " + update.toLocaleTimeString();
-    document.getElementById("today").textContent = " (" + update.toLocaleDateString() + ")";
-
-    // 🚀 Auto-loader for new repo files
-    async function loadNewFiles() {
-      let res = await fetch("https://api.github.com/repos/shiroonigami23-ui/class-solutions/contents/");
-      let files = await res.json();
-      files.forEach(file => {
-        let name = file.name.toLowerCase();
-        if (document.querySelector(`[src="${file.name}"], [href="${file.name}"]`)) return;
-
-        // 📌 Assignments
-        if (name.endsWith(".pdf") && /(cs[-_ ]?5\d{2})/.test(name)) {
-          let id = "size-" + file.name.replace(/\W+/g, "");
-          let div = document.createElement("div");
-          div.className = "pdf-block fileRow";
-          div.setAttribute("data-keywords", file.name);
-          div.innerHTML = `
-            <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png"/> ${file.name}</div>
-            <iframe class="pdf-frame" src="${file.download_url}" aria-label="View ${file.name}"></iframe><br>
-            <a href="${file.download_url}" target="_blank" class="download-link">Download PDF</a>
-            <span class="file-size" id="${id}"></span>`;
-          document.getElementById("assignmentsSection").appendChild(div);
-          setSize(id, file.download_url);
-        }
-
-        // 📘 Notes
-        if (name.endsWith(".epub") && /(cs[-_ ]?5\d{2})/.test(name)) {
-          let id = "size-" + file.name.replace(/\W+/g, "");
-          let li = document.createElement("li");
-          li.className = "fileRow";
-          li.setAttribute("data-keywords", file.name);
-          li.innerHTML = `
-            <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png"/> ${file.name}</div>
-            <div><a href="${file.download_url}" target="_blank" class="download-link">Download</a>
-            <span class="file-size" id="${id}"></span>
-            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div></div>`;
-          document.querySelector("#notesSection ul").appendChild(li);
-          setSize(id, file.download_url);
-        }
-      });
-    }
-    loadNewFiles();
-  </script>
 </body>
 </html>
