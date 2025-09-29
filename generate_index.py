@@ -15,15 +15,27 @@ COURSE_REGEX = re.compile(r"(CS[-_]?\d{3})", re.IGNORECASE)
 
 
 def extract_course_code(filename):
-    """Return normalized course code like 'CS-501' or 'CS-000' if none found."""
+    """Return normalized course code like 'CS-501'. Uses keyword mapping if missing. Skips unknowns."""
     m = COURSE_REGEX.search(filename)
-    if not m:
-        return "CS-000"
-    code = m.group(1).upper().replace("_", "-")
-    # ensure pattern like CS-501
-    if not code.startswith("CS-") and code.startswith("CS"):
-        code = "CS-" + code[2:]
-    return code
+    if m:
+        code = m.group(1).upper().replace("_", "-").replace(" ", "-")
+        if not code.startswith("CS-") and code.startswith("CS"):
+            code = "CS-" + code[2:]
+        return code
+
+    # keyword-based fallback
+    lower_name = filename.lower()
+    if "dbms" in lower_name or "database" in lower_name:
+        return "CS-502"
+    elif "toc" in lower_name or "automata" in lower_name or "nfa" in lower_name or "dfa" in lower_name:
+        return "CS-501"
+    elif ("cyber" in lower_name or "security" in lower_name or
+          "data analytics" in lower_name or "analytics" in lower_name):
+        return "CS-503"
+    elif "web" in lower_name or "internet" in lower_name or "development" in lower_name:
+        return "CS-504"
+    else:
+        return None  # skip completely
 
 
 def format_size(path):
@@ -107,12 +119,14 @@ def main():
     grouped_pdfs = {}
     for f in sorted(pdfs):
         code = extract_course_code(f)
-        grouped_pdfs.setdefault(code, []).append(f)
+        if code:
+            grouped_pdfs.setdefault(code, []).append(f)
 
     grouped_epubs = {}
     for f in sorted(epubs):
         code = extract_course_code(f)
-        grouped_epubs.setdefault(code, []).append(f)
+        if code:
+            grouped_epubs.setdefault(code, []).append(f)
 
     # determine recent files (mtime within NEW_DAYS)
     recent = []
@@ -270,4 +284,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
