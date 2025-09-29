@@ -111,8 +111,25 @@ def main():
     h1 {{ font-size:2.11rem;margin:30px 0 6px 0;}}
     .desc {{ color:#b5bac2; margin-bottom:4px; font-size:1.01em;}}
     .update-bar {{background:#21396c; color:#e3ecfd; margin:20px auto 18px; padding:7px 22px; font-size:.99em; border-radius:13px; max-width:570px;}}
-    .new-banner {{background:#ffeeba;color:#232333;margin:20px auto 12px;padding:8px 16px;border-radius:8px;max-width:620px;}}
-    .new-banner a {{color:#b00;text-decoration:none;font-weight:bold;}}
+        .new-banner {
+      background: #243b66;
+      color: #e6f1ff;
+      margin: 20px auto 14px;
+      padding: 9px 16px;
+      border-radius: 10px;
+      max-width: 640px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      font-size: 0.97em;
+    }
+    .new-banner a {
+      color: #63b3ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .new-banner a:hover {
+      text-decoration: underline;
+      color: #8fd0ff;
+    }
     main {{ max-width:700px;padding:0 8px;margin: 0 auto; }}
     .search-box {{margin:15px 0;}}
     .search-input{{padding:9px 14px;font-size:1.04em;width:72%;max-width:285px;border-radius:6px;border:1px solid #374b63;background:#21293b;color:#f6f7f9;}}
