@@ -1,74 +1,12 @@
 import os
-from datetime import datetime, timedelta
+import re
+import datetime
 
-# Folder where your files are stored (root of repo)
-FILES_DIR = "."
+# Path where your files (PDF, DOCX, etc.) are stored
+ROOT = "."
 
-# Consider files new if modified within this many days
-NEW_WINDOW = timedelta(days=2)
-
-
-def is_new(file_path):
-    mtime = datetime.fromtimestamp(os.path.getmtime(file_path))
-    return datetime.now() - mtime < NEW_WINDOW
-
-
-def format_size(file_path):
-    size = os.path.getsize(file_path)
-    if size < 1024:
-        return f"{size} B"
-    elif size < 1024 * 1024:
-        return f"{size // 1024} KB"
-    else:
-        return f"{round(size / (1024 * 1024), 2)} MB"
-
-
-def build_update_bar(files):
-    new_links = []
-    today = datetime.now().date()
-
-    for f in files:
-        if is_new(f):
-            url = f.replace(" ", "%20")
-            new_links.append(f'<a href="{url}" target="_blank">🆕 {os.path.basename(f)}</a>')
-
-    if new_links:
-        latest_file_time = max(os.path.getmtime(f) for f in files)
-        latest_date = datetime.fromtimestamp(latest_file_time).date()
-        label = "Uploaded today" if today == latest_date else f"Updated {today.strftime('%Y-%m-%d')}"
-        return f'📢 {label} — ' + ", ".join(new_links)
-    else:
-        return f'📢 Updated {today.strftime("%Y-%m-%d")}'
-
-
-def categorize_files():
-    categories = {}
-    all_files = []
-
-    for f in os.listdir(FILES_DIR):
-        if not os.path.isfile(f):
-            continue
-        if not (f.endswith(".pdf") or f.endswith(".epub")):
-            continue
-
-        all_files.append(f)
-
-        # Detect course code (CS-501, CS-502, etc.)
-        code = "Misc"
-        for part in f.split("_"):
-            if part.upper().startswith("CS-") or part.upper().startswith("CS"):
-                code = part.upper().replace("CS", "CS-").replace("--", "-")
-                break
-
-        if code not in categories:
-            categories[code] = []
-        categories[code].append(f)
-
-    return categories, all_files
-
-
-def build_html(categories, update_bar):
-    html = f"""<!DOCTYPE html>
+# HTML header and footer (same style as you already have)
+HTML_HEADER = """<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -76,57 +14,119 @@ def build_html(categories, update_bar):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png" />
   <style>
-    body {{ background: #181e26; color: #f6f7f9; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; min-height: 100vh; text-align: center; }}
-    .lightmode {{ background: #f6f7f9; color: #232333; }}
-    h1 {{ font-size:2.11rem;margin:30px 0 6px 0; }}
-    .update-bar {{ background:#21396c; color:#e3ecfd; margin:20px auto 18px; padding:7px 22px; font-size:.99em; border-radius:13px; max-width:700px; }}
-    section {{ margin:32px 0 16px 0; }}
-    .section-title {{ margin-bottom:11px;font-size:1.11rem;text-transform:uppercase;letter-spacing:.7px; }}
-    .file-list {{ list-style:none;padding:0;margin:13px 0; }}
-    .file-list li {{ margin:9px 0; padding:9px 8px; background:#232b36; border-radius:9px; display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap; }}
-    .download-link {{ display:inline-block; background:#203048;color:#8adcff;text-decoration:none;font-weight:500;font-size:1em; border-radius:8px;padding:6px 19px; }}
-    .download-link:hover {{ background:#1e2a39;color:#b7f3ff; }}
-    .file-size {{ font-size:.95em;color:#bbe1d7;margin-left:9px; }}
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+    h1 { text-align: center; }
+    .course-block { margin-bottom: 30px; }
+    .file-list { list-style-type: none; padding: 0; }
+    .file-list li { margin: 5px 0; }
+    .new-banner { background: #ffeeba; padding: 10px; border: 1px solid #f0ad4e;
+                  border-radius: 5px; margin-bottom: 20px; }
+    .new-banner a { color: #c00; text-decoration: none; font-weight: bold; }
+    .size { color: #555; font-size: 0.9em; margin-left: 5px; }
   </style>
 </head>
 <body>
-  <h1>CSE Notes & Assignments</h1>
-  <div class="update-bar">{update_bar}</div>
-  <main>
+<h1>📘 CSE Notes & Assignments</h1>
 """
 
-    for code, files in sorted(categories.items()):
-        html += f"""    <section>
-      <div class="section-title">{code}</div>
-      <ul class="file-list">
-"""
-        for f in sorted(files):
-            url = f.replace(" ", "%20")
-            size = format_size(f)
-            html += f"""        <li>
-          <div>{os.path.basename(f)}</div>
-          <div>
-            <a href="{url}" target="_blank" class="download-link">Download</a>
-            <span class="file-size">{size}</span>
-          </div>
-        </li>
-"""
-        html += "      </ul>\n    </section>\n"
-
-    html += """  </main>
+HTML_FOOTER = """
 </body>
 </html>
 """
-    return html
+
+# Where to save the index file
+OUTPUT_FILE = "index.html"
+
+# Regex to extract course code (CS-501, CS-502, etc.)
+COURSE_REGEX = re.compile(r"(CS-\d{3})", re.IGNORECASE)
+
+# File extensions to include
+ALLOWED_EXT = {".pdf", ".docx", ".epub", ".txt", ".md"}
+
+# File storing timestamps of new uploads
+META_FILE = ".file_timestamps"
+
+def load_meta():
+    """Load previous file timestamps to track 'new' files"""
+    meta = {}
+    if os.path.exists(META_FILE):
+        with open(META_FILE, "r") as f:
+            for line in f:
+                fname, ts = line.strip().split("|")
+                meta[fname] = float(ts)
+    return meta
+
+def save_meta(meta):
+    """Save current file timestamps"""
+    with open(META_FILE, "w") as f:
+        for fname, ts in meta.items():
+            f.write(f"{fname}|{ts}\n")
+
+def file_size(path):
+    size = os.path.getsize(path)
+    for unit in ['B', 'KB', 'MB']:
+        if size < 1024:
+            return f"{size:.1f}{unit}"
+        size /= 1024
+    return f"{size:.1f}GB"
+
+def main():
+    files = [f for f in os.listdir(ROOT) if os.path.isfile(f)]
+    meta = load_meta()
+    now = datetime.datetime.now().timestamp()
+    new_files = []
+
+    # Group files by course code
+    courses = {}
+    for f in sorted(files):
+        ext = os.path.splitext(f)[1].lower()
+        if ext not in ALLOWED_EXT:
+            continue
+        match = COURSE_REGEX.search(f)
+        if match:
+            course = match.group(1).upper()
+        else:
+            course = "Other"
+        courses.setdefault(course, []).append(f)
+
+        # Check if file is new (<3 days old)
+        mtime = os.path.getmtime(f)
+        if f not in meta or meta[f] < mtime:
+            meta[f] = mtime
+        if now - meta[f] <= 3 * 86400:
+            new_files.append(f)
+
+    save_meta(meta)
+
+    # Build HTML
+    html = [HTML_HEADER]
+
+    # Banner for new files
+    if new_files:
+        banner = '<div class="new-banner">🆕 New files added: '
+        links = []
+        for f in new_files:
+            links.append(f'<a href="{f}" download>{f}</a>')
+        banner += " — ".join(links)
+        banner += "</div>"
+        html.append(banner)
+
+    # Course sections
+    for course, flist in sorted(courses.items()):
+        html.append(f'<div class="course-block">')
+        html.append(f"<h2>{course}</h2>")
+        html.append('<ul class="file-list">')
+        for f in sorted(flist):
+            html.append(f'<li><a href="{f}" download>{f}</a>'
+                        f'<span class="size">({file_size(f)})</span></li>')
+        html.append("</ul></div>")
+
+    html.append(HTML_FOOTER)
+
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        f.write("\n".join(html))
 
 
 if __name__ == "__main__":
-    categories, all_files = categorize_files()
-    update_bar = build_update_bar(all_files)
-    html = build_html(categories, update_bar)
-
-    with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html)
-
-    print("✅ index.html updated with categorized sections, update bar, and file sizes")
-            
+    main()
+    
