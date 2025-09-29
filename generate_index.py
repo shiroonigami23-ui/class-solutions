@@ -1,103 +1,97 @@
-import os
-import re
-import datetime
+import os, re, json
+from datetime import datetime, timedelta
 
-ROOT = "."
-OUTPUT_FILE = "index.html"
-META_FILE = ".file_timestamps"
+# --- CONFIG ---
+INDEX_FILE = "index.html"
+STATE_FILE = ".file_state.json"
 
-ALLOWED_ASSIGN_EXT = {".pdf"}
-ALLOWED_NOTES_EXT = {".epub"}
-COURSE_REGEX = re.compile(r"(CS-\d{3})", re.IGNORECASE)
+# Load previous state
+old_state = {}
+if os.path.exists(STATE_FILE):
+    with open(STATE_FILE, "r") as f:
+        old_state = json.load(f)
 
+# Current files in repo root
+files = [f for f in os.listdir(".") if os.path.isfile(f)]
+pdfs = [f for f in files if f.lower().endswith(".pdf")]
+epubs = [f for f in files if f.lower().endswith(".epub")]
 
-def load_meta():
-    meta = {}
-    if os.path.exists(META_FILE):
-        with open(META_FILE, "r") as f:
-            for line in f:
-                fname, ts = line.strip().split("|")
-                meta[fname] = float(ts)
-    return meta
+# Detect new files
+new_files = [f for f in files if f not in old_state]
 
+# Save state
+state = {f: datetime.now().isoformat() for f in files}
+with open(STATE_FILE, "w") as f:
+    json.dump(state, f)
 
-def save_meta(meta):
-    with open(META_FILE, "w") as f:
-        for fname, ts in meta.items():
-            f.write(f"{fname}|{ts}\n")
+# Utility: extract course code like CS-501
+def extract_course_code(filename):
+    m = re.search(r"(CS[-_]?\d{3})", filename.upper())
+    return m.group(1).replace("_", "-") if m else "CS-000"
 
+# Group files by type
+grouped_pdfs = {}
+for f in sorted(pdfs):
+    code = extract_course_code(f)
+    grouped_pdfs.setdefault(code, []).append(f)
 
-def file_size(path):
-    size = os.path.getsize(path)
-    for unit in ['B', 'KB', 'MB']:
-        if size < 1024:
-            return f"{size:.1f}{unit}"
-        size /= 1024
-    return f"{size:.1f}GB"
+grouped_epubs = {}
+for f in sorted(epubs):
+    code = extract_course_code(f)
+    grouped_epubs.setdefault(code, []).append(f)
 
-
-def generate_file_blocks(files, is_notes=False):
-    """Return HTML blocks for assignments or notes"""
-    blocks = []
-    for f in sorted(files):
-        name = os.path.splitext(os.path.basename(f))[0]
-        keywords = name.replace("_", " ").lower()
-
-        if is_notes:
-            block = f"""
-          <li class="fileRow" data-keywords="{keywords}">
-            <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>{name}</div>
-            <div>
-              <a href="{f}" target="_blank" class="download-link" aria-label="Download {name}">Download</a>
-              <span class="file-size">({file_size(f)})</span>
-              <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
-            </div>
-          </li>"""
-        else:
-            block = f"""
+# Build sections
+def build_pdf_section():
+    html = ""
+    for code, flist in grouped_pdfs.items():
+        for file in flist:
+            title = os.path.splitext(file)[0].replace("_", " ")
+            safe_id = re.sub(r'\W+', '', title.lower())
+            keywords = f"{title} {code} {code.lower()} {code.replace('-', '')} {code.split('-')[1]}"
+            html += f'''
         <div class="pdf-block fileRow" data-keywords="{keywords}">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>{name}</div>
-          <iframe class="pdf-frame" src="{f}" aria-label="View {name}"></iframe><br>
-          <a href="{f}" target="_blank" class="download-link" aria-label="Download {name}">Download PDF</a>
-          <span class="file-size">({file_size(f)})</span>
-        </div>"""
-        blocks.append(block)
-    return "\n".join(blocks)
+          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>{title}</div>
+          <iframe class="pdf-frame" src="{file}" aria-label="View {title}"></iframe><br>
+          <a href="{file}" target="_blank" class="download-link" aria-label="Download {title}">Download PDF</a>
+          <span class="file-size" id="size-{safe_id}"></span>
+        </div>'''
+    return html
 
+def build_epub_section():
+    html = ""
+    for code, flist in grouped_epubs.items():
+        for file in flist:
+            title = os.path.splitext(file)[0].replace("_", " ")
+            safe_id = re.sub(r'\W+', '', title.lower())
+            keywords = f"{title} {code} {code.lower()} {code.replace('-', '')} {code.split('-')[1]}"
+            html += f'''
+        <li class="fileRow" data-keywords="{keywords}">
+          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>{title}</div>
+          <div>
+            <a href="{file}" target="_blank" class="download-link" aria-label="Download {title}">Download</a>
+            <span class="file-size" id="size-{safe_id}"></span>
+            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+          </div>
+        </li>'''
+    return html
 
-def main():
-    files = [f for f in os.listdir(ROOT) if os.path.isfile(f)]
-    meta = load_meta()
-    now = datetime.datetime.now().timestamp()
-    new_files = []
+# Banner for new files (last 3 days only)
+banner_html = ""
+if new_files:
+    recent = []
+    cutoff = datetime.now() - timedelta(days=3)
+    for f in new_files:
+        added_time = datetime.fromisoformat(state[f])
+        if added_time > cutoff:
+            recent.append(f)
+    if recent:
+        banner_html = f'''
+    <div class="new-banner">
+      🆕 New files added: {' — '.join([f'<a href="{f}">{f}</a>' for f in recent])}
+    </div>'''
 
-    assignments = []
-    notes = []
-
-    for f in sorted(files):
-        ext = os.path.splitext(f)[1].lower()
-        if ext in ALLOWED_ASSIGN_EXT:
-            assignments.append(f)
-        elif ext in ALLOWED_NOTES_EXT:
-            notes.append(f)
-
-        # track new
-        mtime = os.path.getmtime(f)
-        if f not in meta or meta[f] < mtime:
-            meta[f] = mtime
-        if now - meta[f] <= 3 * 86400:
-            new_files.append(f)
-
-    save_meta(meta)
-
-    # banner
-    banner_html = ""
-    if new_files:
-        links = " — ".join([f'<a href="{f}">{f}</a>' for f in new_files])
-        banner_html = f'<div class="new-banner">🆕 New files added: {links}</div>'
-
-    # build page
-    html = f"""<!DOCTYPE html>
+# --- Final HTML ---
+html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -105,31 +99,12 @@ def main():
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png" />
   <style>
-    body {{ background: #181e26; color: #f6f7f9; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; min-height: 100vh; text-align: center; transition: background .3s, color .3s;}}
-    .lightmode {{ background: #f6f7f9; color: #232333;}}
-    .darkmode-btn {{ position:fixed;top:13px;right:13px;padding:6px 14px;font-size:1em;background:#253168;color:#f6f7f9;border:none;border-radius:20px;cursor:pointer;z-index:10; transition:.2s; box-shadow:0 1px 5px #0001;}}
-    h1 {{ font-size:2.11rem;margin:30px 0 6px 0;}}
-    .desc {{ color:#b5bac2; margin-bottom:4px; font-size:1.01em;}}
+    body {{ background: #181e26; color: #f6f7f9; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; min-height: 100vh; text-align: center; transition: background .3s, color .3s; }}
+    .lightmode {{ background: #f6f7f9; color: #232333; }}
+    .darkmode-btn {{ position:fixed;top:13px;right:13px;padding:6px 14px;font-size:1em;background:#253168;color:#f6f7f9;border:none;border-radius:20px;cursor:pointer;z-index:10; transition:.2s; box-shadow:0 1px 5px #0001; }}
+    h1 {{ font-size:2.11rem;margin:30px 0 6px 0; }}
+    .desc {{ color:#b5bac2; margin-bottom:4px; font-size:1.01em; }}
     .update-bar {{background:#21396c; color:#e3ecfd; margin:20px auto 18px; padding:7px 22px; font-size:.99em; border-radius:13px; max-width:570px;}}
-        .new-banner {
-      background: #243b66;
-      color: #e6f1ff;
-      margin: 20px auto 14px;
-      padding: 9px 16px;
-      border-radius: 10px;
-      max-width: 640px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
-      font-size: 0.97em;
-    }
-    .new-banner a {
-      color: #63b3ff;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .new-banner a:hover {
-      text-decoration: underline;
-      color: #8fd0ff;
-    }
     main {{ max-width:700px;padding:0 8px;margin: 0 auto; }}
     .search-box {{margin:15px 0;}}
     .search-input{{padding:9px 14px;font-size:1.04em;width:72%;max-width:285px;border-radius:6px;border:1px solid #374b63;background:#21293b;color:#f6f7f9;}}
@@ -153,6 +128,9 @@ def main():
     .feedback {{background:#21396c;color:#e8f2fa;font-size:.98em;padding:7px 16px;border-radius:7px;display:inline-block;margin-top:10px;text-decoration:none;}}
     .qr-section {{margin: 23px 0;}}
     .qr-img {{width:108px;display:block;margin:7px auto;}}
+    .new-banner {{background: #243b66; color: #e6f1ff; margin: 20px auto 14px; padding: 9px 16px; border-radius: 10px; max-width: 640px; box-shadow: 0 2px 8px rgba(0,0,0,0.35); font-size: 0.97em;}}
+    .new-banner a {{color: #63b3ff; text-decoration: none; font-weight: 500;}}
+    .new-banner a:hover {{text-decoration: underline; color: #8fd0ff;}}
     @media (max-width:700px) {{
       .pdf-frame {{height:39vw;min-height:150px;}}
       .file-list li {{flex-direction: column;align-items:flex-start;}}
@@ -165,7 +143,7 @@ def main():
   <h1 title="Assignments & Notes Repository">CSE Notes & Assignments</h1>
   <div class="desc">Instant download and reading for CSE students. All Assignment and Notes for you guys 😉!</div>
   {banner_html}
-  <div class="update-bar" id="update-bar">📢 Latest updates <span id="today"></span></div>
+  <div class="update-bar" id="update-bar">📢 Latest updates (<span id="today"></span>)</div>
   <div class="last-updated">Last updated: <span id="lastUpdate"></span></div>
   <main>
     <div class="search-box">
@@ -173,15 +151,13 @@ def main():
     </div>
     <section>
       <button class="collapse-btn" type="button" onclick="toggleSection('assignmentsSection')">Assignments (PDF) ⬇️</button>
-      <div id="assignmentsSection">
-        {generate_file_blocks(assignments, is_notes=False)}
+      <div id="assignmentsSection">{build_pdf_section()}
       </div>
     </section>
     <section>
       <button class="collapse-btn" type="button" onclick="toggleSection('notesSection')">Notes (EPUB) ⬇️</button>
       <div id="notesSection">
-        <ul class="file-list">
-          {generate_file_blocks(notes, is_notes=True)}
+        <ul class="file-list">{build_epub_section()}
         </ul>
       </div>
     </section>
@@ -193,9 +169,7 @@ def main():
       <div class="section-title">Feedback / Request</div>
       <a class="feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank">💬 Suggest improvements or request files</a>
     </section>
-    <div class="footer">
-        &copy; Aryan Singh Chandel | CSE Section-A, 2025
-    </div>
+    <div class="footer">&copy; Aryan Singh Chandel | CSE Section-A, 2025</div>
   </main>
   <script>
     function toggleSection(sectionId) {{
@@ -221,25 +195,29 @@ def main():
       mode = (mode === "dark") ? "light" : "dark";
       setMode(mode);
     }};
+    function setSize(selector, url) {{
+      fetch(url, {{method:'HEAD'}}).then(r=>{{
+        if(r.ok){{
+          let s = r.headers.get('Content-Length');
+          if(s) document.getElementById(selector).textContent = "• " + (s/1024).toFixed(1) + " KB";
+        }}
+      }}).catch(()=>{{}});
+    }}
+    var update = new Date(document.lastModified);
+    document.getElementById("lastUpdate").textContent = update.toLocaleDateString() + " " + update.toLocaleTimeString();
+    document.getElementById("today").textContent = update.toLocaleDateString();
     function filterFiles() {{
       let v = document.getElementById('searchBox').value.toLowerCase();
       document.querySelectorAll('.fileRow').forEach(function(row) {{
         let keys = row.getAttribute('data-keywords') || '';
-        row.style.display = (keys.includes(v) || v === "") ? "" : "none";
+        row.style.display = (keys.toLowerCase().includes(v) || v === "") ? "" : "none";
       }});
     }}
-    var update = new Date(document.lastModified);
-    document.getElementById("lastUpdate").textContent = update.toLocaleDateString() + " " + update.toLocaleTimeString();
-    document.getElementById("today").textContent = " (" + update.toLocaleDateString() + ")";
   </script>
 </body>
 </html>
 """
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write(html)
-
-
-if __name__ == "__main__":
-    main()
-          
+with open(INDEX_FILE, "w", encoding="utf-8") as f:
+    f.write(html_content)
+    
