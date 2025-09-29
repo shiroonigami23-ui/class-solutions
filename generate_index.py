@@ -13,6 +13,16 @@ def is_new(file_path):
     return datetime.now() - mtime < NEW_WINDOW
 
 
+def format_size(file_path):
+    size = os.path.getsize(file_path)
+    if size < 1024:
+        return f"{size} B"
+    elif size < 1024 * 1024:
+        return f"{size // 1024} KB"
+    else:
+        return f"{round(size / (1024 * 1024), 2)} MB"
+
+
 def build_update_bar(files):
     new_links = []
     today = datetime.now().date()
@@ -92,11 +102,12 @@ def build_html(categories, update_bar):
 """
         for f in sorted(files):
             url = f.replace(" ", "%20")
+            size = format_size(f)
             html += f"""        <li>
           <div>{os.path.basename(f)}</div>
           <div>
             <a href="{url}" target="_blank" class="download-link">Download</a>
-            <span class="file-size"></span>
+            <span class="file-size">{size}</span>
           </div>
         </li>
 """
@@ -117,5 +128,5 @@ if __name__ == "__main__":
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html)
 
-    print("✅ index.html updated with categorized sections and update bar")
+    print("✅ index.html updated with categorized sections, update bar, and file sizes")
             
