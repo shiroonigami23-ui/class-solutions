@@ -55,6 +55,7 @@
     <section>
       <button class="collapse-btn" type="button" onclick="toggleSection('assignmentsSection')">Assignments (PDF) ⬇️</button>
       <div id="assignmentsSection">
+        <!-- ✅ Your manual entries remain -->
         <div class="pdf-block fileRow" data-keywords="dbms assignment 1 cs-502 cs502 502">
           <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>CS-502 DBMS Assignment 1</div>
           <iframe class="pdf-frame" src="DBMS_Assignment1.pdf" aria-label="View DBMS Assignment 1"></iframe><br>
@@ -170,11 +171,11 @@
         }
       }).catch(()=>{});
     }
-    // ✅ fixed file names
+    // ✅ manual files
     setSize("size-dbms", "DBMS_Assignment1.pdf");
     setSize("size-toc", "TOC_CS501_Assignment1.pdf");
     setSize("size-internetweb", "Internet_and_Web_Development_Assignment.pdf");
-    setSize("size-analytics", "Data_Analytics_assignment_1.pdf");
+    setSize("size-analytics", "Data_Analytics_assignment1.pdf");
     setSize("size-tocgraph", "Toc_Assignment_Graph.pdf");
     setSize("size-danotes", "Data_Analytics_Notes.epub");
     setSize("size-fa", "Finite Automata.epub");
@@ -190,6 +191,47 @@
     var update = new Date(document.lastModified);
     document.getElementById("lastUpdate").textContent = update.toLocaleDateString() + " " + update.toLocaleTimeString();
     document.getElementById("today").textContent = " (" + update.toLocaleDateString() + ")";
+
+    // 🚀 Auto-loader for new repo files
+    async function loadNewFiles() {
+      let res = await fetch("https://api.github.com/repos/shiroonigami23-ui/class-solutions/contents/");
+      let files = await res.json();
+      files.forEach(file => {
+        let name = file.name.toLowerCase();
+        if (document.querySelector(`[src="${file.name}"], [href="${file.name}"]`)) return;
+
+        // 📌 Assignments
+        if (name.endsWith(".pdf") && /(cs[-_ ]?5\d{2})/.test(name)) {
+          let id = "size-" + file.name.replace(/\W+/g, "");
+          let div = document.createElement("div");
+          div.className = "pdf-block fileRow";
+          div.setAttribute("data-keywords", file.name);
+          div.innerHTML = `
+            <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png"/> ${file.name}</div>
+            <iframe class="pdf-frame" src="${file.download_url}" aria-label="View ${file.name}"></iframe><br>
+            <a href="${file.download_url}" target="_blank" class="download-link">Download PDF</a>
+            <span class="file-size" id="${id}"></span>`;
+          document.getElementById("assignmentsSection").appendChild(div);
+          setSize(id, file.download_url);
+        }
+
+        // 📘 Notes
+        if (name.endsWith(".epub") && /(cs[-_ ]?5\d{2})/.test(name)) {
+          let id = "size-" + file.name.replace(/\W+/g, "");
+          let li = document.createElement("li");
+          li.className = "fileRow";
+          li.setAttribute("data-keywords", file.name);
+          li.innerHTML = `
+            <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png"/> ${file.name}</div>
+            <div><a href="${file.download_url}" target="_blank" class="download-link">Download</a>
+            <span class="file-size" id="${id}"></span>
+            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div></div>`;
+          document.querySelector("#notesSection ul").appendChild(li);
+          setSize(id, file.download_url);
+        }
+      });
+    }
+    loadNewFiles();
   </script>
 </body>
 </html>
