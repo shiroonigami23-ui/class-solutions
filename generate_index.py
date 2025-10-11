@@ -1,16 +1,14 @@
-#!/usr/bin/env python3
 import os
 import re
 import time
+import subprocess
 from datetime import datetime, timedelta
 from urllib.parse import quote
 
-# Config
 ROOT = "."
 INDEX_FILE = "index.html"
-NEW_DAYS = 3  # banner shows files with mtime within this many days
+NEW_DAYS = 2  
 
-# Regex to detect course codes like CS-501 or CS_501 or CS501 (we normalize to CS-501)
 COURSE_REGEX = re.compile(r"(CS[-_]?\d{3})", re.IGNORECASE)
 
 
@@ -23,7 +21,6 @@ def extract_course_code(filename):
             code = "CS-" + code[2:]
         return code
 
-    # keyword-based fallback
     lower_name = filename.lower()
     if "dbms" in lower_name or "database" in lower_name:
         return "CS-502"
@@ -35,7 +32,7 @@ def extract_course_code(filename):
     elif "web" in lower_name or "internet" in lower_name or "development" in lower_name:
         return "CS-504"
     else:
-        return None  # skip completely
+        return None 
 
 
 def format_size(path):
@@ -109,13 +106,27 @@ def build_epub_section(grouped_epubs):
     return "\n".join(out)
 
 
+
+def get_git_commit_time(filename):
+    """Return the last commit time (unix timestamp) for a file using Git."""
+    try:
+        
+        cmd = ['git', 'log', '-1', '--format=%ct', '--', filename]
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        return int(result.stdout.strip())
+    except (subprocess.CalledProcessError, FileNotFoundError, ValueError):
+    
+        print(f"⚠️ Could not get git commit time for {filename}, falling back to mtime.")
+        return os.path.getmtime(filename)
+
 def main():
-    # collect files in repo root
+
+    
     files = [f for f in os.listdir(ROOT) if os.path.isfile(os.path.join(ROOT, f))]
     pdfs = [f for f in files if f.lower().endswith(".pdf")]
     epubs = [f for f in files if f.lower().endswith(".epub")]
 
-    # group by course code
+    
     grouped_pdfs = {}
     for f in sorted(pdfs):
         code = extract_course_code(f)
@@ -128,30 +139,34 @@ def main():
         if code:
             grouped_epubs.setdefault(code, []).append(f)
 
-    # determine recent files (mtime within NEW_DAYS)
+        
     recent = []
     cutoff = time.time() - (NEW_DAYS * 86400)
     for f in sorted(files):
         try:
-            if os.path.getmtime(f) >= cutoff:
-                # only include downloadable types (pdf/epub) and ignore things like workflow files
-                if f.lower().endswith((".pdf", ".epub", ".txt", ".md")):
+            
+            commit_time = get_git_commit_time(f)
+            
+            if commit_time >= cutoff:
+                
+                if f.lower().endswith((".pdf", ".epub", ".txt", )):
                     recent.append(f)
         except OSError:
             continue
+            
 
-    # build banner (blue style)
+    
     banner_html = ""
     if recent:
         links = " — ".join([f'<a href="{quote(f)}">{f}</a>' for f in recent])
         banner_html = f'''
   <div class="new-banner">🆕 New files added: {links}</div>'''
 
-    # build sections html
+    
     pdf_section_html = build_pdf_section(grouped_pdfs)
     epub_section_html = build_epub_section(grouped_epubs)
 
-    # final HTML (keeps your original layout & JS; file sizes rendered server-side)
+    
     html = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -275,7 +290,6 @@ def main():
 </html>
 """
 
-    # write out the generated index.html
     with open(INDEX_FILE, "w", encoding="utf-8") as fh:
         fh.write(html)
 
