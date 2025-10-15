@@ -8,8 +8,8 @@ import subprocess
 SUPPORTED_EXTENSIONS = ['.pdf', '.epub', '.jpg', '.png', '.jpeg', '.txt', '.md']
 IGNORE_FILES = ['README.md', 'generate_index.py', 'style.css', 'script.js', 'profile.js', 'index.html', 'contribute.html', 'contribution_handler.js', 'contributors.json', 'update_contributors.py']
 COURSE_KEYWORDS = {
-    'CS-501': ['toc', 'automata', 'nfa', 'dfa', 'epsilon nfa', 'cs501'],
-    'CS-502': ['dbms', 'rdbms', 'database', 'ddl', 'dml', 'cs502'],
+    'CS-501': ['toc', 'automata', 'nfa', 'cs501'],
+    'CS-502': ['dbms', 'rdbms', 'database', 'cs502'],
     'CS-503': ['cyber', 'security', 'data', 'analytics', 'cs503'],
     'CS-504': ['internet', 'web', 'iwd', 'cs504']
 }
@@ -85,7 +85,10 @@ def main():
             id_name = category.replace(' ', '');
             tabs_html += f'<button class="tab-link" onclick="openTab(event, \'{id_name}\')">{category}</button>'
             panels_html += f'<div id="{id_name}" class="tab-content"><div class="file-grid">{content}</div></div>'
-            
+    
+    # Convert contributors dict to a JSON string to be embedded in the HTML
+    contributors_json = json.dumps(contributors)
+
     html_template = f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -118,32 +121,44 @@ def main():
             <button class="close-modal-btn" id="closeModalBtn">&times;</button>
             <div class="profile-modal-header">
                 <div class="profile-modal-banner"></div>
-                <img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic" class="modal-profile-pic">
+                <div class="modal-profile-pic-wrapper">
+                    <img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic" class="modal-profile-pic">
+                    <div class="modal-pic-overlay">
+                        <span>Click to Upload</span>
+                    </div>
+                </div>
+                <input type="file" id="modal-pic-upload" accept="image/*" style="display: none;">
                 <h2 id="modal-profile-name">Your Name</h2>
             </div>
             <div class="modal-tabs">
                 <button class="modal-tab-link active" onclick="openProfileTab(event, 'settings')">Settings</button>
-                <button class="modal-tab-link" onclick="openProfileTab(event, 'contribute')">Contribute</button>
+                <button class="modal-tab-link" onclick="openProfileTab(event, 'contribute')">Your Contributions</button>
             </div>
             <div id="settings" class="modal-tab-content" style="display: block;">
-                <div class="setting-item"><label for="profile-name-input">Display Name</label><input type="text" id="profile-name-input" placeholder="Enter your name..."></div>
-                <div class="setting-item"><label for="modal-pic-upload">Profile Picture</label><button onclick="document.getElementById('modal-pic-upload').click()" class="action-button">Upload Image</button><input type="file" id="modal-pic-upload" accept="image/*" style="display: none;"></div>
+                <div class="setting-item"><label for="profile-name-input">Display Name</label><input type="text" id="profile-name-input" placeholder="Enter your display name..."></div>
+                <div class="setting-item"><label for="github-username-input">GitHub Username</label><input type="text" id="github-username-input" placeholder="e.g., shiroonigami23-ui"></div>
                 <div class="setting-item theme-toggle"><label>Theme</label><button id="modeBtn">☀️</button></div>
                 <button id="save-profile-btn" class="action-button primary">Save Changes</button>
             </div>
             <div id="contribute" class="modal-tab-content">
-                <h3>Help Your Classmates</h3>
-                <p>Have a file that could help others? Share it! Your GitHub username will be featured as a credit on the file card.</p>
-                <a href="contribute.html" class="action-button primary">Go to Contribution Page</a>
+                <h3>Your Submitted Files</h3>
+                <div id="user-contributions-list">
+                    <!-- Contributions will be dynamically inserted here by profile.js -->
+                </div>
+                <a href="contribute.html" class="action-button primary contribute-link">Contribute a New File</a>
             </div>
         </div>
     </div>
+    
+    <script>
+        window.contributorsData = {contributors_json};
+    </script>
     <script src="script.js" defer></script>
     <script src="profile.js" defer></script>
 </body>
 </html>"""
     with open('index.html', 'w', encoding='utf-8') as f: f.write(html_template)
-    print("SUCCESS: index.html generated with new two-tab profile modal.")
+    print("SUCCESS: index.html generated with new profile UI and embedded contributor data.")
 
 if __name__ == '__main__':
     main()
