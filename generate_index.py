@@ -9,13 +9,13 @@ SUPPORTED_EXTENSIONS = ['.pdf', '.epub', '.jpg', '.png', '.jpeg', '.txt', '.md']
 # Add .meta so the script is aware of it, but it won't be displayed
 IGNORE_FILES = ['README.md', 'generate_index.py', 'style.css', 'script.js', 'profile.js', 'preview.js', 'index.html', 'contribute.html', 'contribution_handler.js', 'contributors.json', 'update_contributors.py']
 COURSE_KEYWORDS = {
-    'CS-501': ['toc', 'automata', 'nfa', 'cs501'],
+    'CS-501': ['toc', 'automata', 'nfa', 'dfa', 'cs501'],
     'CS-502': ['dbms', 'rdbms', 'database', 'cs502'],
     'CS-503': ['cyber', 'security', 'data', 'analytics', 'cs503'],
     'CS-504': ['internet', 'web', 'iwd', 'cs504']
 }
 FILE_TYPE_MAP = {
-    '.pdf': {'category': 'Documents', 'icon': 'shiro.png'},
+    '.pdf': {'category': 'Documents', 'icon': 'pdf.png'},
     '.epub': {'category': 'Notes', 'icon': 'https://img.icons8.com/fluency/48/book.png'},
     '.jpg': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
     '.jpeg': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
