@@ -1,4 +1,3 @@
-   main()
 import os
 import re
 import datetime
@@ -6,7 +5,7 @@ import subprocess
 
 # --- CONFIGURATION ---
 SUPPORTED_EXTENSIONS = ['.pdf', '.epub', '.jpg', '.png', '.jpeg', '.txt', '.md']
-IGNORE_FILES = ['README.md']
+IGNORE_FILES = ['README.md', 'generate_index.py', 'style.css', 'script.js', 'index.html']
 
 # Flexible keyword-based mapping for courses.
 COURSE_KEYWORDS = {
@@ -27,6 +26,7 @@ FILE_TYPE_MAP = {
 }
 
 def get_course_code(filename):
+    """Categorizes a file based on keywords in its name."""
     fn_lower = filename.lower()
     for code, keywords in COURSE_KEYWORDS.items():
         if any(keyword in fn_lower for keyword in keywords):
@@ -34,22 +34,26 @@ def get_course_code(filename):
     return 'Uncategorized'
 
 def get_file_creation_date(filepath):
+    """Gets the creation date of a file in the git repo."""
     try:
         ts_str = subprocess.check_output(['git', 'log', '--diff-filter=A', '--format=%at', '--', filepath]).decode().strip()
         if ts_str: return datetime.datetime.fromtimestamp(int(ts_str.split('\n')[-1]))
-    except: pass
+    except Exception: pass # Fallback to filesystem time if git fails
     return datetime.datetime.fromtimestamp(os.path.getmtime(filepath))
 
 def get_file_size(filepath):
+    """Gets file size and returns a human-readable string."""
     size = os.path.getsize(filepath)
     if size < 1024**2: return f"{size/1024:.1f} KB"
     return f"{size/1024**2:.2f} MB"
 
 def format_title(filename):
+    """Creates a clean, human-readable title from a filename."""
     title = os.path.splitext(filename)[0].replace('_', ' ').replace('-', ' ')
     return re.sub(r'^(CS \d+\s*)', '', title, flags=re.IGNORECASE).strip().title()
 
 def generate_file_html(file_info):
+    """Generates the HTML block for a single file card."""
     title = format_title(file_info['name'])
     keywords = f"{title} {file_info['course']}"
     icon_url = FILE_TYPE_MAP.get(file_info['ext'], {}).get('icon', '')
@@ -66,10 +70,12 @@ def generate_file_html(file_info):
     """
 
 def main():
+    """Main function to generate the index.html file."""
     all_files = []
     now = datetime.datetime.now()
     for filename in sorted(os.listdir('.')):
         ext = os.path.splitext(filename)[1].lower()
+        # Ensure the script doesn't index itself or other site files
         if ext in SUPPORTED_EXTENSIONS and filename not in IGNORE_FILES and not filename.startswith('.'):
             all_files.append({
                 'name': filename, 'ext': ext, 'size': get_file_size(filename),
@@ -85,13 +91,17 @@ def main():
         html_card = generate_file_html(f)
         content_by_category['All Files'] += html_card
         category = FILE_TYPE_MAP.get(f['ext'], {}).get('category')
-        if category:
+        if category and category in content_by_category:
             content_by_category[category] += html_card
 
     # --- Build the final HTML page ---
     tabs_html = ""
     panels_html = ""
-    for category, content in content_by_category.items():
+    # Make 'All Files' the first tab
+    ordered_categories = ['All Files'] + sorted([cat for cat in content_by_category.keys() if cat != 'All Files'])
+
+    for category in ordered_categories:
+        content = content_by_category.get(category, '')
         if content: # Only create a tab if there is content for it
             id_name = category.replace(' ', '')
             tabs_html += f'<button class="tab-link" onclick="openTab(event, \'{id_name}\')">{category}</button>'
@@ -154,7 +164,8 @@ def main():
 </html>"""
     with open('index.html', 'w', encoding='utf-8') as f:
         f.write(html_template)
-    print("index.html successfully generated with new professional layout and profile section.")
+    print("FIXED: index.html successfully generated. Workflow is now operational.")
 
+# This is the correct placement for the execution block.
 if __name__ == '__main__':
     main()
