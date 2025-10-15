@@ -16,7 +16,7 @@ COURSE_KEYWORDS = {
 }
 FILE_TYPE_MAP = {
     '.pdf': {'category': 'Documents', 'icon': 'pdf.png'},
-    '.epub': {'category': 'Notes', 'icon': 'https://img.icons8.com/fluency/48/book.png'},
+    '.epub': {'category': 'Notes', 'icon': 'notes.png'},
     '.jpg': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
     '.jpeg': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
     '.png': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
