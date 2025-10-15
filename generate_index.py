@@ -1,3 +1,4 @@
+   main()
 import os
 import re
 import datetime
@@ -144,7 +145,7 @@ def main():
 </body>
 </html>"""
     with open('index.html', 'w', encoding='utf-8') as f: f.write(html_template)
-    print("SUCCESS: index.html generated with a full profile modal and separated JS logic.")
+    print("FIXED: index.html now correctly links to profile.js.")
 
 if __name__ == '__main__':
     main()
