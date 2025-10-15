@@ -213,3 +213,31 @@ main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
         grid-template-columns: 1fr;
     }
 }
+/* --- NEW: Responsive Adjustments for File Cards --- */
+@media (max-width: 480px) {
+    .file-card {
+        /* Allow for more vertical space if needed */
+        align-items: flex-start;
+    }
+
+    .file-details {
+        /* Allow details to wrap if filename is long */
+        white-space: normal;
+    }
+
+    .file-title {
+        white-space: normal; /* Allow title to wrap */
+    }
+
+    .file-actions {
+        /* This is the key change: stack the buttons vertically */
+        flex-direction: column;
+        align-items: stretch; /* Make buttons take full width of the container */
+        width: 80px; /* Give a consistent width */
+    }
+    
+    .preview-button,
+    .download-button {
+        text-align: center; /* Center the text inside the buttons */
+    }
+}
