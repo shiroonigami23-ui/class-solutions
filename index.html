@@ -1,252 +1,270 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>CSE • Notes & Assignments</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png" />
-  <style>
-    body { background: #181e26; color: #f6f7f9; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; min-height: 100vh; text-align: center; transition: background .3s, color .3s;}
-    .lightmode { background: #f6f7f9; color: #232333;}
-    .darkmode-btn { position:fixed;top:13px;right:13px;padding:6px 14px;font-size:1em;background:#253168;color:#f6f7f9;border:none;border-radius:20px;cursor:pointer;z-index:10; transition:.2s; box-shadow:0 1px 5px #0001;}
-    h1 { font-size:2.11rem;margin:30px 0 6px 0;}
-    .desc { color:#b5bac2; margin-bottom:4px; font-size:1.01em;}
-    .update-bar {background:#21396c; color:#e3ecfd; margin:20px auto 18px; padding:7px 22px; font-size:.99em; border-radius:13px; max-width:570px;}
-    .new-banner {background: #243b66; color: #e6f1ff; margin: 20px auto 14px; padding: 9px 16px; border-radius: 10px; max-width: 640px; box-shadow: 0 2px 8px rgba(0,0,0,0.35); font-size: 0.97em;}
-    .new-banner a {color: #63b3ff; text-decoration: none; font-weight: 500;}
-    .new-banner a:hover {text-decoration: underline; color: #8fd0ff;}
-    main { max-width:700px;padding:0 8px;margin: 0 auto; }
-    .search-box {margin:15px 0;}
-    .search-input{padding:9px 14px;font-size:1.04em;width:72%;max-width:285px;border-radius:6px;border:1px solid #374b63;background:#21293b;color:#f6f7f9;}
-    .last-updated{margin:4px auto 18px;font-size:.94em;color:#8dacbe;}
-    .collapse-btn { margin:0 auto 3px;display:block;padding:7px 20px;font-size:1.01em;background:#183478;color:#dbe7fa;border:none;border-radius:9px;cursor:pointer;transition:.2s;}
-    section {margin:32px 0 16px 0;}
-    .section-title {margin-bottom:11px;font-size:1.11rem;text-transform:uppercase;letter-spacing:.7px;}
-    .course-title {margin:15px 0 8px;font-size:1.05rem;color:#8adcff;}
-    .pdf-block {margin:26px 0;background:#232b36;border-radius:13px;padding:18px 10px 13px;box-shadow:0 2.5px 9px #0003;}
-    .pdf-title {font-size:1.08em; margin-bottom:10px; display:flex;align-items:center;justify-content:center;}
-    .pdf-title .icon {width:19px;height:19px;margin-right:8px;}
-    .pdf-frame {width:99%;max-width:660px;height:340px;border:1.5px solid #313141;border-radius:8px;background:#111015;margin-bottom:10px;}
-    .download-link {display:inline-block; background:#203048;color:#8adcff;text-decoration:none;font-weight:500;font-size:1em; border-radius:8px;padding:6px 19px;transition:background .15s;box-shadow:0 1px 3.5px #0bf2;}
-    .download-link:hover {background:#1e2a39;color:#b7f3ff;}
-    .file-size {font-size:.95em;color:#bbe1d7;margin-left:9px;}
-    .file-list {list-style:none;padding:0;margin:13px 0;}
-    .file-list li { margin:9px 0; padding:9px 8px; background:#232b36; border-radius:9px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:0 1.5px 7px #0001;}
-    .file-list .left {display:flex;align-items:center;}
-    .file-list .icon {width:18px;height:18px;margin-right:7px;}
-    .epub-msg {font-size:.9em;color:#aef1bb;margin-top:2px;}
-    .footer {margin:38px 0 14px 0;opacity:.61;font-size:.97em;}
-    .feedback {background:#21396c;color:#e8f2fa;font-size:.98em;padding:7px 16px;border-radius:7px;display:inline-block;margin-top:10px;text-decoration:none;}
-    .qr-section {margin: 23px 0;}
-    .qr-img {width:108px;display:block;margin:7px auto;}
-    @media (max-width:700px) {
-      .pdf-frame {height:39vw;min-height:150px;}
-      .file-list li {flex-direction: column;align-items:flex-start;}
-      .file-list .left {margin-bottom:7px;}
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE • Notes & Assignments</title>
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <button class="darkmode-btn" id="modeBtn" aria-label="Toggle Dark/Light Mode">🌙</button>
-  <h1 title="Assignments & Notes Repository">CSE Notes & Assignments</h1>
-  <div class="desc">Instant download and reading for CSE students. All Assignment and Notes for you guys 😉!</div>
-  <div class="new-banner">🆕 New files added: <a href="DBMS_Assignment1.pdf">DBMS_Assignment1.pdf</a> — <a href="DBMS_notes_unit_1.pdf">DBMS_notes_unit_1.pdf</a> — <a href="DBMS_notes_unit_2.pdf">DBMS_notes_unit_2.pdf</a> — <a href="Data%20Analytics%20.epub">Data Analytics .epub</a> — <a href="Data_Analytics_Notes.epub">Data_Analytics_Notes.epub</a> — <a href="Data_Analytics_assignment1.pdf">Data_Analytics_assignment1.pdf</a> — <a href="Finite%20Automata%20.epub">Finite Automata .epub</a> — <a href="Internet%20and%20web%20technology.epub">Internet and web technology.epub</a> — <a href="Internet_and_Web_Development_Assignment.pdf">Internet_and_Web_Development_Assignment.pdf</a> — <a href="Internet_and_Web_development_assignment_2.pdf">Internet_and_Web_development_assignment_2.pdf</a> — <a href="RDBMS.epub">RDBMS.epub</a> — <a href="TOC_CS501_Assignment1.pdf">TOC_CS501_Assignment1.pdf</a> — <a href="TOC_NFA_notes.epub">TOC_NFA_notes.epub</a> — <a href="Toc_Assignment_Graph.pdf">Toc_Assignment_Graph.pdf</a> — <a href="Toc_notes.pdf">Toc_notes.pdf</a> — <a href="_CS_503_Cyber_Security_assignment_2.pdf">_CS_503_Cyber_Security_assignment_2.pdf</a></div>
-  <div class="update-bar" id="update-bar">📢 Latest updates ( <span id="today"></span> )</div>
-  <div class="last-updated">Last updated: <span id="lastUpdate"></span></div>
-  <main>
-    <div class="search-box">
-      <input class="search-input" type="text" placeholder="Type to filter assignments/notes..." oninput="filterFiles()" id="searchBox" aria-label="Filter files">
-    </div>
-    <section>
-      <button class="collapse-btn" type="button" onclick="toggleSection('assignmentsSection')">Assignments (PDF) ⬇️</button>
-      <div id="assignmentsSection">
-        <div class="course-title">CS-501</div>
-
-        <div class="pdf-block fileRow" data-keywords="TOC CS501 Assignment1 CS-501 cs-501 CS501 501">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>TOC CS501 Assignment1</div>
-          <iframe class="pdf-frame" src="TOC_CS501_Assignment1.pdf" aria-label="View TOC CS501 Assignment1"></iframe><br>
-          <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-link" aria-label="Download TOC CS501 Assignment1">Download PDF</a>
-          <span class="file-size">(189.4 KB)</span>
+    <header>
+        <div class="header-content">
+            <h1>CSE Notes & Assignments</h1>
+            <p class="desc">A centralized repository for CSE course materials. Easy to find, preview, and download.</p>
+            <button class="darkmode-btn" id="modeBtn" aria-label="Toggle Dark/Light Mode">🌙</button>
         </div>
+    </header>
 
-        <div class="pdf-block fileRow" data-keywords="Toc Assignment Graph CS-501 cs-501 CS501 501">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>Toc Assignment Graph</div>
-          <iframe class="pdf-frame" src="Toc_Assignment_Graph.pdf" aria-label="View Toc Assignment Graph"></iframe><br>
-          <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-link" aria-label="Download Toc Assignment Graph">Download PDF</a>
-          <span class="file-size">(3.48 MB)</span>
+    <main>
+        <div class="new-banner" id="new-files-banner">
+            <span class="new-emoji">✨</span> 
+            <span id="new-files-content">
+                <strong>Recently Added:</strong> <a href="DBMS_Assignment1.pdf">DBMS_Assignment1.pdf</a> &mdash; <a href="DBMS_notes_unit_1.pdf">DBMS_notes_unit_1.pdf</a> &mdash; <a href="DBMS_notes_unit_2.pdf">DBMS_notes_unit_2.pdf</a> &mdash; <a href="Data Analytics .epub">Data Analytics .epub</a> &mdash; <a href="Data_Analytics_Notes.epub">Data_Analytics_Notes.epub</a> &mdash; <a href="Data_Analytics_assignment1.pdf">Data_Analytics_assignment1.pdf</a> &mdash; <a href="Finite Automata .epub">Finite Automata .epub</a> &mdash; <a href="Internet and web technology.epub">Internet and web technology.epub</a> &mdash; <a href="Internet_and_Web_Development_Assignment.pdf">Internet_and_Web_Development_Assignment.pdf</a> &mdash; <a href="Internet_and_Web_development_assignment_2.pdf">Internet_and_Web_development_assignment_2.pdf</a> &mdash; <a href="RDBMS.epub">RDBMS.epub</a> &mdash; <a href="TOC_CS501_Assignment1.pdf">TOC_CS501_Assignment1.pdf</a> &mdash; <a href="TOC_NFA_notes.epub">TOC_NFA_notes.epub</a> &mdash; <a href="Toc_Assignment_Graph.pdf">Toc_Assignment_Graph.pdf</a> &mdash; <a href="Toc_notes.pdf">Toc_notes.pdf</a> &mdash; <a href="_CS_503_Cyber_Security_assignment_2.pdf">_CS_503_Cyber_Security_assignment_2.pdf</a>
+            </span>
         </div>
-
-        <div class="pdf-block fileRow" data-keywords="Toc notes CS-501 cs-501 CS501 501">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>Toc notes</div>
-          <iframe class="pdf-frame" src="Toc_notes.pdf" aria-label="View Toc notes"></iframe><br>
-          <a href="Toc_notes.pdf" target="_blank" class="download-link" aria-label="Download Toc notes">Download PDF</a>
-          <span class="file-size">(107.9 KB)</span>
+        
+        <div class="search-box">
+            <input class="search-input" type="text" placeholder="Filter by name or course code..." oninput="filterFiles()" id="searchBox" aria-label="Filter files">
         </div>
-        <div class="course-title">CS-502</div>
+        
+        <div class="last-updated">Site last updated: <span id="lastUpdate"></span></div>
 
-        <div class="pdf-block fileRow" data-keywords="DBMS Assignment1 CS-502 cs-502 CS502 502">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>DBMS Assignment1</div>
-          <iframe class="pdf-frame" src="DBMS_Assignment1.pdf" aria-label="View DBMS Assignment1"></iframe><br>
-          <a href="DBMS_Assignment1.pdf" target="_blank" class="download-link" aria-label="Download DBMS Assignment1">Download PDF</a>
-          <span class="file-size">(2.09 MB)</span>
+        <section id="assignments-section">
+            <h2 class="section-title">Assignments (PDF)</h2>
+            <div class="grid-container" id="assignmentsGrid">
+                <div class='course-title'>CS-501</div>
+        <div class="pdf-block file-row" data-keywords="Toc Cs501 Assignment1 CS-501">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Toc Cs501 Assignment1
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="TOC_CS501_Assignment1.pdf" loading="lazy" aria-label="Preview of Toc Cs501 Assignment1"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-link" aria-label="Download Toc Cs501 Assignment1">Download PDF</a>
+            <span class="file-size">189.4 KB</span>
+          </div>
         </div>
-
-        <div class="pdf-block fileRow" data-keywords="DBMS notes unit 1 CS-502 cs-502 CS502 502">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>DBMS notes unit 1</div>
-          <iframe class="pdf-frame" src="DBMS_notes_unit_1.pdf" aria-label="View DBMS notes unit 1"></iframe><br>
-          <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-link" aria-label="Download DBMS notes unit 1">Download PDF</a>
-          <span class="file-size">(88.4 KB)</span>
+        <div class='course-title'>CS-502</div>
+        <div class="pdf-block file-row" data-keywords="Dbms Assignment1 CS-502">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Dbms Assignment1
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="DBMS_Assignment1.pdf" loading="lazy" aria-label="Preview of Dbms Assignment1"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="DBMS_Assignment1.pdf" target="_blank" class="download-link" aria-label="Download Dbms Assignment1">Download PDF</a>
+            <span class="file-size">2.09 MB</span>
+          </div>
         </div>
-
-        <div class="pdf-block fileRow" data-keywords="DBMS notes unit 2 CS-502 cs-502 CS502 502">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>DBMS notes unit 2</div>
-          <iframe class="pdf-frame" src="DBMS_notes_unit_2.pdf" aria-label="View DBMS notes unit 2"></iframe><br>
-          <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-link" aria-label="Download DBMS notes unit 2">Download PDF</a>
-          <span class="file-size">(85.2 KB)</span>
+        
+        <div class="pdf-block file-row" data-keywords="Dbms Notes Unit 1 CS-502">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Dbms Notes Unit 1
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="DBMS_notes_unit_1.pdf" loading="lazy" aria-label="Preview of Dbms Notes Unit 1"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-link" aria-label="Download Dbms Notes Unit 1">Download PDF</a>
+            <span class="file-size">88.4 KB</span>
+          </div>
         </div>
-        <div class="course-title">CS-503</div>
-
-        <div class="pdf-block fileRow" data-keywords="Data Analytics assignment1 CS-503 cs-503 CS503 503">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>Data Analytics assignment1</div>
-          <iframe class="pdf-frame" src="Data_Analytics_assignment1.pdf" aria-label="View Data Analytics assignment1"></iframe><br>
-          <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-link" aria-label="Download Data Analytics assignment1">Download PDF</a>
-          <span class="file-size">(82.6 KB)</span>
+        
+        <div class="pdf-block file-row" data-keywords="Dbms Notes Unit 2 CS-502">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Dbms Notes Unit 2
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="DBMS_notes_unit_2.pdf" loading="lazy" aria-label="Preview of Dbms Notes Unit 2"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-link" aria-label="Download Dbms Notes Unit 2">Download PDF</a>
+            <span class="file-size">85.2 KB</span>
+          </div>
         </div>
-
-        <div class="pdf-block fileRow" data-keywords="CS 503 Cyber Security assignment 2 CS-503 cs-503 CS503 503">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>CS 503 Cyber Security assignment 2</div>
-          <iframe class="pdf-frame" src="_CS_503_Cyber_Security_assignment_2.pdf" aria-label="View CS 503 Cyber Security assignment 2"></iframe><br>
-          <a href="_CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-link" aria-label="Download CS 503 Cyber Security assignment 2">Download PDF</a>
-          <span class="file-size">(169.3 KB)</span>
+        <div class='course-title'>CS-503</div>
+        <div class="pdf-block file-row" data-keywords="Data Analytics Assignment1 CS-503">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Data Analytics Assignment1
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="Data_Analytics_assignment1.pdf" loading="lazy" aria-label="Preview of Data Analytics Assignment1"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-link" aria-label="Download Data Analytics Assignment1">Download PDF</a>
+            <span class="file-size">82.6 KB</span>
+          </div>
         </div>
-        <div class="course-title">CS-504</div>
-
-        <div class="pdf-block fileRow" data-keywords="Internet and Web Development Assignment CS-504 cs-504 CS504 504">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>Internet and Web Development Assignment</div>
-          <iframe class="pdf-frame" src="Internet_and_Web_Development_Assignment.pdf" aria-label="View Internet and Web Development Assignment"></iframe><br>
-          <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-link" aria-label="Download Internet and Web Development Assignment">Download PDF</a>
-          <span class="file-size">(5.14 MB)</span>
+        
+        <div class="pdf-block file-row" data-keywords="Cs 503 Cyber Security Assignment 2 CS-503">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Cs 503 Cyber Security Assignment 2
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="_CS_503_Cyber_Security_assignment_2.pdf" loading="lazy" aria-label="Preview of Cs 503 Cyber Security Assignment 2"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="_CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-link" aria-label="Download Cs 503 Cyber Security Assignment 2">Download PDF</a>
+            <span class="file-size">169.3 KB</span>
+          </div>
         </div>
-
-        <div class="pdf-block fileRow" data-keywords="Internet and Web development assignment 2 CS-504 cs-504 CS504 504">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>Internet and Web development assignment 2</div>
-          <iframe class="pdf-frame" src="Internet_and_Web_development_assignment_2.pdf" aria-label="View Internet and Web development assignment 2"></iframe><br>
-          <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-link" aria-label="Download Internet and Web development assignment 2">Download PDF</a>
-          <span class="file-size">(176.8 KB)</span>
+        <div class='course-title'>CS-504</div>
+        <div class="pdf-block file-row" data-keywords="Internet And Web Development Assignment CS-504">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Internet And Web Development Assignment
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="Internet_and_Web_Development_Assignment.pdf" loading="lazy" aria-label="Preview of Internet And Web Development Assignment"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-link" aria-label="Download Internet And Web Development Assignment">Download PDF</a>
+            <span class="file-size">5.14 MB</span>
+          </div>
         </div>
-      </div>
-    </section>
-    <section>
-      <button class="collapse-btn" type="button" onclick="toggleSection('notesSection')">Notes (EPUB) ⬇️</button>
-      <div id="notesSection">
-        <ul class="file-list">          <div class="course-title">CS-501</div>
+        
+        <div class="pdf-block file-row" data-keywords="Internet And Web Development Assignment 2 CS-504">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Internet And Web Development Assignment 2
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="Internet_and_Web_development_assignment_2.pdf" loading="lazy" aria-label="Preview of Internet And Web Development Assignment 2"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-link" aria-label="Download Internet And Web Development Assignment 2">Download PDF</a>
+            <span class="file-size">176.8 KB</span>
+          </div>
+        </div>
+        <div class='course-title'>Uncategorized</div>
+        <div class="pdf-block file-row" data-keywords="Toc Assignment Graph Uncategorized">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Toc Assignment Graph
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="Toc_Assignment_Graph.pdf" loading="lazy" aria-label="Preview of Toc Assignment Graph"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-link" aria-label="Download Toc Assignment Graph">Download PDF</a>
+            <span class="file-size">3.48 MB</span>
+          </div>
+        </div>
+        
+        <div class="pdf-block file-row" data-keywords="Toc Notes Uncategorized">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            Toc Notes
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="Toc_notes.pdf" loading="lazy" aria-label="Preview of Toc Notes"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="Toc_notes.pdf" target="_blank" class="download-link" aria-label="Download Toc Notes">Download PDF</a>
+            <span class="file-size">107.9 KB</span>
+          </div>
+        </div>
+        
+            </div>
+        </section>
 
-        <li class="fileRow" data-keywords="Finite Automata CS-501 cs-501 CS501 501">
-          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>Finite Automata</div>
-          <div>
-            <a href="Finite%20Automata%20.epub" target="_blank" class="download-link" aria-label="Download Finite Automata">Download</a>
-            <span class="file-size">(9.7 KB)</span>
-            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+        <section id="notes-section">
+            <h2 class="section-title">Notes (EPUB)</h2>
+            <div class="list-container" id="notesList">
+                <ul class='file-list'><div class='course-title'>CS-501</div>
+        <li class="file-row" data-keywords="Toc Nfa Notes CS-501">
+          <div class="file-info">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>
+            <span class="file-title">Toc Nfa Notes</span>
+          </div>
+          <div class="file-actions">
+            <a href="TOC_NFA_notes.epub" target="_blank" class="download-link" aria-label="Download Toc Nfa Notes">Download EPUB</a>
+            <span class="file-size">8.0 KB</span>
           </div>
         </li>
-
-        <li class="fileRow" data-keywords="TOC NFA notes CS-501 cs-501 CS501 501">
-          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>TOC NFA notes</div>
-          <div>
-            <a href="TOC_NFA_notes.epub" target="_blank" class="download-link" aria-label="Download TOC NFA notes">Download</a>
-            <span class="file-size">(8.0 KB)</span>
-            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+        <div class='course-title'>CS-503</div>
+        <li class="file-row" data-keywords="Data Analytics Notes CS-503">
+          <div class="file-info">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>
+            <span class="file-title">Data Analytics Notes</span>
+          </div>
+          <div class="file-actions">
+            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-link" aria-label="Download Data Analytics Notes">Download EPUB</a>
+            <span class="file-size">7.4 KB</span>
           </div>
         </li>
-          <div class="course-title">CS-502</div>
-
-        <li class="fileRow" data-keywords="RDBMS CS-502 cs-502 CS502 502">
-          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>RDBMS</div>
-          <div>
-            <a href="RDBMS.epub" target="_blank" class="download-link" aria-label="Download RDBMS">Download</a>
-            <span class="file-size">(62.8 KB)</span>
-            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+        <div class='course-title'>Uncategorized</div>
+        <li class="file-row" data-keywords="Data Analytics Uncategorized">
+          <div class="file-info">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>
+            <span class="file-title">Data Analytics</span>
+          </div>
+          <div class="file-actions">
+            <a href="Data Analytics .epub" target="_blank" class="download-link" aria-label="Download Data Analytics">Download EPUB</a>
+            <span class="file-size">9.4 KB</span>
           </div>
         </li>
-          <div class="course-title">CS-503</div>
-
-        <li class="fileRow" data-keywords="Data Analytics CS-503 cs-503 CS503 503">
-          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>Data Analytics</div>
-          <div>
-            <a href="Data%20Analytics%20.epub" target="_blank" class="download-link" aria-label="Download Data Analytics">Download</a>
-            <span class="file-size">(9.4 KB)</span>
-            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+        
+        <li class="file-row" data-keywords="Finite Automata Uncategorized">
+          <div class="file-info">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>
+            <span class="file-title">Finite Automata</span>
+          </div>
+          <div class="file-actions">
+            <a href="Finite Automata .epub" target="_blank" class="download-link" aria-label="Download Finite Automata">Download EPUB</a>
+            <span class="file-size">9.7 KB</span>
           </div>
         </li>
-
-        <li class="fileRow" data-keywords="Data Analytics Notes CS-503 cs-503 CS503 503">
-          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>Data Analytics Notes</div>
-          <div>
-            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-link" aria-label="Download Data Analytics Notes">Download</a>
-            <span class="file-size">(7.4 KB)</span>
-            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+        
+        <li class="file-row" data-keywords="Internet And Web Technology Uncategorized">
+          <div class="file-info">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>
+            <span class="file-title">Internet And Web Technology</span>
+          </div>
+          <div class="file-actions">
+            <a href="Internet and web technology.epub" target="_blank" class="download-link" aria-label="Download Internet And Web Technology">Download EPUB</a>
+            <span class="file-size">9.0 KB</span>
           </div>
         </li>
-          <div class="course-title">CS-504</div>
-
-        <li class="fileRow" data-keywords="Internet and web technology CS-504 cs-504 CS504 504">
-          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>Internet and web technology</div>
-          <div>
-            <a href="Internet%20and%20web%20technology.epub" target="_blank" class="download-link" aria-label="Download Internet and web technology">Download</a>
-            <span class="file-size">(9.0 KB)</span>
-            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
+        
+        <li class="file-row" data-keywords="Rdbms Uncategorized">
+          <div class="file-info">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>
+            <span class="file-title">Rdbms</span>
+          </div>
+          <div class="file-actions">
+            <a href="RDBMS.epub" target="_blank" class="download-link" aria-label="Download Rdbms">Download EPUB</a>
+            <span class="file-size">62.8 KB</span>
           </div>
         </li>
         </ul>
-      </div>
-    </section>
-    <div class="qr-section">
-      <div style="margin-bottom:6px;font-size:1em;">Share this site: <br>Scan QR (or long-press to save)</div>
-      <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://shiroonigami23-ui.github.io/class-solutions/" alt="QR for site"/>
-    </div>
-    <section>
-      <div class="section-title">Feedback / Request</div>
-      <a class="feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank">💬 Suggest improvements or request files</a>
-    </section>
-    <div class="footer">&copy; Aryan Singh Chandel | CSE Section-A, 2025</div>
-  </main>
+            </div>
+        </section>
+        
+        <section class="feedback-section">
+            <h2 class="section-title">Feedback / Request</h2>
+            <a class="feedback-link" href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank">💬 Suggest improvements or request files</a>
+        </section>
+    </main>
 
-  <script>
-    function toggleSection(sectionId) {
-      var s = document.getElementById(sectionId);
-      if (s.style.display === "none") s.style.display = "block";
-      else s.style.display = "none";
-    }
-    document.getElementById('assignmentsSection').style.display = "block";
-    document.getElementById('notesSection').style.display = "block";
-    let mode = localStorage.getItem("mode") || "dark";
-    function setMode(m) {
-      if(m==="light") {
-        document.body.classList.add("lightmode");
-        document.getElementById('modeBtn').textContent="🌞";
-      } else {
-        document.body.classList.remove("lightmode");
-        document.getElementById('modeBtn').textContent="🌙";
-      }
-      localStorage.setItem("mode", m);
-    }
-    setMode(mode);
-    document.getElementById('modeBtn').onclick = function() {
-      mode = (mode === "dark") ? "light" : "dark";
-      setMode(mode);
-    };
+    <footer>
+        <p>&copy; 2025 Aryan Singh Chandel | All Rights Reserved</p>
+    </footer>
 
-    var update = new Date(document.lastModified);
-    document.getElementById("lastUpdate").textContent = update.toLocaleDateString() + " " + update.toLocaleTimeString();
-    document.getElementById("today").textContent = update.toLocaleDateString();
-
-    function filterFiles() {
-      let v = document.getElementById('searchBox').value.toLowerCase();
-      document.querySelectorAll('.fileRow').forEach(function(row) {
-        let keys = row.getAttribute('data-keywords') || '';
-        row.style.display = (keys.toLowerCase().includes(v) || v === "") ? "" : "none";
-      });
-    }
-  </script>
+    <script src="script.js" defer></script>
 </body>
 </html>
+    
