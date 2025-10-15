@@ -1,300 +1,224 @@
 import os
 import re
-import time
+import datetime
 import subprocess
-from datetime import datetime, timedelta
-from urllib.parse import quote
 
-ROOT = "."
-INDEX_FILE = "index.html"
-NEW_DAYS = 2  
+# --- CONFIGURATION ---
+# Add file extensions you want to include in the index.
+SUPPORTED_EXTENSIONS = ['.pdf', '.epub']
+# Files to ignore completely.
+IGNORE_FILES = ['README.md']
+# Course code mapping based on filename prefixes.
+COURSE_MAPPING = {
+    'TOC_': 'CS-501',
+    'DBMS_': 'CS-502',
+    'Data_Analytics_': 'CS-503',
+    '_CS_503_': 'CS-503', # Handles your new file format
+    'Internet_and_Web_': 'CS-504',
+}
 
-COURSE_REGEX = re.compile(r"(CS[-_]?\d{3})", re.IGNORECASE)
-
-
-def extract_course_code(filename):
-    """Return normalized course code like 'CS-501'. Uses keyword mapping if missing. Skips unknowns."""
-    m = COURSE_REGEX.search(filename)
-    if m:
-        code = m.group(1).upper().replace("_", "-").replace(" ", "-")
-        if not code.startswith("CS-") and code.startswith("CS"):
-            code = "CS-" + code[2:]
-        return code
-
-    lower_name = filename.lower()
-    if "dbms" in lower_name or "database" in lower_name:
-        return "CS-502"
-    elif "toc" in lower_name or "automata" in lower_name or "nfa" in lower_name or "dfa" in lower_name:
-        return "CS-501"
-    elif ("cyber" in lower_name or "security" in lower_name or
-          "data analytics" in lower_name or "analytics" in lower_name):
-        return "CS-503"
-    elif "web" in lower_name or "internet" in lower_name or "development" in lower_name:
-        return "CS-504"
-    else:
-        return None 
-
-
-def format_size(path):
-    """Return human-friendly size string for a file (KB/MB)."""
+def get_file_creation_date(filepath):
+    """Gets the creation date of a file in the git repo."""
     try:
-        size = os.path.getsize(path)
-    except OSError:
-        return "0 B"
-    if size < 1024:
-        return f"{size} B"
-    kb = size / 1024.0
-    if kb < 1024:
-        return f"{kb:.1f} KB"
-    mb = kb / 1024.0
-    return f"{mb:.2f} MB"
-
-
-def safe_title(filename):
-    """Return display title from filename (no extension, underscores to spaces)."""
-    title = os.path.splitext(os.path.basename(filename))[0]
-    return title.replace("_", " ").strip()
-
-
-def build_pdf_section(grouped_pdfs):
-    """Return HTML for Assignments (PDF) grouped by course code."""
-    out = []
-    for code in sorted(grouped_pdfs.keys()):
-        out.append(f'        <div class="course-title">{code}</div>')
-        for f in sorted(grouped_pdfs[code]):
-            title = safe_title(f)
-            size = format_size(f)
-            # safe id for JS if needed
-            safe_id = re.sub(r'\W+', '', title.lower())
-            # keywords for filter: title, code, variations
-            last_part = code.split('-')[1] if '-' in code else code
-            keywords = f"{title} {code} {code.lower()} {code.replace('-', '')} {last_part}"
-            href = quote(f)
-            block = f'''
-        <div class="pdf-block fileRow" data-keywords="{keywords}">
-          <div class="pdf-title"><img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>{title}</div>
-          <iframe class="pdf-frame" src="{href}" aria-label="View {title}"></iframe><br>
-          <a href="{href}" target="_blank" class="download-link" aria-label="Download {title}">Download PDF</a>
-          <span class="file-size">({size})</span>
-        </div>'''
-            out.append(block)
-    return "\n".join(out)
-
-
-def build_epub_section(grouped_epubs):
-    """Return HTML for Notes (EPUB) grouped by course code."""
-    out = []
-    for code in sorted(grouped_epubs.keys()):
-        out.append(f'          <div class="course-title">{code}</div>')
-        for f in sorted(grouped_epubs[code]):
-            title = safe_title(f)
-            size = format_size(f)
-            safe_id = re.sub(r'\W+', '', title.lower())
-            last_part = code.split('-')[1] if '-' in code else code
-            keywords = f"{title} {code} {code.lower()} {code.replace('-', '')} {last_part}"
-            href = quote(f)
-            block = f'''
-        <li class="fileRow" data-keywords="{keywords}">
-          <div class="left"><img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>{title}</div>
-          <div>
-            <a href="{href}" target="_blank" class="download-link" aria-label="Download {title}">Download</a>
-            <span class="file-size">({size})</span>
-            <div class="epub-msg">Use Moon+ Reader or any EPUB reader app.</div>
-          </div>
-        </li>'''
-            out.append(block)
-    return "\n".join(out)
-
-
-
-def get_git_commit_time(filename):
-    """Return the last commit time (unix timestamp) for a file using Git."""
-    try:
+        # Get the UNIX timestamp of the first commit for the file
+        timestamp_str = subprocess.check_output(
+            ['git', 'log', '--diff-filter=A', '--format=%at', '--', filepath]
+        ).decode('utf-8').strip()
         
-        cmd = ['git', 'log', '-1', '--format=%ct', '--', filename]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-        return int(result.stdout.strip())
-    except (subprocess.CalledProcessError, FileNotFoundError, ValueError):
+        if timestamp_str:
+            # The command can sometimes return multiple timestamps if a file was deleted and re-added.
+            # We take the most recent "add" timestamp, which is the last one.
+            latest_timestamp = int(timestamp_str.split('\n')[-1])
+            return datetime.datetime.fromtimestamp(latest_timestamp)
+    except Exception as e:
+        print(f"Warning: Could not get git creation date for {filepath}. Error: {e}")
+    # Fallback to filesystem modification time if git fails
+    return datetime.datetime.fromtimestamp(os.path.getmtime(filepath))
+
+def get_file_size(filepath):
+    """Gets file size and returns a human-readable string (KB or MB)."""
+    size_bytes = os.path.getsize(filepath)
+    if size_bytes < 1024:
+        return f"{size_bytes} B"
+    elif size_bytes < 1024**2:
+        return f"{size_bytes/1024:.1f} KB"
+    else:
+        return f"{size_bytes/1024**2:.2f} MB"
+
+def format_title(filename):
+    """Creates a clean, human-readable title from a filename."""
+    # Remove extension and replace underscores/hyphens with spaces
+    title = os.path.splitext(filename)[0].replace('_', ' ').replace('-', ' ')
+    # Remove common prefixes/suffixes for a cleaner look
+    title = re.sub(r'^(CS \d+\s*)', '', title, flags=re.IGNORECASE)
+    return title.strip().title()
+
+def generate_file_html(file_info):
+    """Generates the HTML block for a single file."""
+    title = format_title(file_info['name'])
+    keywords = f"{title} {file_info['course']}"
     
-        print(f"⚠️ Could not get git commit time for {filename}, falling back to mtime.")
-        return os.path.getmtime(filename)
+    if file_info['ext'] == '.pdf':
+        return f"""
+        <div class="pdf-block file-row" data-keywords="{keywords}">
+          <div class="pdf-title">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/pdf.png" alt="PDF icon"/>
+            {title}
+          </div>
+          <div class="pdf-preview">
+            <iframe class="pdf-frame" src="{file_info['name']}" loading="lazy" aria-label="Preview of {title}"></iframe>
+          </div>
+          <div class="file-actions">
+            <a href="{file_info['name']}" target="_blank" class="download-link" aria-label="Download {title}">Download PDF</a>
+            <span class="file-size">{file_info['size']}</span>
+          </div>
+        </div>
+        """
+    elif file_info['ext'] == '.epub':
+        return f"""
+        <li class="file-row" data-keywords="{keywords}">
+          <div class="file-info">
+            <img class="icon" src="https://img.icons8.com/color/48/000000/book.png" alt="Book icon"/>
+            <span class="file-title">{title}</span>
+          </div>
+          <div class="file-actions">
+            <a href="{file_info['name']}" target="_blank" class="download-link" aria-label="Download {title}">Download EPUB</a>
+            <span class="file-size">{file_info['size']}</span>
+          </div>
+        </li>
+        """
+    return ""
 
 def main():
+    """Main function to generate the index.html file."""
+    all_files = []
+    now = datetime.datetime.now()
 
-    
-    files = [f for f in os.listdir(ROOT) if os.path.isfile(os.path.join(ROOT, f))]
-    pdfs = [f for f in files if f.lower().endswith(".pdf")]
-    epubs = [f for f in files if f.lower().endswith(".epub")]
-
-    
-    grouped_pdfs = {}
-    for f in sorted(pdfs):
-        code = extract_course_code(f)
-        if code:
-            grouped_pdfs.setdefault(code, []).append(f)
-
-    grouped_epubs = {}
-    for f in sorted(epubs):
-        code = extract_course_code(f)
-        if code:
-            grouped_epubs.setdefault(code, []).append(f)
-
-        
-    recent = []
-    cutoff = time.time() - (NEW_DAYS * 86400)
-    for f in sorted(files):
-        try:
-            
-            commit_time = get_git_commit_time(f)
-            
-            if commit_time >= cutoff:
-                
-                if f.lower().endswith((".pdf", ".epub", ".txt", )):
-                    recent.append(f)
-        except OSError:
+    for filename in sorted(os.listdir('.')):
+        if filename in IGNORE_FILES or filename.startswith('.'):
             continue
+
+        file_ext = os.path.splitext(filename)[1]
+        if file_ext in SUPPORTED_EXTENSIONS:
+            creation_date = get_file_creation_date(filename)
+            course_code = 'Uncategorized'
+            for prefix, code in COURSE_MAPPING.items():
+                if filename.startswith(prefix):
+                    course_code = code
+                    break
             
+            all_files.append({
+                'name': filename,
+                'ext': file_ext,
+                'size': get_file_size(filename),
+                'date': creation_date,
+                'course': course_code
+            })
 
-    
-    banner_html = ""
-    if recent:
-        links = " — ".join([f'<a href="{quote(f)}">{f}</a>' for f in recent])
-        banner_html = f'''
-  <div class="new-banner">🆕 New files added: {links}</div>'''
+    # Sort files by creation date, newest first
+    all_files.sort(key=lambda x: x['date'], reverse=True)
 
+    # --- Generate HTML Sections ---
+    new_files_banner_links = []
+    # A file is "new" if it was added in the last 2 days (48 hours)
+    for f in all_files:
+        if (now - f['date']).total_seconds() < 48 * 3600:
+            new_files_banner_links.append(f'<a href="{f["name"]}">{f["name"]}</a>')
+            
+    new_files_html = ' &mdash; '.join(new_files_banner_links)
     
-    pdf_section_html = build_pdf_section(grouped_pdfs)
-    epub_section_html = build_epub_section(grouped_epubs)
+    courses = sorted(list(set(f['course'] for f in all_files)))
+    assignments_html = ""
+    notes_html = "<ul class='file-list'>"
 
+    for course in courses:
+        # Add course title for assignments
+        assignments_html += f"<div class='course-title'>{course}</div>"
+        
+        # Add course title for notes (EPUBs)
+        has_epub_for_course = any(f['ext'] == '.epub' and f['course'] == course for f in all_files)
+        if has_epub_for_course:
+            notes_html += f"<div class='course-title'>{course}</div>"
+
+        for f in all_files:
+            if f['course'] == course:
+                if f['ext'] == '.pdf':
+                    assignments_html += generate_file_html(f)
+                elif f['ext'] == '.epub':
+                    notes_html += generate_file_html(f)
     
-    html = """<!DOCTYPE html>
+    notes_html += "</ul>"
+
+    # --- HTML Template ---
+    html_template = f"""
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>CSE • Notes & Assignments</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png" />
-  <style>
-    body { background: #181e26; color: #f6f7f9; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; min-height: 100vh; text-align: center; transition: background .3s, color .3s;}
-    .lightmode { background: #f6f7f9; color: #232333;}
-    .darkmode-btn { position:fixed;top:13px;right:13px;padding:6px 14px;font-size:1em;background:#253168;color:#f6f7f9;border:none;border-radius:20px;cursor:pointer;z-index:10; transition:.2s; box-shadow:0 1px 5px #0001;}
-    h1 { font-size:2.11rem;margin:30px 0 6px 0;}
-    .desc { color:#b5bac2; margin-bottom:4px; font-size:1.01em;}
-    .update-bar {background:#21396c; color:#e3ecfd; margin:20px auto 18px; padding:7px 22px; font-size:.99em; border-radius:13px; max-width:570px;}
-    .new-banner {background: #243b66; color: #e6f1ff; margin: 20px auto 14px; padding: 9px 16px; border-radius: 10px; max-width: 640px; box-shadow: 0 2px 8px rgba(0,0,0,0.35); font-size: 0.97em;}
-    .new-banner a {color: #63b3ff; text-decoration: none; font-weight: 500;}
-    .new-banner a:hover {text-decoration: underline; color: #8fd0ff;}
-    main { max-width:700px;padding:0 8px;margin: 0 auto; }
-    .search-box {margin:15px 0;}
-    .search-input{padding:9px 14px;font-size:1.04em;width:72%;max-width:285px;border-radius:6px;border:1px solid #374b63;background:#21293b;color:#f6f7f9;}
-    .last-updated{margin:4px auto 18px;font-size:.94em;color:#8dacbe;}
-    .collapse-btn { margin:0 auto 3px;display:block;padding:7px 20px;font-size:1.01em;background:#183478;color:#dbe7fa;border:none;border-radius:9px;cursor:pointer;transition:.2s;}
-    section {margin:32px 0 16px 0;}
-    .section-title {margin-bottom:11px;font-size:1.11rem;text-transform:uppercase;letter-spacing:.7px;}
-    .course-title {margin:15px 0 8px;font-size:1.05rem;color:#8adcff;}
-    .pdf-block {margin:26px 0;background:#232b36;border-radius:13px;padding:18px 10px 13px;box-shadow:0 2.5px 9px #0003;}
-    .pdf-title {font-size:1.08em; margin-bottom:10px; display:flex;align-items:center;justify-content:center;}
-    .pdf-title .icon {width:19px;height:19px;margin-right:8px;}
-    .pdf-frame {width:99%;max-width:660px;height:340px;border:1.5px solid #313141;border-radius:8px;background:#111015;margin-bottom:10px;}
-    .download-link {display:inline-block; background:#203048;color:#8adcff;text-decoration:none;font-weight:500;font-size:1em; border-radius:8px;padding:6px 19px;transition:background .15s;box-shadow:0 1px 3.5px #0bf2;}
-    .download-link:hover {background:#1e2a39;color:#b7f3ff;}
-    .file-size {font-size:.95em;color:#bbe1d7;margin-left:9px;}
-    .file-list {list-style:none;padding:0;margin:13px 0;}
-    .file-list li { margin:9px 0; padding:9px 8px; background:#232b36; border-radius:9px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:0 1.5px 7px #0001;}
-    .file-list .left {display:flex;align-items:center;}
-    .file-list .icon {width:18px;height:18px;margin-right:7px;}
-    .epub-msg {font-size:.9em;color:#aef1bb;margin-top:2px;}
-    .footer {margin:38px 0 14px 0;opacity:.61;font-size:.97em;}
-    .feedback {background:#21396c;color:#e8f2fa;font-size:.98em;padding:7px 16px;border-radius:7px;display:inline-block;margin-top:10px;text-decoration:none;}
-    .qr-section {margin: 23px 0;}
-    .qr-img {width:108px;display:block;margin:7px auto;}
-    @media (max-width:700px) {
-      .pdf-frame {height:39vw;min-height:150px;}
-      .file-list li {flex-direction: column;align-items:flex-start;}
-      .file-list .left {margin-bottom:7px;}
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE • Notes & Assignments</title>
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <button class="darkmode-btn" id="modeBtn" aria-label="Toggle Dark/Light Mode">🌙</button>
-  <h1 title="Assignments & Notes Repository">CSE Notes & Assignments</h1>
-  <div class="desc">Instant download and reading for CSE students. All Assignment and Notes for you guys 😉!</div>""" + banner_html + """
-  <div class="update-bar" id="update-bar">📢 Latest updates ( <span id="today"></span> )</div>
-  <div class="last-updated">Last updated: <span id="lastUpdate"></span></div>
-  <main>
-    <div class="search-box">
-      <input class="search-input" type="text" placeholder="Type to filter assignments/notes..." oninput="filterFiles()" id="searchBox" aria-label="Filter files">
-    </div>
-    <section>
-      <button class="collapse-btn" type="button" onclick="toggleSection('assignmentsSection')">Assignments (PDF) ⬇️</button>
-      <div id="assignmentsSection">
-""" + pdf_section_html + """
-      </div>
-    </section>
-    <section>
-      <button class="collapse-btn" type="button" onclick="toggleSection('notesSection')">Notes (EPUB) ⬇️</button>
-      <div id="notesSection">
-        <ul class="file-list">""" + epub_section_html + """
-        </ul>
-      </div>
-    </section>
-    <div class="qr-section">
-      <div style="margin-bottom:6px;font-size:1em;">Share this site: <br>Scan QR (or long-press to save)</div>
-      <img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://shiroonigami23-ui.github.io/class-solutions/" alt="QR for site"/>
-    </div>
-    <section>
-      <div class="section-title">Feedback / Request</div>
-      <a class="feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank">💬 Suggest improvements or request files</a>
-    </section>
-    <div class="footer">&copy; Aryan Singh Chandel | CSE Section-A, 2025</div>
-  </main>
+    <header>
+        <div class="header-content">
+            <h1>CSE Notes & Assignments</h1>
+            <p class="desc">A centralized repository for CSE course materials. Easy to find, preview, and download.</p>
+            <button class="darkmode-btn" id="modeBtn" aria-label="Toggle Dark/Light Mode">🌙</button>
+        </div>
+    </header>
 
-  <script>
-    function toggleSection(sectionId) {
-      var s = document.getElementById(sectionId);
-      if (s.style.display === "none") s.style.display = "block";
-      else s.style.display = "none";
-    }
-    document.getElementById('assignmentsSection').style.display = "block";
-    document.getElementById('notesSection').style.display = "block";
-    let mode = localStorage.getItem("mode") || "dark";
-    function setMode(m) {
-      if(m==="light") {
-        document.body.classList.add("lightmode");
-        document.getElementById('modeBtn').textContent="🌞";
-      } else {
-        document.body.classList.remove("lightmode");
-        document.getElementById('modeBtn').textContent="🌙";
-      }
-      localStorage.setItem("mode", m);
-    }
-    setMode(mode);
-    document.getElementById('modeBtn').onclick = function() {
-      mode = (mode === "dark") ? "light" : "dark";
-      setMode(mode);
-    };
+    <main>
+        <div class="new-banner" id="new-files-banner">
+            <span class="new-emoji">✨</span> 
+            <span id="new-files-content">
+                {'<strong>Recently Added:</strong> ' + new_files_html if new_files_html else 'No new files in the last 48 hours.'}
+            </span>
+        </div>
+        
+        <div class="search-box">
+            <input class="search-input" type="text" placeholder="Filter by name or course code..." oninput="filterFiles()" id="searchBox" aria-label="Filter files">
+        </div>
+        
+        <div class="last-updated">Site last updated: <span id="lastUpdate"></span></div>
 
-    var update = new Date(document.lastModified);
-    document.getElementById("lastUpdate").textContent = update.toLocaleDateString() + " " + update.toLocaleTimeString();
-    document.getElementById("today").textContent = update.toLocaleDateString();
+        <section id="assignments-section">
+            <h2 class="section-title">Assignments (PDF)</h2>
+            <div class="grid-container" id="assignmentsGrid">
+                {assignments_html}
+            </div>
+        </section>
 
-    function filterFiles() {
-      let v = document.getElementById('searchBox').value.toLowerCase();
-      document.querySelectorAll('.fileRow').forEach(function(row) {
-        let keys = row.getAttribute('data-keywords') || '';
-        row.style.display = (keys.toLowerCase().includes(v) || v === "") ? "" : "none";
-      });
-    }
-  </script>
+        <section id="notes-section">
+            <h2 class="section-title">Notes (EPUB)</h2>
+            <div class="list-container" id="notesList">
+                {notes_html}
+            </div>
+        </section>
+        
+        <section class="feedback-section">
+            <h2 class="section-title">Feedback / Request</h2>
+            <a class="feedback-link" href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank">💬 Suggest improvements or request files</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; {datetime.datetime.now().year} Aryan Singh Chandel | All Rights Reserved</p>
+    </footer>
+
+    <script src="script.js" defer></script>
 </body>
 </html>
-"""
+    """
 
-    with open(INDEX_FILE, "w", encoding="utf-8") as fh:
-        fh.write(html)
+    with open('index.html', 'w', encoding='utf-8') as f:
+        f.write(html_template)
+    
+    print("index.html has been successfully generated.")
 
-    print(f"✅ {INDEX_FILE} generated. PDFs: {len(pdfs)}, EPUBs: {len(epubs)}, recent: {len(recent)}")
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
