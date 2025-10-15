@@ -1,0 +1,47 @@
+name: 'Update Contributors on Issue Close'
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+    # Only run this job if the issue title starts with "File Submission:"
+    if: startsWith(github.event.issue.title, 'File Submission:')
+    
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v3
+
+      - name: 'Set up Python'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 'Extract filename and username'
+        id: extract_info
+        run: |
+          # Extract filename from "File Submission: TheFileName.pdf"
+          FILENAME=$(echo "${{ github.event.issue.title }}" | sed 's/File Submission: //')
+          echo "FILENAME=$FILENAME" >> $GITHUB_ENV
+          
+          # Get the username of the person who created the issue
+          USERNAME="${{ github.event.issue.user.login }}"
+          echo "USERNAME=$USERNAME" >> $GITHUB_ENV
+          
+      - name: 'Update contributors.json'
+        run: python update_contributors.py "${{ env.FILENAME }}" "${{ env.USERNAME }}"
+        
+      - name: 'Commit and push if there are changes'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add contributors.json
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "feat: ✨ automatically update contributors.json"
+            git push
+          fi
