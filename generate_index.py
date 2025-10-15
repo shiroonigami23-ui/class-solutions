@@ -1,17 +1,17 @@
 import os
 import re
+import json
 import datetime
 import subprocess
 
-# --- CONFIGURATION ---
+# --- (Configuration is the same) ---
 SUPPORTED_EXTENSIONS = ['.pdf', '.epub', '.jpg', '.png', '.jpeg', '.txt', '.md']
-IGNORE_FILES = ['README.md', 'generate_index.py', 'style.css', 'script.js', 'profile.js', 'index.html']
-
+IGNORE_FILES = ['README.md', 'generate_index.py', 'style.css', 'script.js', 'profile.js', 'index.html', 'contribute.html', 'contribution_handler.js', 'contributors.json']
 COURSE_KEYWORDS = {
-    'CS-501': ['toc', 'automata', 'nfa', 'dfa', 'conversion dfa', 'cs501'],
+    'CS-501': ['toc', 'automata', 'nfa', 'cs501'],
     'CS-502': ['dbms', 'rdbms', 'database', 'cs502'],
     'CS-503': ['cyber', 'security', 'data', 'analytics', 'cs503'],
-    'CS-504': ['internet', 'web', 'webpage', 'website', 'iwd', 'cs504']
+    'CS-504': ['internet', 'web', 'iwd', 'cs504']
 }
 FILE_TYPE_MAP = {
     '.pdf': {'category': 'Documents', 'icon': 'https://img.icons8.com/fluency/48/adobe-pdf.png'},
@@ -23,7 +23,14 @@ FILE_TYPE_MAP = {
     '.md': {'category': 'Text Files', 'icon': 'https://img.icons8.com/fluency/48/document.png'}
 }
 
-# --- (All the functions from before remain the same) ---
+def load_contributors():
+    try:
+        with open('contributors.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+# --- (Other functions are the same) ---
 def get_course_code(filename):
     fn_lower = filename.lower()
     for code, keywords in COURSE_KEYWORDS.items():
@@ -46,22 +53,32 @@ def format_title(filename):
     title = os.path.splitext(filename)[0].replace('_', ' ').replace('-', ' ')
     return re.sub(r'^(CS \d+\s*)', '', title, flags=re.IGNORECASE).strip().title()
 
-def generate_file_html(file_info):
+# --- MODIFIED HTML GENERATION ---
+def generate_file_html(file_info, contributors):
     title = format_title(file_info['name'])
     keywords = f"{title} {file_info['course']}"
     icon_url = FILE_TYPE_MAP.get(file_info['ext'], {}).get('icon', '')
+    
+    # Check for contributor and create the attribution HTML
+    contributor_name = contributors.get(file_info['name'])
+    contributor_html = ''
+    if contributor_name:
+        contributor_html = f'<div class="contributor-credit">Added by <a href="https://github.com/{contributor_name}" target="_blank">@{contributor_name}</a></div>'
+
     return f"""
     <div class="file-card file-row" data-keywords="{keywords}" data-course="{file_info['course']}">
         <div class="file-icon"><img src="{icon_url}" alt="{file_info['ext']} icon"></div>
         <div class="file-details">
             <div class="file-title">{title}</div>
             <div class="file-meta">{file_info['course']} &bull; {file_info['size']}</div>
+            {contributor_html}
         </div>
         <a href="{file_info['name']}" target="_blank" class="download-button" aria-label="Download {title}">View</a>
     </div>"""
 
 def main():
-    # --- (The file scanning and HTML generation logic is the same) ---
+    contributors = load_contributors()
+    # --- (File scanning is the same) ---
     all_files = []
     for filename in sorted(os.listdir('.')):
         ext = os.path.splitext(filename)[1].lower()
@@ -75,12 +92,13 @@ def main():
     content_by_category = {cat_info['category']: '' for cat_info in FILE_TYPE_MAP.values()}
     content_by_category['All Files'] = ''
     for f in all_files:
-        html_card = generate_file_html(f)
+        html_card = generate_file_html(f, contributors) # Pass contributors here
         content_by_category['All Files'] += html_card
         category = FILE_TYPE_MAP.get(f['ext'], {}).get('category')
         if category and category in content_by_category:
             content_by_category[category] += html_card
 
+    # --- (Tab and Panel generation is the same) ---
     tabs_html, panels_html = "", ""
     ordered_categories = ['All Files'] + sorted([cat for cat in content_by_category if cat != 'All Files'])
     for category in ordered_categories:
@@ -90,7 +108,7 @@ def main():
             tabs_html += f'<button class="tab-link" onclick="openTab(event, \'{id_name}\')">{category}</button>'
             panels_html += f'<div id="{id_name}" class="tab-content"><div class="file-grid">{content}</div></div>'
     
-    # --- THIS IS THE UPDATED HTML TEMPLATE ---
+    # --- UPDATED HTML TEMPLATE with link to contribute.html ---
     html_template = f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -114,8 +132,6 @@ def main():
         </div>
         {panels_html}
     </main>
-
-    <!-- ==== NEW FOOTER SECTION ==== -->
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -124,48 +140,27 @@ def main():
                 <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://shiroonigami23-ui.github.io/class-solutions/" alt="QR Code for site"/>
             </div>
             <div class="footer-section">
-                <h4>Feedback & Requests</h4>
-                <p>Have a suggestion or need a file?</p>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank" class="feedback-button">Let Us Know</a>
+                <h4>Have a File to Share?</h4>
+                <p>Become a contributor and help your classmates!</p>
+                <a href="contribute.html" class="feedback-button">Contribute a File</a>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; {datetime.datetime.now().year} Aryan Singh Chandel | Enhanced Edition</p>
-        </div>
+        <div class="footer-bottom"><p>&copy; {datetime.datetime.now().year} Aryan Singh Chandel | Enhanced Edition</p></div>
     </footer>
-    
-    <!-- Profile Modal Structure -->
     <div id="profileModal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="close-modal-btn" id="closeModalBtn">&times;</button>
-            <h2>Profile & Settings</h2>
+        <div class="modal-content"><button class="close-modal-btn" id="closeModalBtn">&times;</button><h2>Profile & Settings</h2>
             <div class="profile-modal-body">
-                <div class="profile-pic-container">
-                    <img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic">
-                    <label for="modal-pic-upload" class="change-avatar-btn-modal">Change Picture</label>
-                    <input type="file" id="modal-pic-upload" accept="image/*" style="display: none;">
-                </div>
-                <div class="profile-settings">
-                    <div class="setting-item">
-                        <label for="profile-name-input">Your Name</label>
-                        <input type="text" id="profile-name-input" placeholder="Enter your name...">
-                    </div>
-                    <div class="setting-item theme-toggle">
-                        <label>Theme</label>
-                        <button id="modeBtn">☀️</button>
-                    </div>
-                    <button id="save-profile-btn">Save Profile</button>
-                </div>
+                <div class="profile-pic-container"><img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic"><label for="modal-pic-upload" class="change-avatar-btn-modal">Change Picture</label><input type="file" id="modal-pic-upload" accept="image/*" style="display: none;"></div>
+                <div class="profile-settings"><div class="setting-item"><label for="profile-name-input">Your Name</label><input type="text" id="profile-name-input" placeholder="Enter your name..."></div><div class="setting-item theme-toggle"><label>Theme</label><button id="modeBtn">☀️</button></div><button id="save-profile-btn">Save Profile</button></div>
             </div>
         </div>
     </div>
-    
     <script src="script.js" defer></script>
     <script src="profile.js" defer></script>
 </body>
 </html>"""
     with open('index.html', 'w', encoding='utf-8') as f: f.write(html_template)
-    print("SUCCESS: index.html generated with restored QR and Feedback sections in the footer.")
+    print("SUCCESS: index.html generated with contributor credits and new submission system.")
 
 if __name__ == '__main__':
     main()
