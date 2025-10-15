@@ -160,3 +160,56 @@ main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+/* --- NEW: Hub Dashboard --- */
+.hub-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: var(--surface-dark);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-dark);
+}
+.stat-card {
+    background-color: var(--bg-dark);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+}
+.stat-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-secondary-dark);
+    margin-top: 0.5rem;
+}
+.stat-card.wide {
+    text-align: left;
+}
+.recent-files-ticker {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 900px) {
+    .hub-dashboard {
+        grid-template-columns: 1fr 1fr;
+    }
+    .stat-card.wide {
+        grid-column: 1 / -1;
+    }
+}
+@media (max-width: 600px) {
+    .hub-dashboard {
+        grid-template-columns: 1fr;
+    }
+}
