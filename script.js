@@ -1,4 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const populateDashboard = () => {
+        if (window.hubStats) {
+            document.getElementById('total-files-stat').textContent = window.hubStats.totalFiles || '0';
+            document.getElementById('top-contributor-stat').textContent = window.hubStats.topContributor || 'N/A';
+            
+            const recentFilesEl = document.getElementById('recent-files-stat');
+            if (window.hubStats.recentFiles && window.hubStats.recentFiles.length > 0) {
+                recentFilesEl.textContent = window.hubStats.recentFiles.join('  •  ');
+            } else {
+                recentFilesEl.textContent = 'No recent files found.';
+            }
+        }
+    };
+    populateDashboard();
     // --- Tab System ---
     const tabs = document.querySelectorAll('.tab-link');
     if (tabs.length > 0) {
