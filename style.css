@@ -161,3 +161,90 @@ footer { text-align: center; padding: 2rem; margin-top: 2rem; color: var(--text-
     border-top: 1px solid var(--border-color);
     font-size: 0.85rem;
 }
+/* ==== Contributor Credit Styles ==== */
+.contributor-credit {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+.contributor-credit a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+.contributor-credit a:hover {
+    text-decoration: underline;
+}
+
+/* ==== Contribution Page Styles ==== */
+.contribution-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+.contribution-container {
+    max-width: 600px;
+    width: 100%;
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    text-align: center;
+}
+.contribution-container h1 {
+    color: var(--text-primary);
+}
+.contribution-container p {
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+}
+.contribution-step {
+    margin-bottom: 25px;
+}
+.contribution-step h2 {
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+#drop-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 40px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+#drop-zone:hover, #drop-zone.dragging {
+    background-color: var(--header-bg);
+    border-color: var(--accent-color);
+}
+#share-link-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--header-bg);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+.hidden {
+    display: none;
+}
+.success-message {
+    color: #22c55e; /* Green-500 from Tailwind */
+    font-weight: 500;
+    margin-top: 15px !important;
+}
+#text-preview {
+    background-color: var(--header-bg);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: left;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+}
