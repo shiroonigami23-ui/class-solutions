@@ -8,19 +8,16 @@
   "description": "Your central dashboard for notes, assignments, and resources.",
   "icons": [
     {
-      "src": "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png",
-      "sizes": "72x72",
-      "type": "image/png"
-    },
-    {
-      "src": "https://raw.githubusercontent.com/shiroonigami23-ui/class-solutions/main/shiro.png",
+      "src": "shiro.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://raw.githubusercontent.com/shiroonigami23-ui/class-solutions/main/app.png",
+      "src": "app.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
