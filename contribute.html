@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contribute a File - CSE Student Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PDF.js library for previews -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+</head>
+<body class="contribution-page">
+    <div class="contribution-container">
+        <h1>Contribute to the Hub</h1>
+        <p>Thank you for helping your classmates! Follow these simple steps.</p>
+
+        <div class="contribution-step" id="step1">
+            <h2>Step 1: Choose Your File</h2>
+            <div id="drop-zone">
+                <p>Drag & drop your file here, or click to select</p>
+                <input type="file" id="file-input" accept=".pdf,.epub,.jpg,.png,.txt,.md" hidden>
+            </div>
+            <div id="preview-area" class="hidden">
+                <h3>Your File Preview:</h3>
+                <div id="file-name-preview"></div>
+                <canvas id="pdf-preview-canvas"></canvas>
+                <img id="image-preview" alt="Image Preview" style="display:none; max-width: 100%; border-radius: 8px;">
+                <pre id="text-preview"></pre>
+                <p class="success-message">Awesome! Your file is ready.</p>
+            </div>
+        </div>
+
+        <div class="contribution-step hidden" id="step2">
+            <h2>Step 2: Provide a Shareable Link</h2>
+            <p>Please upload your file to a service like Google Drive or Dropbox and paste the link below.</p>
+            <input type="text" id="share-link-input" placeholder="Paste your shareable link here...">
+        </div>
+
+        <div class="contribution-step hidden" id="step3">
+            <h2>Step 3: Submit!</h2>
+            <p>Click the button below to finalize your submission. We'll grab your GitHub username automatically for credit.</p>
+            <a href="#" id="github-submit-btn" target="_blank" class="feedback-button">Submit via GitHub</a>
+        </div>
+    </div>
+    <script src="contribution_handler.js"></script>
+</body>
+</html>
+
