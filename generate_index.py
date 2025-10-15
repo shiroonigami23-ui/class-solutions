@@ -19,7 +19,7 @@ FILE_TYPE_MAP = {
     '.epub': {'category': 'Notes', 'icon': 'notes.png'},
     '.jpg': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
     '.jpeg': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
-    '.png': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
+    '.png': {'category': 'Images', 'icon': 'image.png'},
     '.txt': {'category': 'Text Files', 'icon': 'https://img.icons8.com/fluency/48/document.png'},
     '.md': {'category': 'Text Files', 'icon': 'https://img.icons8.com/fluency/48/document.png'}
 }
