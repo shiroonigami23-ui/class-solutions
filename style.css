@@ -64,3 +64,68 @@ footer { text-align: center; padding: 2rem; margin-top: 2rem; color: var(--text-
     .search-input { width: calc(100% - 2.4rem); }
     .tabs { overflow-x: auto; padding-bottom: 10px; }
 }
+/* ==== Footer Styles ==== */
+.site-footer {
+    background-color: var(--header-bg);
+    color: var(--text-secondary);
+    padding: 30px 20px 10px 20px;
+    margin-top: 40px;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    text-align: center;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.footer-section h4 {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.footer-section p {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.qr-code {
+    background-color: white;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.feedback-button {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.feedback-button:hover {
+    background-color: var(--accent-color-dark);
+    transform: translateY(-2px);
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.85rem;
+}
