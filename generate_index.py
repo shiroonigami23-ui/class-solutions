@@ -15,7 +15,7 @@ COURSE_KEYWORDS = {
     'CS-504': ['internet', 'web', 'iwd', 'cs504']
 }
 FILE_TYPE_MAP = {
-    '.pdf': {'category': 'Documents', 'icon': 'https://img.icons8.com/fluency/48/adobe-pdf.png'},
+    '.pdf': {'category': 'Documents', 'icon': 'shiro.png'},
     '.epub': {'category': 'Notes', 'icon': 'https://img.icons8.com/fluency/48/book.png'},
     '.jpg': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
     '.jpeg': {'category': 'Images', 'icon': 'https://img.icons8.com/fluency/48/image.png'},
