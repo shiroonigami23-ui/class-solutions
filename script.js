@@ -1,58 +1,105 @@
 document.addEventListener('DOMContentLoaded', function() {
     
+    // --- Profile Dropdown Logic ---
+    const profileArea = document.querySelector('.profile-area');
+    const profilePic = document.getElementById('profile-pic');
+    profilePic.addEventListener('click', () => profileArea.classList.toggle('active'));
+    document.addEventListener('click', (e) => {
+        if (!profileArea.contains(e.target)) {
+            profileArea.classList.remove('active');
+        }
+    });
+
+    // --- Profile Personalization ---
+    const nameInput = document.getElementById('profile-name-input');
+    const nameDisplay = document.getElementById('profile-name-display');
+    const saveBtn = document.getElementById('save-profile-btn');
+    const picUpload = document.getElementById('profile-pic-upload');
+    const dropdownPic = document.getElementById('dropdown-profile-pic');
+
+    // Load saved data from localStorage
+    const savedName = localStorage.getItem('userName');
+    const savedPic = localStorage.getItem('userPic');
+
+    if (savedName) {
+        nameDisplay.textContent = savedName;
+        nameInput.value = savedName;
+    }
+    if (savedPic) {
+        profilePic.src = savedPic;
+        dropdownPic.src = savedPic;
+    }
+
+    // Save Name
+    saveBtn.addEventListener('click', () => {
+        const newName = nameInput.value.trim();
+        if (newName) {
+            localStorage.setItem('userName', newName);
+            nameDisplay.textContent = newName;
+            alert('Profile saved!');
+            profileArea.classList.remove('active');
+        }
+    });
+
+    // Handle Picture Upload
+    picUpload.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                localStorage.setItem('userPic', imageUrl);
+                profilePic.src = imageUrl;
+                dropdownPic.src = imageUrl;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
     // --- Dark/Light Mode Toggle ---
     const modeBtn = document.getElementById('modeBtn');
-    // Read the saved mode from localStorage, default to 'dark'
-    let currentMode = localStorage.getItem("mode") || "dark";
+    let currentMode = localStorage.getItem("themeMode") || "dark";
 
     const setMode = (mode) => {
         if (mode === "light") {
             document.body.classList.add("lightmode");
-            modeBtn.textContent = "🌞";
+            modeBtn.textContent = "🌙";
         } else {
             document.body.classList.remove("lightmode");
-            modeBtn.textContent = "🌙";
+            modeBtn.textContent = "☀️";
         }
-        localStorage.setItem("mode", mode);
+        localStorage.setItem("themeMode", mode);
     };
-
-    // Set initial mode on page load
     setMode(currentMode);
-
-    // Add click event listener to the button
     modeBtn.addEventListener('click', () => {
         currentMode = (currentMode === "dark") ? "light" : "dark";
         setMode(currentMode);
     });
 
-    // --- Last Updated Timestamp ---
-    const lastUpdateSpan = document.getElementById("lastUpdate");
-    if (lastUpdateSpan) {
-        // This date is automatically set by the python script during generation
-        const update = new Date(); 
-        lastUpdateSpan.textContent = update.toLocaleString();
+    // --- Tab System ---
+    const tabs = document.querySelectorAll('.tab-link');
+    if (tabs.length > 0) {
+        // Open the 'All Files' tab by default if it exists, otherwise the first tab
+        const defaultTab = document.querySelector('.tab-link[onclick*="AllFiles"]') || tabs[0];
+        defaultTab.click();
     }
-    
-    // --- Hide "New Files" Banner if Empty ---
-    const newFilesContent = document.getElementById('new-files-content');
-    if (newFilesContent && newFilesContent.textContent.trim().includes('No new files')) {
-        const newFilesBanner = document.getElementById('new-files-banner');
-        if (newFilesBanner) {
-            newFilesBanner.style.display = 'none';
-        }
-    }
-
 });
 
-// --- File Filtering Function ---
-// This function is called directly from the oninput event in the HTML
+function openTab(event, tabName) {
+    // Hide all tab content
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    // Deactivate all tab links
+    document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+    // Show the selected tab content and activate its link
+    document.getElementById(tabName).style.display = 'block';
+    event.currentTarget.classList.add('active');
+}
+
+// --- File Filtering ---
 function filterFiles() {
     const searchTerm = document.getElementById('searchBox').value.toLowerCase();
-    const fileRows = document.querySelectorAll('.file-row');
-
-    fileRows.forEach(row => {
+    document.querySelectorAll('.file-row').forEach(row => {
         const keywords = row.getAttribute('data-keywords') || '';
-        const isVisible = keywords.toLowerCase().includes(searchTerm);
-        row.style.display = isVisible ? '' : 'none';
+        row.style.display = keywords.toLowerCase().includes(searchTerm) ? '' : 'none';
     });
 }
