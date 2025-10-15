@@ -19,21 +19,17 @@ body.lightmode {
 .action-button.primary { background-color: var(--primary-color); color: white; }
 .action-button:hover { background-color: var(--primary-hover); }
 
-/* --- Header --- */
+/* --- Header & Main Content (Same as before) --- */
 header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; background-color: var(--surface-dark); border-bottom: 1px solid var(--border-dark); }
 .header-content h1 { margin: 0; color: var(--primary-color); font-size: 1.8rem; }
 .header-content p { margin: 0.2rem 0 0; color: var(--text-secondary-dark); }
 .profile-pic { width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 2px solid var(--primary-color); object-fit: cover; }
-
-/* --- Main Content, Search & Tabs --- */
 main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
 .search-and-tabs { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
 .search-input { padding: 0.8rem 1.2rem; width: 300px; border-radius: 8px; border: 1px solid var(--border-dark); background-color: var(--surface-dark); color: var(--text-dark); }
 .tabs button { background: transparent; color: var(--text-secondary-dark); border: none; padding: 0.8rem 1.2rem; cursor: pointer; font-size: 1rem; font-weight: 500; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
 .tabs button:hover { color: var(--text-dark); }
 .tabs button.active { color: var(--primary-color); border-bottom: 2px solid var(--primary-color); }
-
-/* --- File Display Grid --- */
 .tab-content { display: none; animation: fadeIn .5s; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
@@ -50,26 +46,38 @@ main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
 .download-button { background-color: var(--primary-color); color: white !important; padding: 0.5rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 500; white-space: nowrap; transition: background-color .2s; }
 .download-button:hover { background-color: var(--primary-hover); }
 
-/* --- NEW Enhanced Profile Modal --- */
+/* --- ENHANCED Profile Modal --- */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .modal-overlay.active { display: flex; animation: fadeIn .3s; }
 .modal-content { background-color: var(--surface-dark); border-radius: 16px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2); padding: 0; overflow: hidden; }
 .close-modal-btn { position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.3); border: none; font-size: 1.5rem; color: white; cursor: pointer; border-radius: 50%; width: 32px; height: 32px; line-height: 32px; z-index: 10; }
 .profile-modal-header { text-align: center; position: relative; }
 .profile-modal-banner { height: 120px; background: linear-gradient(45deg, var(--primary-color), #A78BFA); }
-.modal-profile-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 5px solid var(--surface-dark); margin-top: -60px; position: relative; z-index: 5; }
+
+/* NEW: Image Upload Interaction */
+.modal-profile-pic-wrapper { position: relative; width: 120px; height: 120px; margin: -60px auto 0 auto; cursor: pointer; }
+.modal-profile-pic { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 5px solid var(--surface-dark); }
+.modal-pic-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background-color: rgba(0,0,0,0.5); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; opacity: 0; transition: opacity .2s; }
+.modal-profile-pic-wrapper:hover .modal-pic-overlay { opacity: 1; }
+
 #modal-profile-name { margin: 0.5rem 0 1rem 0; color: var(--text-dark); font-size: 1.5rem; }
 .modal-tabs { display: flex; border-bottom: 1px solid var(--border-dark); }
 .modal-tab-link { flex: 1; background: transparent; color: var(--text-secondary-dark); border: none; padding: 1rem; cursor: pointer; font-size: 1rem; font-weight: 600; border-bottom: 3px solid transparent; transition: all .2s; }
 .modal-tab-link.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-.modal-tab-content { padding: 2rem; display: none; animation: fadeIn .4s; }
-.setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.modal-tab-content { padding: 2rem; display: none; animation: fadeIn .4s; text-align: center; }
+.setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; text-align: left; }
 .setting-item label { font-weight: 500; color: var(--text-secondary-dark); }
-#profile-name-input { padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-dark); background-color: var(--bg-dark); color: var(--text-dark); width: 60%; }
-#contribute p { margin-bottom: 1.5rem; }
+.setting-item input { padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-dark); background-color: var(--bg-dark); color: var(--text-dark); width: 60%; }
 #contribute h3 { margin-top: 0; color: var(--primary-color); }
+#contribute p { margin-bottom: 1.5rem; }
 
-/* --- Footer --- */
+/* NEW: User Contributions List */
+#user-contributions-list { list-style: none; padding: 0; margin-bottom: 1.5rem; text-align: left; max-height: 200px; overflow-y: auto; }
+#user-contributions-list li { background-color: var(--bg-dark); padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; font-weight: 500; }
+.contributions-empty-state { color: var(--text-secondary-dark); }
+.contribute-link { display: block; width: fit-content; margin: 0 auto; }
+
+/* --- Footer (Same as before) --- */
 .site-footer { background-color: var(--surface-dark); color: var(--text-secondary-dark); padding: 30px 20px 10px 20px; margin-top: 40px; border-top: 1px solid var(--border-dark); }
 .footer-content { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; max-width: 800px; margin: 0 auto 20px auto; text-align: center; }
 .footer-section { flex: 1; min-width: 250px; }
@@ -79,7 +87,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
 .feedback-button:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
 .footer-bottom { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-dark); font-size: 0.85rem; }
 
-/* --- Responsive --- */
+/* --- Responsive (Same as before) --- */
 @media (max-width: 768px) {
     header { flex-direction: column; gap: 1rem; text-align: center; }
     .search-and-tabs { flex-direction: column; align-items: stretch; }
