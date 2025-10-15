@@ -1,4 +1,3 @@
-
 import os
 import re
 import datetime
@@ -9,10 +8,10 @@ SUPPORTED_EXTENSIONS = ['.pdf', '.epub', '.jpg', '.png', '.jpeg', '.txt', '.md']
 IGNORE_FILES = ['README.md', 'generate_index.py', 'style.css', 'script.js', 'profile.js', 'index.html']
 
 COURSE_KEYWORDS = {
-    'CS-501': ['toc', 'automata', 'nfa', 'cs501'],
+    'CS-501': ['toc', 'automata', 'nfa', 'dfa', 'conversion dfa', 'cs501'],
     'CS-502': ['dbms', 'rdbms', 'database', 'cs502'],
     'CS-503': ['cyber', 'security', 'data', 'analytics', 'cs503'],
-    'CS-504': ['internet', 'web', 'iwd', 'cs504']
+    'CS-504': ['internet', 'web', 'webpage', 'website', 'iwd', 'cs504']
 }
 FILE_TYPE_MAP = {
     '.pdf': {'category': 'Documents', 'icon': 'https://img.icons8.com/fluency/48/adobe-pdf.png'},
@@ -24,6 +23,7 @@ FILE_TYPE_MAP = {
     '.md': {'category': 'Text Files', 'icon': 'https://img.icons8.com/fluency/48/document.png'}
 }
 
+# --- (All the functions from before remain the same) ---
 def get_course_code(filename):
     fn_lower = filename.lower()
     for code, keywords in COURSE_KEYWORDS.items():
@@ -61,6 +61,7 @@ def generate_file_html(file_info):
     </div>"""
 
 def main():
+    # --- (The file scanning and HTML generation logic is the same) ---
     all_files = []
     for filename in sorted(os.listdir('.')):
         ext = os.path.splitext(filename)[1].lower()
@@ -88,7 +89,8 @@ def main():
             id_name = category.replace(' ', '')
             tabs_html += f'<button class="tab-link" onclick="openTab(event, \'{id_name}\')">{category}</button>'
             panels_html += f'<div id="{id_name}" class="tab-content"><div class="file-grid">{content}</div></div>'
-
+    
+    # --- THIS IS THE UPDATED HTML TEMPLATE ---
     html_template = f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -112,7 +114,25 @@ def main():
         </div>
         {panels_html}
     </main>
-    <footer><p>&copy; {datetime.datetime.now().year} Aryan Singh Chandel | Enhanced Edition</p></footer>
+
+    <!-- ==== NEW FOOTER SECTION ==== -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Share this Site</h4>
+                <p>Scan the QR code with your phone.</p>
+                <img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://shiroonigami23-ui.github.io/class-solutions/" alt="QR Code for site"/>
+            </div>
+            <div class="footer-section">
+                <h4>Feedback & Requests</h4>
+                <p>Have a suggestion or need a file?</p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank" class="feedback-button">Let Us Know</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; {datetime.datetime.now().year} Aryan Singh Chandel | Enhanced Edition</p>
+        </div>
+    </footer>
     
     <!-- Profile Modal Structure -->
     <div id="profileModal" class="modal-overlay">
@@ -145,7 +165,7 @@ def main():
 </body>
 </html>"""
     with open('index.html', 'w', encoding='utf-8') as f: f.write(html_template)
-    print("FIXED: index.html now correctly links to profile.js.")
+    print("SUCCESS: index.html generated with restored QR and Feedback sections in the footer.")
 
 if __name__ == '__main__':
     main()
