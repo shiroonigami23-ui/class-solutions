@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // --- Profile Data Elements ---
     const nameInput = document.getElementById('profile-name-input');
+    const nameDisplay = document.getElementById('modal-profile-name');
     const headerPic = document.getElementById('profile-pic');
     const modalPic = document.getElementById('modal-profile-pic');
     const picUpload = document.getElementById('modal-pic-upload');
@@ -15,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Open/Close Modal ---
     openModalBtn.addEventListener('click', () => profileModal.classList.add('active'));
     closeModalBtn.addEventListener('click', () => profileModal.classList.remove('active'));
-    // Close modal if user clicks on the overlay
     profileModal.addEventListener('click', (e) => {
         if (e.target === profileModal) {
             profileModal.classList.remove('active');
@@ -24,11 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Profile Personalization ---
     const loadProfileData = () => {
-        const savedName = localStorage.getItem('userName');
+        const savedName = localStorage.getItem('userName') || 'Your Name';
         const savedPic = localStorage.getItem('userPic');
-        if (savedName) {
-            nameInput.value = savedName;
-        }
+        
+        nameInput.value = savedName === 'Your Name' ? '' : savedName;
+        nameDisplay.textContent = savedName;
+
         if (savedPic) {
             headerPic.src = savedPic;
             modalPic.src = savedPic;
@@ -40,6 +41,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const newName = nameInput.value.trim();
         if (newName) {
             localStorage.setItem('userName', newName);
+            nameDisplay.textContent = newName;
+        } else {
+            localStorage.removeItem('userName');
+            nameDisplay.textContent = 'Your Name';
         }
         alert('Profile saved successfully!');
         profileModal.classList.remove('active');
@@ -84,3 +89,22 @@ document.addEventListener('DOMContentLoaded', function() {
     loadProfileData();
     setMode(currentMode);
 });
+
+// --- NEW Function for Modal Tabs ---
+function openProfileTab(evt, tabName) {
+    // Get all elements with class="modal-tab-content" and hide them
+    const tabcontent = document.getElementsByClassName("modal-tab-content");
+    for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="modal-tab-link" and remove the class "active"
+    const tablinks = document.getElementsByClassName("modal-tab-link");
+    for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
