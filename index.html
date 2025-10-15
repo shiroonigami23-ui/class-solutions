@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js" defer></script>
 </head>
 <body>
     <header>
@@ -17,293 +18,389 @@
     <main>
         <div class="search-and-tabs"><div class="search-box"><input class="search-input" type="text" placeholder="Filter files by name or course..." id="searchBox" oninput="filterFiles()"></div><div class="tabs"><button class="tab-link" onclick="openTab(event, 'AllFiles')">All Files</button><button class="tab-link" onclick="openTab(event, 'Documents')">Documents</button><button class="tab-link" onclick="openTab(event, 'Notes')">Notes</button></div></div>
         <div id="AllFiles" class="tab-content"><div class="file-grid">
-    <div class="file-card file-row" data-keywords="Cyber Security Assignment 2 CS-503" data-course="CS-503">
+    <div class="file-card file-row" data-keywords="Cyber Security Assignment 2 CS-503 " data-course="CS-503">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Cyber Security Assignment 2</div>
             <div class="file-meta">CS-503 &bull; 169.3 KB</div>
             <div class="contributor-credit">Added by <a href="https://github.com/shiroonigami23-ui" target="_blank">@shiroonigami23-ui</a></div>
         </div>
-        <a href="CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Cyber Security Assignment 2">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="CS_503_Cyber_Security_assignment_2.pdf">Preview</button>
+            <a href="CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Cyber Security Assignment 2">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Dbms Assignment1 CS-502" data-course="CS-502">
+    <div class="file-card file-row" data-keywords="Dbms Assignment1 CS-502 " data-course="CS-502">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Dbms Assignment1</div>
             <div class="file-meta">CS-502 &bull; 2.09 MB</div>
             
         </div>
-        <a href="DBMS_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Assignment1">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_Assignment1.pdf">Preview</button>
+            <a href="DBMS_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Assignment1">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Dbms Notes Unit 1 CS-502" data-course="CS-502">
+    <div class="file-card file-row" data-keywords="Dbms Notes Unit 1 CS-502 " data-course="CS-502">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Dbms Notes Unit 1</div>
             <div class="file-meta">CS-502 &bull; 88.4 KB</div>
             
         </div>
-        <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 1">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_notes_unit_1.pdf">Preview</button>
+            <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 1">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Dbms Notes Unit 2 CS-502" data-course="CS-502">
+    <div class="file-card file-row" data-keywords="Dbms Notes Unit 2 CS-502 " data-course="CS-502">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Dbms Notes Unit 2</div>
             <div class="file-meta">CS-502 &bull; 85.2 KB</div>
             
         </div>
-        <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 2">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_notes_unit_2.pdf">Preview</button>
+            <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 2">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Data Analytics CS-503" data-course="CS-503">
+    <div class="file-card file-row" data-keywords="Data Analytics CS-503 " data-course="CS-503">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Data Analytics</div>
             <div class="file-meta">CS-503 &bull; 9.4 KB</div>
             
         </div>
-        <a href="Data Analytics .epub" target="_blank" class="download-button" aria-label="Download Data Analytics">View</a>
+        <div class="file-actions">
+            
+            <a href="Data Analytics .epub" target="_blank" class="download-button" aria-label="Download Data Analytics">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Data Analytics Notes CS-503" data-course="CS-503">
+    <div class="file-card file-row" data-keywords="Data Analytics Notes CS-503 " data-course="CS-503">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Data Analytics Notes</div>
             <div class="file-meta">CS-503 &bull; 7.4 KB</div>
             
         </div>
-        <a href="Data_Analytics_Notes.epub" target="_blank" class="download-button" aria-label="Download Data Analytics Notes">View</a>
+        <div class="file-actions">
+            
+            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-button" aria-label="Download Data Analytics Notes">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Data Analytics Assignment1 CS-503" data-course="CS-503">
+    <div class="file-card file-row" data-keywords="Data Analytics Assignment1 CS-503 " data-course="CS-503">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Data Analytics Assignment1</div>
             <div class="file-meta">CS-503 &bull; 82.6 KB</div>
             
         </div>
-        <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-button" aria-label="Download Data Analytics Assignment1">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Data_Analytics_assignment1.pdf">Preview</button>
+            <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-button" aria-label="Download Data Analytics Assignment1">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Finite Automata CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Finite Automata CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Finite Automata</div>
             <div class="file-meta">CS-501 &bull; 9.7 KB</div>
             
         </div>
-        <a href="Finite Automata .epub" target="_blank" class="download-button" aria-label="Download Finite Automata">View</a>
+        <div class="file-actions">
+            
+            <a href="Finite Automata .epub" target="_blank" class="download-button" aria-label="Download Finite Automata">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Technology CS-504" data-course="CS-504">
+    <div class="file-card file-row" data-keywords="Internet And Web Technology CS-504 " data-course="CS-504">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Internet And Web Technology</div>
             <div class="file-meta">CS-504 &bull; 9.0 KB</div>
             
         </div>
-        <a href="Internet and web technology.epub" target="_blank" class="download-button" aria-label="Download Internet And Web Technology">View</a>
+        <div class="file-actions">
+            
+            <a href="Internet and web technology.epub" target="_blank" class="download-button" aria-label="Download Internet And Web Technology">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment CS-504" data-course="CS-504">
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment CS-504 " data-course="CS-504">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Internet And Web Development Assignment</div>
             <div class="file-meta">CS-504 &bull; 5.14 MB</div>
             
         </div>
-        <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Internet_and_Web_Development_Assignment.pdf">Preview</button>
+            <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 2 CS-504" data-course="CS-504">
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 2 CS-504 " data-course="CS-504">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Internet And Web Development Assignment 2</div>
             <div class="file-meta">CS-504 &bull; 176.8 KB</div>
             
         </div>
-        <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment 2">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Internet_and_Web_development_assignment_2.pdf">Preview</button>
+            <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment 2">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Rdbms CS-502" data-course="CS-502">
+    <div class="file-card file-row" data-keywords="Rdbms CS-502 " data-course="CS-502">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Rdbms</div>
             <div class="file-meta">CS-502 &bull; 62.8 KB</div>
             
         </div>
-        <a href="RDBMS.epub" target="_blank" class="download-button" aria-label="Download Rdbms">View</a>
+        <div class="file-actions">
+            
+            <a href="RDBMS.epub" target="_blank" class="download-button" aria-label="Download Rdbms">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Cs501 Assignment1 CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Toc Cs501 Assignment1 CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Cs501 Assignment1</div>
             <div class="file-meta">CS-501 &bull; 189.4 KB</div>
             
         </div>
-        <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Toc Cs501 Assignment1">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="TOC_CS501_Assignment1.pdf">Preview</button>
+            <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Toc Cs501 Assignment1">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Nfa Notes CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Toc Nfa Notes CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Nfa Notes</div>
             <div class="file-meta">CS-501 &bull; 8.0 KB</div>
             
         </div>
-        <a href="TOC_NFA_notes.epub" target="_blank" class="download-button" aria-label="Download Toc Nfa Notes">View</a>
+        <div class="file-actions">
+            
+            <a href="TOC_NFA_notes.epub" target="_blank" class="download-button" aria-label="Download Toc Nfa Notes">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Assignment Graph CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Toc Assignment Graph CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Assignment Graph</div>
             <div class="file-meta">CS-501 &bull; 3.48 MB</div>
             
         </div>
-        <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-button" aria-label="Download Toc Assignment Graph">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Toc_Assignment_Graph.pdf">Preview</button>
+            <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-button" aria-label="Download Toc Assignment Graph">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Notes CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Toc Notes CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Notes</div>
             <div class="file-meta">CS-501 &bull; 107.9 KB</div>
             
         </div>
-        <a href="Toc_notes.pdf" target="_blank" class="download-button" aria-label="Download Toc Notes">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Toc_notes.pdf">Preview</button>
+            <a href="Toc_notes.pdf" target="_blank" class="download-button" aria-label="Download Toc Notes">View</a>
+        </div>
     </div></div></div><div id="Documents" class="tab-content"><div class="file-grid">
-    <div class="file-card file-row" data-keywords="Cyber Security Assignment 2 CS-503" data-course="CS-503">
+    <div class="file-card file-row" data-keywords="Cyber Security Assignment 2 CS-503 " data-course="CS-503">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Cyber Security Assignment 2</div>
             <div class="file-meta">CS-503 &bull; 169.3 KB</div>
             <div class="contributor-credit">Added by <a href="https://github.com/shiroonigami23-ui" target="_blank">@shiroonigami23-ui</a></div>
         </div>
-        <a href="CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Cyber Security Assignment 2">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="CS_503_Cyber_Security_assignment_2.pdf">Preview</button>
+            <a href="CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Cyber Security Assignment 2">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Dbms Assignment1 CS-502" data-course="CS-502">
+    <div class="file-card file-row" data-keywords="Dbms Assignment1 CS-502 " data-course="CS-502">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Dbms Assignment1</div>
             <div class="file-meta">CS-502 &bull; 2.09 MB</div>
             
         </div>
-        <a href="DBMS_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Assignment1">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_Assignment1.pdf">Preview</button>
+            <a href="DBMS_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Assignment1">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Dbms Notes Unit 1 CS-502" data-course="CS-502">
+    <div class="file-card file-row" data-keywords="Dbms Notes Unit 1 CS-502 " data-course="CS-502">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Dbms Notes Unit 1</div>
             <div class="file-meta">CS-502 &bull; 88.4 KB</div>
             
         </div>
-        <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 1">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_notes_unit_1.pdf">Preview</button>
+            <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 1">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Dbms Notes Unit 2 CS-502" data-course="CS-502">
+    <div class="file-card file-row" data-keywords="Dbms Notes Unit 2 CS-502 " data-course="CS-502">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Dbms Notes Unit 2</div>
             <div class="file-meta">CS-502 &bull; 85.2 KB</div>
             
         </div>
-        <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 2">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_notes_unit_2.pdf">Preview</button>
+            <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 2">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Data Analytics Assignment1 CS-503" data-course="CS-503">
+    <div class="file-card file-row" data-keywords="Data Analytics Assignment1 CS-503 " data-course="CS-503">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Data Analytics Assignment1</div>
             <div class="file-meta">CS-503 &bull; 82.6 KB</div>
             
         </div>
-        <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-button" aria-label="Download Data Analytics Assignment1">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Data_Analytics_assignment1.pdf">Preview</button>
+            <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-button" aria-label="Download Data Analytics Assignment1">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment CS-504" data-course="CS-504">
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment CS-504 " data-course="CS-504">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Internet And Web Development Assignment</div>
             <div class="file-meta">CS-504 &bull; 5.14 MB</div>
             
         </div>
-        <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Internet_and_Web_Development_Assignment.pdf">Preview</button>
+            <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 2 CS-504" data-course="CS-504">
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 2 CS-504 " data-course="CS-504">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Internet And Web Development Assignment 2</div>
             <div class="file-meta">CS-504 &bull; 176.8 KB</div>
             
         </div>
-        <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment 2">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Internet_and_Web_development_assignment_2.pdf">Preview</button>
+            <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment 2">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Cs501 Assignment1 CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Toc Cs501 Assignment1 CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Cs501 Assignment1</div>
             <div class="file-meta">CS-501 &bull; 189.4 KB</div>
             
         </div>
-        <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Toc Cs501 Assignment1">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="TOC_CS501_Assignment1.pdf">Preview</button>
+            <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Toc Cs501 Assignment1">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Assignment Graph CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Toc Assignment Graph CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Assignment Graph</div>
             <div class="file-meta">CS-501 &bull; 3.48 MB</div>
             
         </div>
-        <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-button" aria-label="Download Toc Assignment Graph">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Toc_Assignment_Graph.pdf">Preview</button>
+            <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-button" aria-label="Download Toc Assignment Graph">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Notes CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Toc Notes CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/adobe-pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Notes</div>
             <div class="file-meta">CS-501 &bull; 107.9 KB</div>
             
         </div>
-        <a href="Toc_notes.pdf" target="_blank" class="download-button" aria-label="Download Toc Notes">View</a>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Toc_notes.pdf">Preview</button>
+            <a href="Toc_notes.pdf" target="_blank" class="download-button" aria-label="Download Toc Notes">View</a>
+        </div>
     </div></div></div><div id="Notes" class="tab-content"><div class="file-grid">
-    <div class="file-card file-row" data-keywords="Data Analytics CS-503" data-course="CS-503">
+    <div class="file-card file-row" data-keywords="Data Analytics CS-503 " data-course="CS-503">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Data Analytics</div>
             <div class="file-meta">CS-503 &bull; 9.4 KB</div>
             
         </div>
-        <a href="Data Analytics .epub" target="_blank" class="download-button" aria-label="Download Data Analytics">View</a>
+        <div class="file-actions">
+            
+            <a href="Data Analytics .epub" target="_blank" class="download-button" aria-label="Download Data Analytics">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Data Analytics Notes CS-503" data-course="CS-503">
+    <div class="file-card file-row" data-keywords="Data Analytics Notes CS-503 " data-course="CS-503">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Data Analytics Notes</div>
             <div class="file-meta">CS-503 &bull; 7.4 KB</div>
             
         </div>
-        <a href="Data_Analytics_Notes.epub" target="_blank" class="download-button" aria-label="Download Data Analytics Notes">View</a>
+        <div class="file-actions">
+            
+            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-button" aria-label="Download Data Analytics Notes">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Finite Automata CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Finite Automata CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Finite Automata</div>
             <div class="file-meta">CS-501 &bull; 9.7 KB</div>
             
         </div>
-        <a href="Finite Automata .epub" target="_blank" class="download-button" aria-label="Download Finite Automata">View</a>
+        <div class="file-actions">
+            
+            <a href="Finite Automata .epub" target="_blank" class="download-button" aria-label="Download Finite Automata">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Technology CS-504" data-course="CS-504">
+    <div class="file-card file-row" data-keywords="Internet And Web Technology CS-504 " data-course="CS-504">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Internet And Web Technology</div>
             <div class="file-meta">CS-504 &bull; 9.0 KB</div>
             
         </div>
-        <a href="Internet and web technology.epub" target="_blank" class="download-button" aria-label="Download Internet And Web Technology">View</a>
+        <div class="file-actions">
+            
+            <a href="Internet and web technology.epub" target="_blank" class="download-button" aria-label="Download Internet And Web Technology">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Rdbms CS-502" data-course="CS-502">
+    <div class="file-card file-row" data-keywords="Rdbms CS-502 " data-course="CS-502">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Rdbms</div>
             <div class="file-meta">CS-502 &bull; 62.8 KB</div>
             
         </div>
-        <a href="RDBMS.epub" target="_blank" class="download-button" aria-label="Download Rdbms">View</a>
+        <div class="file-actions">
+            
+            <a href="RDBMS.epub" target="_blank" class="download-button" aria-label="Download Rdbms">View</a>
+        </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Nfa Notes CS-501" data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Toc Nfa Notes CS-501 " data-course="CS-501">
         <div class="file-icon"><img src="https://img.icons8.com/fluency/48/book.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Nfa Notes</div>
             <div class="file-meta">CS-501 &bull; 8.0 KB</div>
             
         </div>
-        <a href="TOC_NFA_notes.epub" target="_blank" class="download-button" aria-label="Download Toc Nfa Notes">View</a>
+        <div class="file-actions">
+            
+            <a href="TOC_NFA_notes.epub" target="_blank" class="download-button" aria-label="Download Toc Nfa Notes">View</a>
+        </div>
     </div></div></div>
     </main>
     <footer class="site-footer">
@@ -313,17 +410,14 @@
         </div>
         <div class="footer-bottom"><p>&copy; 2025 Aryan Singh Chandel | Enhanced Edition</p></div>
     </footer>
+
+    <!-- Profile Modal (Structure remains the same) -->
     <div id="profileModal" class="modal-overlay">
         <div class="modal-content">
             <button class="close-modal-btn" id="closeModalBtn">&times;</button>
             <div class="profile-modal-header">
                 <div class="profile-modal-banner"></div>
-                <div class="modal-profile-pic-wrapper">
-                    <img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic" class="modal-profile-pic">
-                    <div class="modal-pic-overlay">
-                        <span>Click to Upload</span>
-                    </div>
-                </div>
+                <div class="modal-profile-pic-wrapper"><img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic" class="modal-profile-pic"><div class="modal-pic-overlay"><span>Click to Upload</span></div></div>
                 <input type="file" id="modal-pic-upload" accept="image/*" style="display: none;">
                 <h2 id="modal-profile-name">Your Name</h2>
             </div>
@@ -338,19 +432,24 @@
                 <button id="save-profile-btn" class="action-button primary">Save Changes</button>
             </div>
             <div id="contribute" class="modal-tab-content">
-                <h3>Your Submitted Files</h3>
-                <div id="user-contributions-list">
-                    <!-- Contributions will be dynamically inserted here by profile.js -->
-                </div>
+                <h3>Your Submitted Files</h3><div id="user-contributions-list"></div>
                 <a href="contribute.html" class="action-button primary contribute-link">Contribute a New File</a>
             </div>
         </div>
     </div>
     
-    <script>
-        window.contributorsData = {"TOC_Assignment_Graph.pdf": "shiroonigami23-ui", "CS_503_Cyber_Security_assignment_2.pdf": "shiroonigami23-ui"};
-    </script>
+    <!-- PDF Preview Modal -->
+    <div id="pdfPreviewModal" class="modal-overlay pdf-preview-modal">
+        <div class="pdf-modal-content">
+            <button class="close-modal-btn" id="closePdfModalBtn">&times;</button>
+            <h3 id="pdf-modal-title"></h3>
+            <div id="pdf-viewer-container"><div id="loader"></div><canvas id="pdf-canvas"></canvas></div>
+        </div>
+    </div>
+    
+    <script> window.contributorsData = {"TOC_Assignment_Graph.pdf": "shiroonigami23-ui", "CS_503_Cyber_Security_assignment_2.pdf": "shiroonigami23-ui"}; </script>
     <script src="script.js" defer></script>
     <script src="profile.js" defer></script>
+    <script src="preview.js" defer></script>
 </body>
 </html>
