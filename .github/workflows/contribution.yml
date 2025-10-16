@@ -11,18 +11,9 @@ permissions:
 jobs:
   process-contribution:
     runs-on: ubuntu-latest
-    
-    # We still have the gatekeeper, but we will now log what it sees.
     if: startsWith(github.event.issue.title, 'File Submission:')
     
     steps:
-      # --- DEBUGGING STEP 1 ---
-      # This will print the raw event data. We can see the EXACT issue title here.
-      - name: 'Dump GitHub context'
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github.event) }}
-        run: echo "$GITHUB_CONTEXT"
-
       - name: 'Checkout repository'
         uses: actions/checkout@v4
 
@@ -31,43 +22,42 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: 'Extract Info from Issue'
+      - name: 'Extract Info and Sanitize Filename'
         id: extract_info
         run: |
-          # Extract filename and username
-          FILENAME=$(echo "${{ github.event.issue.title }}" | sed 's/File Submission: //')
-          echo "FILENAME=$FILENAME" >> $GITHUB_ENV
+          # --- SAFER FILENAME EXTRACTION ---
+          # 1. Get the title part after "File Submission: "
+          RAW_FILENAME=$(echo "${{ github.event.issue.title }}" | sed 's/File Submission: //')
+          # 2. Replace spaces and special characters with underscores for a safe filename
+          SAFE_FILENAME=$(echo "$RAW_FILENAME" | tr -s '[:space:]' '_' | sed 's/[^A-Za-z0-9._-]/_/g')
+          
+          echo "Original Filename: $RAW_FILENAME"
+          echo "Sanitized Filename: $SAFE_FILENAME"
+          echo "FILENAME=$SAFE_FILENAME" >> $GITHUB_ENV
           
           USERNAME="${{ github.event.issue.user.login }}"
           echo "USERNAME=$USERNAME" >> $GITHUB_ENV
 
-          # Extract the file attachment URL from the issue body
-          URL=$(echo "${{ github.event.issue.body }}" | grep -oP '\[.*\]\(\K[^)]+' | head -n 1)
+          # --- MORE ROBUST URL FINDER ---
+          # This looks for any markdown-style URL in the entire issue body.
+          URL=$(echo "${{ github.event.issue.body }}" | grep -o 'https://[a-zA-Z0-9./-]*' | head -n 1)
+          echo "Found URL: $URL"
           echo "FILE_URL=$URL" >> $GITHUB_ENV
           
-      # --- DEBUGGING STEP 2 ---
-      # This will show us if the variables were extracted correctly.
-      - name: 'Print Extracted Variables'
-        run: |
-          echo "Extracted Filename: ${{ env.FILENAME }}"
-          echo "Extracted Username: ${{ env.USERNAME }}"
-          echo "Extracted File URL: ${{ env.FILE_URL }}"
-
       - name: 'Validate and Download Contribution File'
         run: |
           if [[ -z "${{ env.FILE_URL }}" ]]; then
             echo "::error::Could not find a file attachment URL in the issue body."
-            echo "Please ensure the file was dragged and dropped into the issue description."
+            echo "Make sure the file was uploaded to the issue, creating a link."
             exit 1
           fi
+          echo "Downloading from ${{ env.FILE_URL }} and saving as ${{ env.FILENAME }}"
+          # Use curl with -L to follow redirects and -o to specify the output file
           curl -L -o "${{ env.FILENAME }}" "${{ env.FILE_URL }}"
-          echo "Successfully downloaded ${{ env.FILENAME }}"
+          echo "Download complete."
 
-      - name: 'Run update_contributors.py'
-        run: |
-          echo "Attempting to run update_contributors.py..."
-          python update_contributors.py "${{ env.FILENAME }}" "${{ env.USERNAME }}"
-          echo "Finished running update_contributors.py."
+      - name: 'Update contributors.json'
+        run: python update_contributors.py "${{ env.FILENAME }}" "${{ env.USERNAME }}"
         
       - name: 'Regenerate index.html'
         run: python "generate_index.py"
@@ -76,9 +66,12 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          echo "Adding files to git: ${{ env.FILENAME }}, contributors.json, index.html"
           git add "${{ env.FILENAME }}" contributors.json index.html
+          
           if git diff --staged --quiet; then
-            echo "No changes to commit."
+            echo "No new changes to commit."
           else
             git commit -m "feat(bot): Add ${{ env.FILENAME }} from @${{ env.USERNAME }}"
             git push
