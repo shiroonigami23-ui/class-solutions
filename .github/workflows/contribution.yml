@@ -1,25 +1,30 @@
-name: 'Update Contributors on Issue Close'
+name: 'Process Contribution on Issue Close'
 
 on:
   issues:
     types: [closed]
 
+# Grant permissions for the action to write, read issues, and access contents
+permissions:
+  contents: write
+  issues: read
+
 jobs:
-  update-json:
+  process-contribution:
     runs-on: ubuntu-latest
-    # Only run this job if the issue title starts with "File Submission:"
+    # Ensure the job only runs for the correct issue type
     if: startsWith(github.event.issue.title, 'File Submission:')
     
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 'Set up Python'
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: 'Extract filename and username'
+      - name: 'Extract Info from Issue'
         id: extract_info
         run: |
           # Extract filename from "File Submission: TheFileName.pdf"
@@ -29,18 +34,42 @@ jobs:
           # Get the username of the person who created the issue
           USERNAME="${{ github.event.issue.user.login }}"
           echo "USERNAME=$USERNAME" >> $GITHUB_ENV
+
+          # --- NEW: Extract the file attachment URL from the issue body ---
+          # This looks for the markdown link GitHub creates when you drag-drop a file
+          URL=$(echo "${{ github.event.issue.body }}" | grep -oP '\[.*\]\(\K[^)]+' | head -n 1)
+          echo "FILE_URL=$URL" >> $GITHUB_ENV
           
+      - name: 'Validate and Download Contribution File'
+        run: |
+          if [[ -z "${{ env.FILE_URL }}" ]]; then
+            echo "::error::Could not find a file attachment URL in the issue body."
+            echo "Please ensure the file was dragged and dropped into the issue description to create a link."
+            exit 1
+          fi
+          echo "Found file URL: ${{ env.FILE_URL }}"
+          # Download the file from the URL and save it with its proper name
+          curl -L -o "${{ env.FILENAME }}" "${{ env.FILE_URL }}"
+          echo "Successfully downloaded ${{ env.FILENAME }}"
+
       - name: 'Update contributors.json'
         run: python update_contributors.py "${{ env.FILENAME }}" "${{ env.USERNAME }}"
         
-      - name: 'Commit and push if there are changes'
+      - name: 'Regenerate index.html'
+        # Run the build script to add the new file to the site
+        run: python "generate_index.py"
+        
+      - name: 'Commit and push all changes'
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add contributors.json
-          # Check if there are changes to commit
+          
+          # Add the new file, the updated contributors list, and the new index.html
+          git add "${{ env.FILENAME }}" contributors.json index.html
+          
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "feat: ✨ automatically update contributors.json"
+            git commit -m "feat(bot): Add ${{ env.FILENAME }} from @${{ env.USERNAME }}"
             git push
+          fi
