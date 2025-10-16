@@ -44,4 +44,3 @@ jobs:
           else
             git commit -m "feat: ✨ automatically update contributors.json"
             git push
-          fi
