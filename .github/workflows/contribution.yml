@@ -4,7 +4,6 @@ on:
   issues:
     types: [closed]
 
-# Grant permissions for the action to write, read issues, and access contents
 permissions:
   contents: write
   issues: read
@@ -12,10 +11,18 @@ permissions:
 jobs:
   process-contribution:
     runs-on: ubuntu-latest
-    # Ensure the job only runs for the correct issue type
+    
+    # We still have the gatekeeper, but we will now log what it sees.
     if: startsWith(github.event.issue.title, 'File Submission:')
     
     steps:
+      # --- DEBUGGING STEP 1 ---
+      # This will print the raw event data. We can see the EXACT issue title here.
+      - name: 'Dump GitHub context'
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github.event) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - name: 'Checkout repository'
         uses: actions/checkout@v4
 
@@ -27,46 +34,49 @@ jobs:
       - name: 'Extract Info from Issue'
         id: extract_info
         run: |
-          # Extract filename from "File Submission: TheFileName.pdf"
+          # Extract filename and username
           FILENAME=$(echo "${{ github.event.issue.title }}" | sed 's/File Submission: //')
           echo "FILENAME=$FILENAME" >> $GITHUB_ENV
           
-          # Get the username of the person who created the issue
           USERNAME="${{ github.event.issue.user.login }}"
           echo "USERNAME=$USERNAME" >> $GITHUB_ENV
 
-          # --- NEW: Extract the file attachment URL from the issue body ---
-          # This looks for the markdown link GitHub creates when you drag-drop a file
+          # Extract the file attachment URL from the issue body
           URL=$(echo "${{ github.event.issue.body }}" | grep -oP '\[.*\]\(\K[^)]+' | head -n 1)
           echo "FILE_URL=$URL" >> $GITHUB_ENV
           
+      # --- DEBUGGING STEP 2 ---
+      # This will show us if the variables were extracted correctly.
+      - name: 'Print Extracted Variables'
+        run: |
+          echo "Extracted Filename: ${{ env.FILENAME }}"
+          echo "Extracted Username: ${{ env.USERNAME }}"
+          echo "Extracted File URL: ${{ env.FILE_URL }}"
+
       - name: 'Validate and Download Contribution File'
         run: |
           if [[ -z "${{ env.FILE_URL }}" ]]; then
             echo "::error::Could not find a file attachment URL in the issue body."
-            echo "Please ensure the file was dragged and dropped into the issue description to create a link."
+            echo "Please ensure the file was dragged and dropped into the issue description."
             exit 1
           fi
-          echo "Found file URL: ${{ env.FILE_URL }}"
-          # Download the file from the URL and save it with its proper name
           curl -L -o "${{ env.FILENAME }}" "${{ env.FILE_URL }}"
           echo "Successfully downloaded ${{ env.FILENAME }}"
 
-      - name: 'Update contributors.json'
-        run: python update_contributors.py "${{ env.FILENAME }}" "${{ env.USERNAME }}"
+      - name: 'Run update_contributors.py'
+        run: |
+          echo "Attempting to run update_contributors.py..."
+          python update_contributors.py "${{ env.FILENAME }}" "${{ env.USERNAME }}"
+          echo "Finished running update_contributors.py."
         
       - name: 'Regenerate index.html'
-        # Run the build script to add the new file to the site
         run: python "generate_index.py"
         
       - name: 'Commit and push all changes'
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          # Add the new file, the updated contributors list, and the new index.html
           git add "${{ env.FILENAME }}" contributors.json index.html
-          
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
