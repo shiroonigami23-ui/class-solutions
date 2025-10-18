@@ -816,7 +816,10 @@ main {
     }
 
     .tabs {
-        flex-direction: column;
+    display: flex;
+    flex-direction: row !important;  
+    gap: 12px;
+    flex-wrap: wrap; 
     }
 
     .search-input {
