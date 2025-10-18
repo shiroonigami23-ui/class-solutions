@@ -241,12 +241,13 @@ main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
         text-align: center; /* Center the text inside the buttons */
     }
 }
+    
 /* ============================================
-   FULL VIDEO BACKGROUND FOR ENTIRE PROFILE MODAL
-   WITH GLASSMORPHISM FLOATING DESIGN
+   CLEAN VIDEO BACKGROUND - NO BLUR PANELS
+   PURE FLOATING ELEMENTS ONLY
    ============================================ */
 
-/* Video covers the ENTIRE modal content area */
+/* Video covers entire modal */
 .modal-content {
     position: relative;
     overflow: hidden;
@@ -260,6 +261,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
     height: 100%;
     object-fit: cover;
     z-index: 0;
+    pointer-events: none;
 }
 
 /* Remove old styling */
@@ -267,191 +269,238 @@ main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
     display: none;
 }
 
-/* Make close button float above video */
+/* Close button - minimal clean design */
 .close-modal-btn {
     position: relative;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 2px solid rgba(255, 255, 255, 0.8);
     color: #fff !important;
     font-weight: bold;
+    font-size: 28px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
 }
 
 .close-modal-btn:hover {
-    background: rgba(255, 0, 0, 0.3) !important;
-    transform: scale(1.1);
+    background: rgba(255, 0, 0, 0.6) !important;
+    transform: rotate(90deg) scale(1.1);
 }
 
-/* Profile header with glassmorphism */
+/* Profile header - NO BACKGROUND */
 .profile-modal-header {
     position: relative;
     z-index: 10;
-    background: transparent;
+    background: transparent !important;
     padding: 30px 20px;
 }
 
-/* Profile picture with glass effect */
+/* Fix profile picture - Perfect circle with clean border */
 .modal-profile-pic-wrapper {
     position: relative;
     z-index: 10;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 20px;
+    border-radius: 50% !important;
+    overflow: hidden;
+    border: 4px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    background: transparent !important;
 }
 
-/* Profile name with glassmorphism */
+.modal-profile-pic {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+    object-fit: cover;
+}
+
+.modal-pic-overlay {
+    border-radius: 50%;
+}
+
+/* Profile name - floating text only */
 .profile-modal-header h2 {
     position: relative;
     z-index: 10;
     color: #fff;
-    text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8);
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.9),
+        -1px -1px 2px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.7);
+    background: transparent !important;
     padding: 15px 30px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
     margin: 20px auto;
     width: fit-content;
+    font-size: 24px;
+    font-weight: 700;
 }
 
-/* Tabs with glassmorphism - NO SOLID BACKGROUNDS */
+/* Tabs - NO BACKGROUND PANEL, just floating buttons */
 .modal-tabs {
     position: relative;
     z-index: 10;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border: none !important;
     padding: 8px;
     margin: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
 }
 
 .modal-tab-link {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.6);
     color: rgba(255, 255, 255, 0.9);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 12px 28px;
+    border-radius: 25px;
     transition: all 0.3s ease;
+    font-weight: 600;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .modal-tab-link:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .modal-tab-link.active {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(124, 58, 237, 0.7);
+    border-color: rgba(255, 255, 255, 0.9);
     color: #fff;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.6);
 }
 
-/* Content area with glassmorphism - FLOATING STYLE */
+/* Content area - NO BACKGROUND PANEL */
 .modal-tab-content {
     position: relative;
     z-index: 10;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px);
+    background: transparent !important;
+    backdrop-filter: none !important;
     padding: 25px;
     border-radius: 16px;
     margin: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: none !important;
+    box-shadow: none !important;
 }
 
-/* Settings items with floating glass design */
+/* Settings items - clean floating */
 .setting-item {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .setting-item label {
     color: #fff;
-    font-weight: 600;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    font-weight: 700;
+    font-size: 16px;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.9),
+        0 0 10px rgba(0, 0, 0, 0.8);
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-/* Input fields with glassmorphism */
+/* Input fields - clean with no blur */
 .setting-item input[type="text"] {
     width: 100%;
-    background: rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: none !important;
+    border: 2px solid rgba(255, 255, 255, 0.6) !important;
     color: #fff !important;
-    padding: 12px 16px;
-    border-radius: 10px;
-    font-size: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
     transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .setting-item input[type="text"]::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
+    text-shadow: none;
 }
 
 .setting-item input[type="text"]:focus {
-    background: rgba(255, 255, 255, 0.22) !important;
-    border-color: rgba(255, 255, 255, 0.5) !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    border-color: rgba(255, 255, 255, 0.9) !important;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     outline: none;
 }
 
 /* Theme toggle button */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .theme-toggle button {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: none;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 22px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .theme-toggle button:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.9);
     transform: scale(1.1);
 }
 
-/* Save button with vibrant glassmorphism */
+/* Save button - vibrant and clean */
 .action-button.primary {
-    background: rgba(124, 58, 237, 0.5) !important;
-    backdrop-filter: blur(12px);
-    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    background: rgba(124, 58, 237, 0.8) !important;
+    backdrop-filter: none !important;
+    border: 2px solid rgba(255, 255, 255, 0.8) !important;
     color: #fff !important;
-    padding: 14px 32px;
-    border-radius: 12px;
-    font-weight: 600;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+    padding: 16px 40px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 16px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
     transition: all 0.3s ease;
+    margin-top: 10px;
 }
 
 .action-button.primary:hover {
-    background: rgba(124, 58, 237, 0.7) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.6);
+    background: rgba(124, 58, 237, 1) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.7);
 }
 
-/* Contribution section styling */
+/* Contribution section */
 #contribute h3 {
     color: #fff;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.9),
+        0 0 15px rgba(0, 0, 0, 0.7);
     margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 #user-contributions-list {
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.4);
     border-radius: 12px;
-    padding: 15px;
+    padding: 20px;
     margin-bottom: 20px;
-    min-height: 100px;
+    min-height: 120px;
+    color: #fff;
 }
 
 .contribute-link {
@@ -459,25 +508,20 @@ main { max-width: 1400px; margin: 0 auto; padding: 2rem; }
     text-decoration: none;
 }
 
-/* Dark mode adjustments - Keep glassmorphism, just adjust opacity */
+/* Dark mode - same style, no need for changes */
 body.dark-mode .modal-tabs {
-    background: rgba(0, 0, 0, 0.25);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: transparent !important;
 }
 
 body.dark-mode .modal-tab-content {
-    background: rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.12);
-}
-
-body.dark-mode .setting-item input[type="text"] {
-    background: rgba(0, 0, 0, 0.3) !important;
+    background: transparent !important;
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .modal-tabs {
         margin: 15px 10px;
+        flex-direction: column;
     }
 
     .modal-tab-content {
@@ -491,11 +535,20 @@ body.dark-mode .setting-item input[type="text"] {
 
     .profile-modal-header h2 {
         padding: 12px 20px;
-        font-size: 18px;
+        font-size: 20px;
+    }
+
+    .modal-profile-pic-wrapper {
+        width: 120px;
+        height: 120px;
     }
 }
 
-/* Ensure video plays smoothly */
-.profile-bg-video-full {
-    pointer-events: none;
+/* Ensure no blur effects anywhere */
+* {
+    backdrop-filter: none !important;
 }
+
+.modal-content * {
+    backdrop-filter: none !important;
+    }
