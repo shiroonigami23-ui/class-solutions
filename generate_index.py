@@ -169,31 +169,49 @@ def main():
         <div class="footer-bottom"><p>&copy; {datetime.datetime.now().year} Aryan Singh Chandel | Enhanced Edition</p></div>
     </footer>
 
-    <!-- Profile Modal with Video Background -->
+    <!-- Profile Modal with FULL Video Background -->
     <div id="profileModal" class="modal-overlay">
         <div class="modal-content">
+            <!-- VIDEO BACKGROUND COVERING ENTIRE MODAL -->
+            <video autoplay loop muted playsinline class="profile-bg-video-full">
+                <source src="profile-bg.mp4" type="video/mp4">
+            </video>
+
             <button class="close-modal-btn" id="closeModalBtn">&times;</button>
+
             <div class="profile-modal-header">
-                <!-- VIDEO BACKGROUND -->
-                <video autoplay loop muted playsinline class="profile-bg-video">
-                    <source src="profile-bg.mp4" type="video/mp4">
-                </video>
-                <div class="modal-profile-pic-wrapper"><img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic" class="modal-profile-pic"><div class="modal-pic-overlay"><span>Click to Upload</span></div></div>
+                <div class="modal-profile-pic-wrapper">
+                    <img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic" class="modal-profile-pic">
+                    <div class="modal-pic-overlay"><span>Click to Upload</span></div>
+                </div>
                 <input type="file" id="modal-pic-upload" accept="image/*" style="display: none;">
                 <h2 id="modal-profile-name">Your Name</h2>
             </div>
+
             <div class="modal-tabs">
                 <button class="modal-tab-link active" onclick="openProfileTab(event, 'settings')">Settings</button>
                 <button class="modal-tab-link" onclick="openProfileTab(event, 'contribute')">Your Contributions</button>
             </div>
+
             <div id="settings" class="modal-tab-content" style="display: block;">
-                <div class="setting-item"><label for="profile-name-input">Display Name</label><input type="text" id="profile-name-input" placeholder="Enter your display name..."></div>
-                <div class="setting-item"><label for="github-username-input">GitHub Username</label><input type="text" id="github-username-input" placeholder="e.g., shiroonigami23-ui"></div>
-                <div class="setting-item theme-toggle"><label>Theme</label><button id="modeBtn">â˜€ï¸</button></div>
+                <div class="setting-item">
+                    <label for="profile-name-input">Display Name</label>
+                    <input type="text" id="profile-name-input" placeholder="Enter your display name...">
+                </div>
+                <div class="setting-item">
+                    <label for="github-username-input">GitHub Username</label>
+                    <input type="text" id="github-username-input" placeholder="e.g., shiroonigami23-ui">
+                </div>
+                <div class="setting-item theme-toggle">
+                    <label>Theme</label>
+                    <button id="modeBtn">â˜€ï¸</button>
+                </div>
                 <button id="save-profile-btn" class="action-button primary">Save Changes</button>
             </div>
+
             <div id="contribute" class="modal-tab-content">
-                <h3>Your Submitted Files</h3><div id="user-contributions-list"></div>
+                <h3>Your Submitted Files</h3>
+                <div id="user-contributions-list"></div>
                 <a href="contribute.html" class="action-button primary contribute-link">Contribute a New File</a>
             </div>
         </div>
