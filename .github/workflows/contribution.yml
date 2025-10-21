@@ -26,11 +26,17 @@ jobs:
         id: extract_info
         run: |
           # --- SAFER FILENAME EXTRACTION ---
-          # 1. Get the title part after "File Submission: "
           RAW_FILENAME=$(echo "${{ github.event.issue.title }}" | sed 's/File Submission: //')
-          # 2. Replace spaces and special characters with underscores for a safe filename
-          SAFE_FILENAME=$(echo "$RAW_FILENAME" | tr -s '[:space:]' '_' | sed 's/[^A-Za-z0-9._-]/_/g')
-          
+
+          # --- MORE ROBUST CLEANING ---
+          # 1. Replace special chars (except ., _, -) with _
+          # 2. Squeeze multiple spaces/underscores into one _
+          # 3. Remove any single trailing underscore
+          SAFE_FILENAME=$(echo "$RAW_FILENAME" | \
+            sed 's/[^A-Za-z0-9._ -]/_/g' | \
+            tr -s '[:space:]_' '_' | \
+            sed 's/_$//')
+
           echo "Original Filename: $RAW_FILENAME"
           echo "Sanitized Filename: $SAFE_FILENAME"
           echo "FILENAME=$SAFE_FILENAME" >> $GITHUB_ENV
@@ -39,7 +45,6 @@ jobs:
           echo "USERNAME=$USERNAME" >> $GITHUB_ENV
 
           # --- MORE ROBUST URL FINDER ---
-          # This looks for any markdown-style URL in the entire issue body.
           URL=$(echo "${{ github.event.issue.body }}" | grep -o 'https://[a-zA-Z0-9./-]*' | head -n 1)
           echo "Found URL: $URL"
           echo "FILE_URL=$URL" >> $GITHUB_ENV
@@ -52,7 +57,6 @@ jobs:
             exit 1
           fi
           echo "Downloading from ${{ env.FILE_URL }} and saving as ${{ env.FILENAME }}"
-          # Use curl with -L to follow redirects and -o to specify the output file
           curl -L -o "${{ env.FILENAME }}" "${{ env.FILE_URL }}"
           echo "Download complete."
 
@@ -71,11 +75,9 @@ jobs:
           git add "${{ env.FILENAME }}" contributors.json index.html
           
           if git diff --staged --quiet; then
-            echo "No new changes to commit."
+            echo "No new changes to commit. (Check generate_index.py)"
           else
             git commit -m "feat(bot): Add ${{ env.FILENAME }} from @${{ env.USERNAME }}"
-            
-            # --- THIS IS THE FIXED LINE ---
             git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/shiroonigami23-ui/class-solutions.git HEAD:main
           fi
           
