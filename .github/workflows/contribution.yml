@@ -25,13 +25,8 @@ jobs:
       - name: 'Extract Info and Sanitize Filename'
         id: extract_info
         run: |
-          # --- SAFER FILENAME EXTRACTION ---
           RAW_FILENAME=$(echo "${{ github.event.issue.title }}" | sed 's/File Submission: //')
-
-          # --- MORE ROBUST CLEANING ---
-          # 1. Replace special chars (except ., _, -) with _
-          # 2. Squeeze multiple spaces/underscores into one _
-          # 3. Remove any single trailing underscore
+          
           SAFE_FILENAME=$(echo "$RAW_FILENAME" | \
             sed 's/[^A-Za-z0-9._ -]/_/g' | \
             tr -s '[:space:]_' '_' | \
@@ -44,8 +39,11 @@ jobs:
           USERNAME="${{ github.event.issue.user.login }}"
           echo "USERNAME=$USERNAME" >> $GITHUB_ENV
 
-          # --- MORE ROBUST URL FINDER ---
-          URL=$(echo "${{ github.event.issue.body }}" | grep -o 'https://[a-zA-Z0-9./-]*' | head -n 1)
+          # --- THIS IS THE FIX ---
+          # A much more robust command to find the real file URL
+          # It looks for Markdown links pointing to GitHub's file servers
+          URL=$(echo "${{ github.event.issue.body }}" | grep -oE '(https://github.com/[^)]+/files/[^)]+|https://github-production-user-asset-[^)]+)' | head -n 1)
+          
           echo "Found URL: $URL"
           echo "FILE_URL=$URL" >> $GITHUB_ENV
           
@@ -57,6 +55,7 @@ jobs:
             exit 1
           fi
           echo "Downloading from ${{ env.FILE_URL }} and saving as ${{ env.FILENAME }}"
+          # Use curl -L to follow redirects, -o to save with the correct name
           curl -L -o "${{ env.FILENAME }}" "${{ env.FILE_URL }}"
           echo "Download complete."
 
