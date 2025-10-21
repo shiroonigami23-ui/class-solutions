@@ -74,5 +74,8 @@ jobs:
             echo "No new changes to commit."
           else
             git commit -m "feat(bot): Add ${{ env.FILENAME }} from @${{ env.USERNAME }}"
-            git push
+            
+            # --- THIS IS THE FIXED LINE ---
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/shiroonigami23-ui/class-solutions.git HEAD:main
           fi
+          
