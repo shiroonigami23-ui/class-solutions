@@ -22,6 +22,16 @@ jobs:
         with:
           python-version: '3.10'
 
+      # --- NEW DEBUG STEP ---
+      # This will print the issue body to the action logs
+      - name: '!!! DEBUG: Print Issue Body !!!'
+        run: |
+          echo "Dumping issue body to see what the action sees:"
+          echo "--------------------------------------------------"
+          echo "${{ github.event.issue.body }}"
+          echo "--------------------------------------------------"
+          echo "--- End of Issue Body ---"
+
       - name: 'Extract Info and Sanitize Filename'
         id: extract_info
         run: |
@@ -39,9 +49,7 @@ jobs:
           USERNAME="${{ github.event.issue.user.login }}"
           echo "USERNAME=$USERNAME" >> $GITHUB_ENV
 
-          # --- THIS IS THE FIX ---
-          # A much more robust command to find the real file URL
-          # It looks for Markdown links pointing to GitHub's file servers
+          # This is the command that is failing
           URL=$(echo "${{ github.event.issue.body }}" | grep -oE '(https://github.com/[^)]+/files/[^)]+|https://github-production-user-asset-[^)]+)' | head -n 1)
           
           echo "Found URL: $URL"
@@ -55,7 +63,6 @@ jobs:
             exit 1
           fi
           echo "Downloading from ${{ env.FILE_URL }} and saving as ${{ env.FILENAME }}"
-          # Use curl -L to follow redirects, -o to save with the correct name
           curl -L -o "${{ env.FILENAME }}" "${{ env.FILE_URL }}"
           echo "Download complete."
 
@@ -70,7 +77,6 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          echo "Adding files to git: ${{ env.FILENAME }}, contributors.json, index.html"
           git add "${{ env.FILENAME }}" contributors.json index.html
           
           if git diff --staged --quiet; then
