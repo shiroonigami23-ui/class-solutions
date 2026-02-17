@@ -1,49 +1,81 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const populateDashboard = () => {
-        if (window.hubStats) {
-            document.getElementById('total-files-stat').textContent = window.hubStats.totalFiles || '0';
-            document.getElementById('top-contributor-stat').textContent = window.hubStats.topContributor || 'N/A';
-            
-            const recentFilesEl = document.getElementById('recent-files-stat');
-            if (window.hubStats.recentFiles && window.hubStats.recentFiles.length > 0) {
-                recentFilesEl.textContent = window.hubStats.recentFiles.join('  •  ');
-            } else {
-                recentFilesEl.textContent = 'No recent files found.';
-            }
+document.addEventListener('DOMContentLoaded', function () {
+    const searchBox = document.getElementById('searchBox');
+    const semesterButtons = document.querySelectorAll('.semester-option');
+    const tabButtons = document.querySelectorAll('.tab-link');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    let selectedSemester = localStorage.getItem('selectedSemester') || 'all';
+
+    function applyFilters() {
+        const searchTerm = (searchBox?.value || '').toLowerCase();
+
+        document.querySelectorAll('.file-row').forEach((row) => {
+            const keywords = (row.getAttribute('data-keywords') || '').toLowerCase();
+            const semester = row.getAttribute('data-semester') || '';
+
+            const matchesSearch = keywords.includes(searchTerm);
+            const matchesSemester = selectedSemester === 'all' || semester === selectedSemester;
+
+            row.style.display = matchesSearch && matchesSemester ? '' : 'none';
+        });
+
+        const activeTab = document.querySelector('.tab-content[style*="block"]') || document.querySelector('.tab-content');
+        let visibleInTab = 0;
+        if (activeTab) {
+            activeTab.querySelectorAll('.file-row').forEach(function (row) {
+                if (row.style.display !== 'none') visibleInTab++;
+            });
         }
-    };
-    populateDashboard();
-    // --- Tab System ---
-    const tabs = document.querySelectorAll('.tab-link');
-    if (tabs.length > 0) {
-        // Open the 'All Files' tab by default if it exists, otherwise the first tab
-        const defaultTab = document.querySelector('.tab-link[onclick*="AllFiles"]') || tabs[0];
-        defaultTab.click();
+        const noResultsEl = document.getElementById('no-results-message');
+        if (noResultsEl) noResultsEl.classList.toggle('hidden', visibleInTab > 0);
     }
-});
 
-function openTab(event, tabName) {
-    // Hide all tab content panels
-    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
-    
-    // Deactivate all tab link buttons
-    document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
-    
-    // Show the selected tab content and activate its link
-    const activeTab = document.getElementById(tabName);
-    if(activeTab) {
-        activeTab.style.display = 'block';
+    function setSemester(value) {
+        selectedSemester = value;
+        localStorage.setItem('selectedSemester', value);
+
+        semesterButtons.forEach((button) => {
+            button.classList.toggle('active', button.dataset.semester === value);
+        });
+
+        applyFilters();
     }
-    event.currentTarget.classList.add('active');
-}
 
-// --- File Filtering ---
-function filterFiles() {
-    const searchTerm = document.getElementById('searchBox').value.toLowerCase();
-    document.querySelectorAll('.file-row').forEach(row => {
-        const keywords = row.getAttribute('data-keywords') || '';
-        // A file is shown if its keywords include the search term
-        const isMatch = keywords.toLowerCase().includes(searchTerm);
-        row.style.display = isMatch ? '' : 'none'; // Use empty string to reset to default display
+    function openTab(tabId) {
+        tabContents.forEach((tab) => {
+            tab.style.display = tab.id === tabId ? 'block' : 'none';
+        });
+
+        tabButtons.forEach((button) => {
+            button.classList.toggle('active', button.dataset.tab === tabId);
+        });
+
+        applyFilters();
+    }
+
+    semesterButtons.forEach((button) => {
+        button.addEventListener('click', function () {
+            setSemester(button.dataset.semester || 'all');
+        });
     });
-}
+
+    tabButtons.forEach((button) => {
+        button.addEventListener('click', function () {
+            openTab(button.dataset.tab);
+        });
+    });
+
+    if (searchBox) {
+        searchBox.addEventListener('input', applyFilters);
+    }
+
+    if (!Array.from(semesterButtons).some((button) => button.dataset.semester === selectedSemester)) {
+        selectedSemester = 'all';
+    }
+
+    const initialTab = tabButtons[0]?.dataset.tab;
+    if (initialTab) {
+        openTab(initialTab);
+    }
+    setSemester(selectedSemester);
+});

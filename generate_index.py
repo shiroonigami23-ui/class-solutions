@@ -1,245 +1,463 @@
+import datetime
+import html
+import json
 import os
 import re
-import json
-import datetime
 import subprocess
+from typing import Dict, List, Tuple
 
-# --- CONFIGURATION ---
-SUPPORTED_EXTENSIONS = ['.pdf', '.epub', '.jpg', '.png', '.jpeg', '.txt', '.md']
-IGNORE_FILES = ['README.md', 'generate_index.py', 'style.css', 'script.js', 'profile.js', 'preview.js', 'index.html', 'contribute.html', 'contribution_handler.js', 'contributors.json', 'update_contributors.py']
-COURSE_KEYWORDS = {
-    'CS-501': ['toc', 'automata', 'nfa', 'dfa', 'cs501'],
-    'CS-502': ['dbms', 'rdbms', 'database', 'cs502'],
-    'CS-503': ['cyber', 'security', 'data', 'analytics', 'cs503'],
-    'CS-504': ['internet', 'web', 'iwd', 'cs504']
+try:
+    import yaml
+except ImportError:
+    yaml = None
+
+SUPPORTED_EXTENSIONS = [".pdf", ".epub", ".jpg", ".png", ".jpeg", ".txt", ".md"]
+IGNORE_FILES = {
+    "README.md",
+    "generate_index.py",
+    "style.css",
+    "script.js",
+    "profile.js",
+    "preview.js",
+    "index.html",
+    "contribute.html",
+    "contribution_handler.js",
+    "contributors.json",
+    "update_contributors.py",
+    "subjects.yaml",
 }
+
 FILE_TYPE_MAP = {
-    '.pdf': {'category': 'Documents', 'icon': 'pdf.png'},
-    '.epub': {'category': 'Notes', 'icon': 'notes.png'},
-    '.jpg': {'category': 'Images', 'icon': 'jpg.png'},
-    '.jpeg': {'category': 'Images', 'icon': 'jpeg.png'},
-    '.png': {'category': 'Images', 'icon': 'image.png'},
-    '.txt': {'category': 'Text Files', 'icon': 'txt.png'},
-    '.md': {'category': 'Text Files', 'icon': 'https://img.icons8.com/fluency/48/document.png'}
+    ".pdf": {"category": "Documents", "icon": "pdf.png"},
+    ".epub": {"category": "Notes", "icon": "notes.png"},
+    ".jpg": {"category": "Images", "icon": "jpg.png"},
+    ".jpeg": {"category": "Images", "icon": "jpeg.png"},
+    ".png": {"category": "Images", "icon": "image.png"},
+    ".txt": {"category": "Text Files", "icon": "txt.png"},
+    ".md": {"category": "Text Files", "icon": "txt.png"},
 }
 
-# --- HELPER FUNCTIONS ---
+DEFAULT_COURSES = {
+    "CS-501": {"semester": "5", "keywords": ["toc", "automata", "nfa", "dfa", "cs501"]},
+    "CS-502": {"semester": "5", "keywords": ["dbms", "rdbms", "database", "cs502"]},
+    "CS-503": {"semester": "5", "keywords": ["cyber", "security", "data analytics", "cs503"]},
+    "CS-504": {"semester": "5", "keywords": ["internet", "web", "iwd", "cs504"]},
+    "CS-601": {"semester": "6", "keywords": ["cs601", "machine learning", "ml"]},
+    "CS-602": {"semester": "6", "keywords": ["cs602", "computer network", "network"]},
+    "CS-603": {"semester": "6", "keywords": ["cs603", "compiler", "graphics"]},
+    "CS-604": {"semester": "6", "keywords": ["cs604", "project management", "pm"]},
+    "CS-605": {"semester": "6", "keywords": ["cs605", "data analytics lab", "dal"]},
+    "CS-606": {"semester": "6", "keywords": ["cs606", "skill development", "hnd"]},
+}
 
-def load_contributors():
+DEFAULT_SEMESTERS = {
+    "5": "Semester 5",
+    "6": "Semester 6",
+}
+
+
+def load_contributors() -> Dict[str, str]:
     try:
-        with open('contributors.json', 'r') as f: return json.load(f)
+        with open("contributors.json", "r", encoding="utf-8") as file:
+            data = json.load(file)
+            if isinstance(data, dict):
+                return data
     except (FileNotFoundError, json.JSONDecodeError):
-        return {}
+        pass
+    return {}
 
-def get_course_code(filename):
-    fn_lower = filename.lower();
-    for code, keywords in COURSE_KEYWORDS.items():
-        if any(keyword in fn_lower for keyword in keywords): return code
-    return 'Uncategorized'
 
-def get_file_creation_date(filepath):
+def load_subject_config(config_path: str = "subjects.yaml") -> Dict:
+    config = {
+        "courses": dict(DEFAULT_COURSES),
+        "semesters": dict(DEFAULT_SEMESTERS),
+        "file_overrides": {},
+    }
+
+    if not os.path.exists(config_path):
+        return config
+
+    if yaml is None:
+        print("WARNING: PyYAML is not installed. Using default course/semester mapping.")
+        return config
+
     try:
-        ts_str = subprocess.check_output(['git', 'log', '--diff-filter=A', '--format=%at', '--', filepath]).decode().strip()
-        if ts_str: return datetime.datetime.fromtimestamp(int(ts_str.split('\n')[-1]))
-    except Exception: pass
+        with open(config_path, "r", encoding="utf-8") as file:
+            loaded = yaml.safe_load(file) or {}
+    except Exception as error:
+        print(f"WARNING: Could not parse {config_path}: {error}. Using defaults.")
+        return config
+
+    loaded_courses = loaded.get("courses", {})
+    if isinstance(loaded_courses, dict):
+        for code, meta in loaded_courses.items():
+            if not isinstance(meta, dict):
+                continue
+            merged = dict(config["courses"].get(code, {}))
+            merged.update(meta)
+            merged["keywords"] = [str(k).lower() for k in merged.get("keywords", [])]
+            merged["semester"] = str(merged.get("semester", "General"))
+            config["courses"][code] = merged
+
+    loaded_semesters = loaded.get("semesters", {})
+    if isinstance(loaded_semesters, dict):
+        for sem_key, sem_name in loaded_semesters.items():
+            config["semesters"][str(sem_key)] = str(sem_name)
+
+    loaded_overrides = loaded.get("file_overrides", {})
+    if isinstance(loaded_overrides, dict):
+        config["file_overrides"] = {str(name).lower(): meta for name, meta in loaded_overrides.items() if isinstance(meta, dict)}
+
+    return config
+
+
+def get_file_creation_date(filepath: str) -> datetime.datetime:
+    try:
+        ts_output = subprocess.check_output(["git", "log", "--diff-filter=A", "--format=%at", "--", filepath]).decode().strip()
+        if ts_output:
+            return datetime.datetime.fromtimestamp(int(ts_output.split("\n")[-1]))
+    except Exception:
+        pass
     return datetime.datetime.fromtimestamp(os.path.getmtime(filepath))
 
-def get_file_size(filepath):
-    size = os.path.getsize(filepath);
-    if size < 1024**2: return f"{size/1024:.1f} KB"
-    return f"{size/1024**2:.2f} MB"
 
-def format_title(filename):
-    title = os.path.splitext(filename)[0].replace('_', ' ').replace('-', ' ');
-    return re.sub(r'^(CS \d+\s*)', '', title, flags=re.IGNORECASE).strip().title()
+def get_file_size(filepath: str) -> str:
+    size = os.path.getsize(filepath)
+    if size < 1024 ** 2:
+        return f"{size / 1024:.1f} KB"
+    return f"{size / (1024 ** 2):.2f} MB"
 
-def extract_keywords(file_info):
+
+def format_title(filename: str) -> str:
+    title = os.path.splitext(filename)[0].replace("_", " ").replace("-", " ")
+    title = re.sub(r"^(cs\s*\d+\s*)", "", title, flags=re.IGNORECASE).strip()
+    return title.title()
+
+
+def _normalize_for_match(text: str) -> str:
+    """Normalize filename for keyword matching: lowercase, no hyphens/spaces/underscores."""
+    return re.sub(r"[\s\-_]+", "", text.lower())
+
+
+def resolve_course(filename: str, courses: Dict[str, Dict], file_override: Dict) -> str:
+    if file_override.get("course"):
+        return str(file_override["course"])
+
+    normalized = filename.lower()
+    normalized_compact = _normalize_for_match(filename)
+    best_course = "Uncategorized"
+    best_score = 0
+
+    for code, meta in courses.items():
+        keywords = [str(word).lower() for word in meta.get("keywords", [])]
+        score = 0
+        for word in keywords:
+            if not word:
+                continue
+            word_compact = _normalize_for_match(word)
+            if word in normalized or word_compact in normalized_compact:
+                score += 1
+        if score > best_score:
+            best_course = code
+            best_score = score
+
+    return best_course
+
+
+def resolve_semester(filename: str, course: str, courses: Dict[str, Dict], file_override: Dict) -> str:
+    if file_override.get("semester"):
+        return str(file_override["semester"])
+
+    if course in courses and courses[course].get("semester"):
+        return str(courses[course]["semester"])
+
+    sem_match = re.search(r"sem(?:ester)?\s*[-_ ]?(\d+)", filename, re.IGNORECASE)
+    if sem_match:
+        return sem_match.group(1)
+
+    return "General"
+
+
+def extract_keywords(file_info: Dict, file_override: Dict) -> str:
     keywords = set()
-    base_filename = os.path.splitext(file_info['name'])[0]
-    meta_filepath = base_filename + '.meta'
 
+    override_keywords = file_override.get("keywords", [])
+    if isinstance(override_keywords, list):
+        keywords.update(str(item).lower() for item in override_keywords)
+
+    meta_filepath = os.path.splitext(file_info["name"])[0] + ".meta"
     if os.path.exists(meta_filepath):
-        with open(meta_filepath, 'r', encoding='utf-8') as f:
-            keywords.update(f.read().lower().split())
+        with open(meta_filepath, "r", encoding="utf-8") as file:
+            keywords.update(file.read().lower().split())
 
-    if file_info['ext'] in ['.txt', '.md']:
+    if file_info["ext"] in [".txt", ".md"]:
         try:
-            with open(file_info['name'], 'r', encoding='utf-8') as f:
-                content = f.read(500).lower() 
-                words = re.findall(r'\b\w+\b', content)
+            with open(file_info["name"], "r", encoding="utf-8") as file:
+                content = file.read(500).lower()
+                words = re.findall(r"\b\w+\b", content)
                 keywords.update(words)
-        except Exception as e:
-            print(f"Could not read {file_info['name']} for keywords: {e}")
+        except Exception as error:
+            print(f"WARNING: Could not read {file_info['name']} for keywords: {error}")
 
-    return ' '.join(list(keywords))
+    return " ".join(sorted(keywords))
 
-def generate_file_html(file_info, contributors):
-    title = format_title(file_info['name'])
-    base_keywords = f"{title} {file_info['course']}"
-    content_keywords = extract_keywords(file_info)
-    all_keywords = f"{base_keywords} {content_keywords}"
 
-    contributor_name = contributors.get(file_info['name'])
-    contributor_html = f'<div class="contributor-credit">Added by <a href="https://github.com/{contributor_name}" target="_blank">@{contributor_name}</a></div>' if contributor_name else ''
+def generate_file_html(file_info: Dict, contributors: Dict[str, str], file_override: Dict) -> str:
+    title = file_override.get("title") or format_title(file_info["name"])
+    contributor_name = contributors.get(file_info["name"])
 
-    preview_button_html = ''
-    if file_info['ext'] == '.pdf':
-        preview_button_html = f'<button class="preview-button" data-pdf-url="{file_info["name"]}">Preview</button>'
+    base_keywords = f"{title} {file_info['course']} semester {file_info['semester']}"
+    content_keywords = extract_keywords(file_info, file_override)
+    all_keywords = f"{base_keywords} {content_keywords}".strip()
+
+    contributor_html = ""
+    if contributor_name:
+        contributor_html = (
+            f'<div class="contributor-credit">Added by '
+            f'<a href="https://github.com/{html.escape(contributor_name)}" target="_blank">'
+            f'@{html.escape(contributor_name)}</a></div>'
+        )
+
+    preview_button_html = ""
+    if file_info["ext"] == ".pdf":
+        preview_button_html = f'<button class="preview-button" data-pdf-url="{html.escape(file_info["name"])}">Preview</button>'
+
+    file_name = html.escape(file_info["name"])
+    safe_title = html.escape(title)
+    safe_keywords = html.escape(all_keywords)
+    safe_course = html.escape(file_info["course"])
+    safe_semester = html.escape(str(file_info["semester"]))
+    safe_size = html.escape(file_info["size"])
+    icon = html.escape(FILE_TYPE_MAP.get(file_info["ext"], {}).get("icon", "txt.png"))
+    ext = html.escape(file_info["ext"])
 
     return f"""
-    <div class="file-card file-row" data-keywords="{all_keywords}" data-course="{file_info['course']}">
-        <div class="file-icon"><img src="{FILE_TYPE_MAP.get(file_info['ext'], {}).get('icon', '')}" alt="{file_info['ext']} icon"></div>
+    <div class="file-card file-row" data-keywords="{safe_keywords}" data-course="{safe_course}" data-semester="{safe_semester}">
+        <div class="file-icon"><img src="{icon}" alt="{ext} icon"></div>
         <div class="file-details">
-            <div class="file-title">{title}</div>
-            <div class="file-meta">{file_info['course']} &bull; {file_info['size']}</div>
+            <div class="file-title">{safe_title}</div>
+            <div class="file-meta"><span>{safe_course}</span><span>Sem {safe_semester}</span><span>{safe_size}</span></div>
             {contributor_html}
         </div>
         <div class="file-actions">
             {preview_button_html}
-            <a href="{file_info['name']}" target="_blank" class="download-button" aria-label="Download {title}">View</a>
+            <a href="{file_name}" target="_blank" class="download-button" aria-label="Open {safe_title}">View</a>
         </div>
     </div>"""
 
-def main():
+
+def sort_semesters(semester_values: List[str]) -> List[str]:
+    def sort_key(value: str) -> Tuple[int, str]:
+        if str(value).isdigit():
+            return (0, str(int(value)))
+        return (1, str(value))
+
+    unique = sorted(set(str(item) for item in semester_values), key=sort_key)
+    return unique
+
+
+def main() -> None:
+    config = load_subject_config()
     contributors = load_contributors()
+
+    courses = config["courses"]
+    semesters = config["semesters"]
+    file_overrides = config["file_overrides"]
+
     all_files = []
-    for filename in sorted(os.listdir('.')):
+    for filename in sorted(os.listdir(".")):
         ext = os.path.splitext(filename)[1].lower()
-        if ext in SUPPORTED_EXTENSIONS and filename not in IGNORE_FILES and not filename.startswith('.'):
-            all_files.append({'name': filename, 'ext': ext, 'size': get_file_size(filename), 'date': get_file_creation_date(filename), 'course': get_course_code(filename)})
+        if ext not in SUPPORTED_EXTENSIONS or filename in IGNORE_FILES or filename.startswith("."):
+            continue
 
-    all_files.sort(key=lambda x: x['date'], reverse=True)
+        override = file_overrides.get(filename.lower(), {})
+        course = resolve_course(filename, courses, override)
+        semester = resolve_semester(filename, course, courses, override)
 
-    content_by_category = {v['category']: '' for v in FILE_TYPE_MAP.values()}; content_by_category['All Files'] = ''
-    for f in all_files:
-        html_card = generate_file_html(f, contributors)
-        content_by_category['All Files'] += html_card
-        category = FILE_TYPE_MAP.get(f['ext'], {}).get('category')
-        if category in content_by_category: content_by_category[category] += html_card
+        all_files.append(
+            {
+                "name": filename,
+                "ext": ext,
+                "size": get_file_size(filename),
+                "date": get_file_creation_date(filename),
+                "course": course,
+                "semester": semester,
+                "override": override,
+            }
+        )
 
-    tabs_html, panels_html = "", ""
-    ordered_categories = ['All Files'] + sorted([c for c in content_by_category if c != 'All Files'])
-    for category in ordered_categories:
-        content = content_by_category.get(category, '');
-        if content:
-            id_name = category.replace(' ', '');
-            tabs_html += f'<button class="tab-link" onclick="openTab(event, \'{id_name}\')">{category}</button>'
-            panels_html += f'<div id="{id_name}" class="tab-content"><div class="file-grid">{content}</div></div>'
+    all_files.sort(key=lambda item: item["date"], reverse=True)
+
+    categories = sorted({meta["category"] for meta in FILE_TYPE_MAP.values()})
+    content_by_category = {"All Files": ""}
+    for category in categories:
+        content_by_category[category] = ""
+
+    for file_info in all_files:
+        card_html = generate_file_html(file_info, contributors, file_info["override"])
+        content_by_category["All Files"] += card_html
+
+        category = FILE_TYPE_MAP.get(file_info["ext"], {}).get("category")
+        if category in content_by_category:
+            content_by_category[category] += card_html
+
+    tabs_html = ""
+    panels_html = ""
+    ordered_categories = ["All Files"] + [category for category in categories if content_by_category.get(category)]
+
+    for index, category in enumerate(ordered_categories):
+        content = content_by_category.get(category, "")
+        if not content:
+            continue
+        tab_id = category.replace(" ", "")
+        active_class = " active" if index == 0 else ""
+        tabs_html += f'<button class="tab-link{active_class}" data-tab="{tab_id}">{html.escape(category)}</button>'
+        panels_html += f'<div id="{tab_id}" class="tab-content" style="display: {"block" if index == 0 else "none"};"><div class="file-grid">{content}</div></div>'
+
+    # Show all semesters from YAML first, then any from files (e.g. General)
+    file_semesters = {item["semester"] for item in all_files if item.get("semester")}
+    config_sem_keys = sort_semesters(list(semesters.keys()))
+    semester_values = sort_semesters(list(set(config_sem_keys) | file_semesters))
+    semester_buttons = '<button class="semester-option active" data-semester="all">All Semesters</button>'
+    for sem in semester_values:
+        label = semesters.get(sem, f"Semester {sem}")
+        semester_buttons += f'<button class="semester-option" data-semester="{html.escape(sem)}">{html.escape(label)}</button>'
 
     contributors_json = json.dumps(contributors)
+    year = datetime.datetime.now().year
 
-    html_template = f"""
-<!DOCTYPE html>
-<html lang="en">
+    html_template = f"""<!DOCTYPE html>
+<html lang=\"en\">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset=\"UTF-8\"> 
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
     <title>CSE Student Hub</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#7C3AED">
-    <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png"/>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js" defer></script>
+    <link rel=\"manifest\" href=\"manifest.json\">
+    <meta name=\"theme-color\" content=\"#0B7285\">
+    <link rel=\"icon\" href=\"https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png\"/>
+    <link rel=\"stylesheet\" href=\"style.css\">
+    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+    <link href=\"https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@500;700&display=swap\" rel=\"stylesheet\">
+    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js\" defer></script>
 </head>
 <body>
-    <!-- MAIN PAGE VIDEO BACKGROUND -->
-    <video autoplay loop muted playsinline class="main-page-bg-video">
-        <source src="bg.mp4" type="video/mp4">
+    <video autoplay loop muted playsinline class=\"main-page-bg-video\">
+        <source src=\"bg.mp4\" type=\"video/mp4\">
     </video>
 
     <header>
-        <div class="header-content"><h1>CSE Student Hub</h1><p>Your central dashboard for notes, assignments, and resources.</p></div>
-        <div class="profile-area"><img src="https://placehold.co/100x100/7c3aed/FFFFFF?text=U" alt="User Profile" id="profile-pic" class="profile-pic"></div>
-    </header>
-    <main>
-        <div class="search-and-tabs"><div class="search-box"><input class="search-input" type="text" placeholder="Filter files by name or course..." id="searchBox" oninput="filterFiles()"></div><div class="tabs">{tabs_html}</div></div>
-        {panels_html}
-    </main>
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-section"><h4>Share this Site</h4><p>Scan the QR code with your phone.</p><img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://shiroonigami23-ui.github.io/class-solutions/" alt="QR Code for site"/></div>
-            <div class="footer-section"><h4>Feedback & Requests</h4><p>Have a suggestion or need a file?</p><a href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank" class="feedback-button">Let Us Know</a></div>
+        <div class=\"header-content\">
+            <h1>CSE Student Hub</h1>
+            <p>Pick your semester and jump to notes, assignments, and lab files.</p>
         </div>
-        <div class="footer-bottom"><p>&copy; {datetime.datetime.now().year} Aryan Singh Chandel | Enhanced Edition</p></div>
+        <div class=\"profile-area\">
+            <img src=\"https://placehold.co/100x100/0b7285/FFFFFF?text=U\" alt=\"User Profile\" id=\"profile-pic\" class=\"profile-pic\">
+        </div>
+    </header>
+
+    <main>
+        <section class=\"semester-selector semester-hero\" aria-label=\"Semester selection\">
+            <span class=\"semester-badge\">Step 1</span>
+            <h2>Choose your semester</h2>
+            <p class=\"semester-hint\" id=\"semesterHint\">Start here — pick your semester to see relevant notes, assignments, and lab files. You can switch anytime.</p>
+            <div class=\"semester-options\" id=\"semester-options\">{semester_buttons}</div>
+        </section>
+
+        <section class=\"search-and-tabs\" aria-label=\"Filter and browse\">
+            <div class=\"search-box\">
+                <span class=\"search-icon\" aria-hidden=\"true\">⌕</span>
+                <input class=\"search-input\" type=\"text\" placeholder=\"Filter by file name, course code, or keyword...\" id=\"searchBox\" autocomplete=\"off\">
+            </div>
+            <div class=\"tabs\" role=\"tablist\">{tabs_html}</div>
+        </section>
+
+        {panels_html}
+        <p id=\"no-results-message\" class=\"no-results-message hidden\" aria-live=\"polite\">No files match your semester or search. Try a different semester or keyword.</p>
+    </main>
+
+    <footer class=\"site-footer\">
+        <div class=\"footer-content\">
+            <div class=\"footer-section\"><h4>Share this Site</h4><p>Scan and open on mobile.</p><img class=\"qr-code\" src=\"https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://shiroonigami23-ui.github.io/class-solutions/\" alt=\"QR Code for site\"/></div>
+            <div class=\"footer-section\"><h4>Feedback & Requests</h4><p>Need a file or fix?</p><a href=\"https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header\" target=\"_blank\" class=\"feedback-button\">Let Us Know</a></div>
+        </div>
+        <div class=\"footer-bottom\"><p>&copy; {year} CSE Student Hub</p></div>
     </footer>
 
-    <!-- Profile Modal with Video Background -->
-    <div id="profileModal" class="modal-overlay">
-        <div class="modal-content">
-            <!-- PROFILE VIDEO BACKGROUND -->
-            <video autoplay loop muted playsinline class="profile-bg-video-full">
-                <source src="profile-bg.mp4" type="video/mp4">
+    <div id=\"profileModal\" class=\"modal-overlay\">
+        <div class=\"modal-content\">
+            <video autoplay loop muted playsinline class=\"profile-bg-video-full\">
+                <source src=\"profile-bg.mp4\" type=\"video/mp4\">
             </video>
 
-            <button class="close-modal-btn" id="closeModalBtn">&times;</button>
+            <button class=\"close-modal-btn\" id=\"closeModalBtn\">&times;</button>
 
-            <div class="profile-modal-header">
-                <div class="modal-profile-pic-wrapper">
-                    <img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic" class="modal-profile-pic">
-                    <div class="modal-pic-overlay"><span>Click to Upload</span></div>
+            <div class=\"profile-modal-header\">
+                <div class=\"modal-profile-pic-wrapper\">
+                    <img src=\"https://placehold.co/200x200/0b7285/FFFFFF?text=U\" alt=\"User Profile\" id=\"modal-profile-pic\" class=\"modal-profile-pic\">
+                    <div class=\"modal-pic-overlay\"><span>Click to Upload</span></div>
                 </div>
-                <input type="file" id="modal-pic-upload" accept="image/*" style="display: none;">
-                <h2 id="modal-profile-name">Your Name</h2>
+                <input type=\"file\" id=\"modal-pic-upload\" accept=\"image/*\" style=\"display: none;\">
+                <h2 id=\"modal-profile-name\">Your Name</h2>
             </div>
 
-            <div class="modal-tabs">
-                <button class="modal-tab-link active" onclick="openProfileTab(event, 'settings')">Settings</button>
-                <button class="modal-tab-link" onclick="openProfileTab(event, 'contribute')">Your Contributions</button>
+            <div class=\"modal-tabs\">
+                <button class=\"modal-tab-link active\" onclick=\"openProfileTab(event, 'settings')\">Settings</button>
+                <button class=\"modal-tab-link\" onclick=\"openProfileTab(event, 'contribute')\">Your Contributions</button>
             </div>
 
-            <div id="settings" class="modal-tab-content" style="display: block;">
-                <div class="setting-item">
-                    <label for="profile-name-input">Display Name</label>
-                    <input type="text" id="profile-name-input" placeholder="Enter your display name...">
+            <div id=\"settings\" class=\"modal-tab-content\" style=\"display: block;\">
+                <div class=\"setting-item\">
+                    <label for=\"profile-name-input\">Display Name</label>
+                    <input type=\"text\" id=\"profile-name-input\" placeholder=\"Enter your display name...\">
                 </div>
-                <div class="setting-item">
-                    <label for="github-username-input">GitHub Username</label>
-                    <input type="text" id="github-username-input" placeholder="e.g., shiroonigami23-ui">
+                <div class=\"setting-item\">
+                    <label for=\"github-username-input\">GitHub Username</label>
+                    <input type=\"text\" id=\"github-username-input\" placeholder=\"e.g., shiroonigami23-ui\">
                 </div>
-                <div class="setting-item theme-toggle">
+                <div class=\"setting-item theme-toggle\">
                     <label>Theme</label>
-                    <button id="modeBtn">☀️</button>
+                    <button id=\"modeBtn\">☀️</button>
                 </div>
-                <button id="save-profile-btn" class="action-button primary">Save Changes</button>
+                <button id=\"save-profile-btn\" class=\"action-button primary\">Save Changes</button>
             </div>
 
-            <div id="contribute" class="modal-tab-content">
+            <div id=\"contribute\" class=\"modal-tab-content\">
                 <h3>Your Submitted Files</h3>
-                <div id="user-contributions-list"></div>
-                <a href="contribute.html" class="action-button primary contribute-link">Contribute a New File</a>
+                <div id=\"user-contributions-list\"></div>
+                <a href=\"contribute.html\" class=\"action-button primary contribute-link\">Contribute a New File</a>
             </div>
         </div>
     </div>
 
-    <!-- PDF Preview Modal -->
-    <div id="pdfPreviewModal" class="modal-overlay pdf-preview-modal">
-        <div class="pdf-modal-content">
-            <button class="close-modal-btn" id="closePdfModalBtn">&times;</button>
-            <h3 id="pdf-modal-title"></h3>
-            <div id="pdf-viewer-container"><div id="loader"></div><canvas id="pdf-canvas"></canvas></div>
+    <div id=\"pdfPreviewModal\" class=\"modal-overlay pdf-preview-modal\">
+        <div class=\"pdf-modal-content\">
+            <button class=\"close-modal-btn\" id=\"closePdfModalBtn\">&times;</button>
+            <h3 id=\"pdf-modal-title\"></h3>
+            <div id=\"pdf-viewer-container\"><div id=\"loader\"></div><canvas id=\"pdf-canvas\"></canvas></div>
         </div>
     </div>
 
-    <script> window.contributorsData = {contributors_json}; </script>
-    <script src="script.js" defer></script>
-    <script src="profile.js" defer></script>
-    <script src="preview.js" defer></script>
+    <script>window.contributorsData = {contributors_json};</script>
+    <script src=\"script.js\" defer></script>
+    <script src=\"profile.js\" defer></script>
+    <script src=\"preview.js\" defer></script>
     <script>
         if ('serviceWorker' in navigator) {{
             window.addEventListener('load', () => {{
-                navigator.serviceWorker.register('/sw.js').then(registration => {{
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }}, err => {{
-                    console.log('ServiceWorker registration failed: ', err);
-                }});
+                navigator.serviceWorker.register('/sw.js').catch(() => {{}});
             }});
         }}
     </script>
 </body>
-</html>"""
-    with open('index.html', 'w', encoding='utf-8') as f: f.write(html_template)
-    print("SUCCESS: index.html generated with DUAL video backgrounds (main page + profile)!")
+</html>
+"""
 
-if __name__ == '__main__':
+    with open("index.html", "w", encoding="utf-8") as file:
+        file.write(html_template)
+
+    print("SUCCESS: index.html generated with semester selector and YAML-aware course mapping.")
+
+
+if __name__ == "__main__":
     main()

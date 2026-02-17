@@ -1,0 +1,59 @@
+# Course mapping used by generate_index.py
+# Workflow: drop files into repo root, update this YAML only when adding a new subject/code,
+# then run: python generate_index.py
+#
+# 6th sem subjects from official timetable (Jan–June 2026, CSE Dept):
+#   CS-601 Machine Learning | CS-602 Computer Network | CS-603 Compiler/Graphics
+#   CS-604 Project Management | CS-605 Data Analytics Lab | CS-606 Skill Development Lab
+
+semesters:
+  "5": Semester 5
+  "6": Semester 6
+
+courses:
+  CS-501:
+    semester: "5"
+    keywords: [toc, automata, nfa, dfa, cs501]
+  CS-502:
+    semester: "5"
+    keywords: [dbms, rdbms, database, cs502]
+  CS-503:
+    semester: "5"
+    keywords: [cyber, security, data analytics, cs503]
+  CS-504:
+    semester: "5"
+    keywords: [internet, web, iwd, cs504]
+
+  # 6th semester (from class timetable) – keywords match many filename variants
+  CS-601:
+    semester: "6"
+    name: Machine Learning
+    keywords: [cs601, cs-601, 601, machine learning, machinelearning, ml, deep learning]
+  CS-602:
+    semester: "6"
+    name: Computer Network
+    keywords: [cs602, cs-602, 602, computer network, computernetwork, networking, cn, networks]
+  CS-603:
+    semester: "6"
+    name: Compiler/Graphics
+    keywords: [cs603, cs-603, 603, compiler, compilers, graphics, cg]
+  CS-604:
+    semester: "6"
+    name: Project Management
+    keywords: [cs604, cs-604, 604, project management, projectmanagement, pm]
+  CS-605:
+    semester: "6"
+    name: Data Analytics Lab
+    keywords: [cs605, cs-605, 605, data analytics lab, dataanalytics, dal]
+  CS-606:
+    semester: "6"
+    name: Skill Development Lab
+    keywords: [cs606, cs-606, 606, skill development, skilldevelopment, hnd]
+
+# Optional per-file overrides (uncomment and edit when needed)
+# file_overrides:
+#   "my_file_name.pdf":
+#     course: "CS-601"
+#     semester: "6"
+#     title: "Machine Learning Unit 1"
+#     keywords: [ml, regression, exam]

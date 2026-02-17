@@ -43,44 +43,59 @@
 
 ## 📖 Available Subjects
 
-The repository currently hosts materials for:
+The hub supports **5th and 6th semester** subjects. Choose your semester on the site to filter files.
 
-| Code | Subject | Type of Content |
+| Code | Subject | Semester |
 | :--- | :--- | :--- |
-| **CS-501** | Theory of Computation (TOC) | Assignments, Notes (NFA/DFA), Graph Solutions |
-| **CS-502** | DBMS | Unit Notes, Assignment Solutions |
-| **CS-503** | Cyber Security & Data Analytics | Assignments, Digital Notes, EPUBs |
-| **CS-504** | Internet & Web Tech | Web Development Assignments, Notes |
+| **CS-501** | Theory of Computation (TOC) | 5 |
+| **CS-502** | DBMS | 5 |
+| **CS-503** | Cyber Security & Data Analytics | 5 |
+| **CS-504** | Internet & Web Tech | 5 |
+| **CS-601** | Machine Learning | 6 |
+| **CS-602** | Computer Network | 6 |
+| **CS-603** | Compiler/Graphics | 6 |
+| **CS-604** | Project Management | 6 |
+| **CS-605** | Data Analytics Lab | 6 |
+| **CS-606** | Skill Development Lab | 6 |
 
 ---
 
 ## 🎮 How to Use
 
 1. **Visit the Site:** Open the [Live Link](https://shiroonigami23-ui.github.io/class-solutions/).
-2. **Find a File:**
-   - Use the **Search Bar** at the top.
-   - Or click the **Tags** (e.g., "Notes", "Documents") to filter.
-3. **Preview/Download:**
-   - Click **Preview** to read the file in a modal.
-   - Click **View/Download** to save it to your device.
-4. **Contribute:** Click on your profile icon to access the contribution page or settings.
+2. **Choose your semester** (Step 1) — e.g. Semester 5 or 6 — to see relevant files.
+3. **Find a File:**
+   - Use the **Search bar** to filter by name, course code, or keyword.
+   - Use the **tabs** (All Files, Documents, Images, Notes) to filter by type.
+4. **Preview/Download:**
+   - Click **Preview** for PDFs in-browser.
+   - Click **View** to open or download the file.
+5. **Contribute:** Click your profile icon for settings and the contribution page.
 
 ---
 
 ## 🤝 How to Contribute
 
-We welcome new notes and assignments! To add your files:
+We welcome new notes and assignments! Use the **semester workflow** below (drop files in repo root and run the generator). You can also use the in-app contribution form (profile → Contribute a New File).
 
-### Option 1: Via GitHub (Recommended)
-1. **Fork** this repository.
-2. Upload your file to the `files/` directory.
-3. Open `data.json` (or the relevant data file) and add an entry for your new file following the existing format:
-   ```json
-   {
-     "name": "Your File Name",
-     "subject": "CS-XXX",
-     "type": "pdf",
-     "size": "1.2 MB",
-     "link": "files/yourfile.pdf"
-   }
-   
+---
+
+## Semester Workflow (5th & 6th sem)
+
+**Same automatic flow for all semesters:**
+
+1. **Drop files** into the repository root (PDFs, EPUBs, images, etc.).
+2. **Run once:** `python generate_index.py`
+3. The script scans the root, assigns each file to a subject and semester from `subjects.yaml`, and regenerates `index.html`.
+
+**No need to edit `subjects.yaml`** unless you add a **new** subject code. Existing 5th and 6th sem subjects (CS-501–CS-504, CS-601–CS-606) are already configured.
+
+### How files get assigned (6th sem and others)
+
+The script matches **filenames** to courses using **keywords** in `subjects.yaml`. It is flexible with naming:
+
+- **Course code in name:** `CS601_Notes.pdf`, `CS-601-ML.pdf`, `601_Assignment.pdf` → **CS-601** (Machine Learning)
+- **Subject words:** `Machine_Learning_Unit1.pdf`, `Computer_Network_notes.pdf` → **CS-601**, **CS-602**
+- **Spaces/hyphens/underscores** in filenames are ignored for matching, so `CS-601` and `CS601` both match.
+
+6th sem courses (CS-601 to CS-606) have extra keywords so many name variants map to the correct 600-series. If a file still lands in “Uncategorized”, add a one-off mapping under `file_overrides` in `subjects.yaml` or rename the file to include the subject code or name.

@@ -1,787 +1,807 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSE Student Hub</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#7C3AED">
+    <meta name="theme-color" content="#0B7285">
     <link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4da.png"/>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js" defer></script>
 </head>
 <body>
-    <!-- MAIN PAGE VIDEO BACKGROUND -->
     <video autoplay loop muted playsinline class="main-page-bg-video">
         <source src="bg.mp4" type="video/mp4">
     </video>
 
     <header>
-        <div class="header-content"><h1>CSE Student Hub</h1><p>Your central dashboard for notes, assignments, and resources.</p></div>
-        <div class="profile-area"><img src="https://placehold.co/100x100/7c3aed/FFFFFF?text=U" alt="User Profile" id="profile-pic" class="profile-pic"></div>
+        <div class="header-content">
+            <h1>CSE Student Hub</h1>
+            <p>Pick your semester and jump to notes, assignments, and lab files.</p>
+        </div>
+        <div class="profile-area">
+            <img src="https://placehold.co/100x100/0b7285/FFFFFF?text=U" alt="User Profile" id="profile-pic" class="profile-pic">
+        </div>
     </header>
+
     <main>
-        <div class="search-and-tabs"><div class="search-box"><input class="search-input" type="text" placeholder="Filter files by name or course..." id="searchBox" oninput="filterFiles()"></div><div class="tabs"><button class="tab-link" onclick="openTab(event, 'AllFiles')">All Files</button><button class="tab-link" onclick="openTab(event, 'Documents')">Documents</button><button class="tab-link" onclick="openTab(event, 'Images')">Images</button><button class="tab-link" onclick="openTab(event, 'Notes')">Notes</button></div></div>
-        <div id="AllFiles" class="tab-content"><div class="file-grid">
-    <div class="file-card file-row" data-keywords="503 Cyber Security CS-503 " data-course="CS-503">
+        <section class="semester-selector semester-hero" aria-label="Semester selection">
+            <span class="semester-badge">Step 1</span>
+            <h2>Choose your semester</h2>
+            <p class="semester-hint" id="semesterHint">Start here — pick your semester to see relevant notes, assignments, and lab files. You can switch anytime.</p>
+            <div class="semester-options" id="semester-options"><button class="semester-option active" data-semester="all">All Semesters</button><button class="semester-option" data-semester="5">Semester 5</button><button class="semester-option" data-semester="6">Semester 6</button><button class="semester-option" data-semester="General">Semester General</button></div>
+        </section>
+
+        <section class="search-and-tabs" aria-label="Filter and browse">
+            <div class="search-box">
+                <span class="search-icon" aria-hidden="true">⌕</span>
+                <input class="search-input" type="text" placeholder="Filter by file name, course code, or keyword..." id="searchBox" autocomplete="off">
+            </div>
+            <div class="tabs" role="tablist"><button class="tab-link active" data-tab="AllFiles">All Files</button><button class="tab-link" data-tab="Documents">Documents</button><button class="tab-link" data-tab="Images">Images</button><button class="tab-link" data-tab="Notes">Notes</button></div>
+        </section>
+
+        <div id="AllFiles" class="tab-content" style="display: block;"><div class="file-grid">
+    <div class="file-card file-row" data-keywords="503 Cyber Security CS-503 semester 5" data-course="CS-503" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">503 Cyber Security</div>
-            <div class="file-meta">CS-503 &bull; 61.9 KB</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>61.9 KB</span></div>
             
         </div>
         <div class="file-actions">
             <button class="preview-button" data-pdf-url="503_Cyber_Security.pdf">Preview</button>
-            <a href="503_Cyber_Security.pdf" target="_blank" class="download-button" aria-label="Download 503 Cyber Security">View</a>
+            <a href="503_Cyber_Security.pdf" target="_blank" class="download-button" aria-label="Open 503 Cyber Security">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Cyber Security Assignment 2 CS-503 " data-course="CS-503">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Cyber Security Assignment 2</div>
-            <div class="file-meta">CS-503 &bull; 169.3 KB</div>
-            <div class="contributor-credit">Added by <a href="https://github.com/shiroonigami23-ui" target="_blank">@shiroonigami23-ui</a></div>
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="CS_503_Cyber_Security_assignment_2.pdf">Preview</button>
-            <a href="CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Cyber Security Assignment 2">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Cs(504) Assignment 3 Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
-        <div class="file-details">
-            <div class="file-title">Cs(504) Assignment 3</div>
-            <div class="file-meta">Uncategorized &bull; 43.1 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="Cs(504) assignment_3.png" target="_blank" class="download-button" aria-label="Download Cs(504) Assignment 3">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Cs504 Assignment 3 CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Cs504 Assignment 3</div>
-            <div class="file-meta">CS-504 &bull; 105.8 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Cs504_Assignment_3.pdf">Preview</button>
-            <a href="Cs504_Assignment_3.pdf" target="_blank" class="download-button" aria-label="Download Cs504 Assignment 3">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Dbms Assignment1 CS-502 " data-course="CS-502">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Dbms Assignment1</div>
-            <div class="file-meta">CS-502 &bull; 2.09 MB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="DBMS_Assignment1.pdf">Preview</button>
-            <a href="DBMS_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Assignment1">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Dbms Notes Unit 1 CS-502 " data-course="CS-502">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Dbms Notes Unit 1</div>
-            <div class="file-meta">CS-502 &bull; 88.4 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="DBMS_notes_unit_1.pdf">Preview</button>
-            <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 1">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Dbms Notes Unit 2 CS-502 " data-course="CS-502">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Dbms Notes Unit 2</div>
-            <div class="file-meta">CS-502 &bull; 85.2 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="DBMS_notes_unit_2.pdf">Preview</button>
-            <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 2">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Data Analytics CS-503 " data-course="CS-503">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
-        <div class="file-details">
-            <div class="file-title">Data Analytics</div>
-            <div class="file-meta">CS-503 &bull; 9.4 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="Data Analytics .epub" target="_blank" class="download-button" aria-label="Download Data Analytics">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Data Analytics Notes CS-503 " data-course="CS-503">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
-        <div class="file-details">
-            <div class="file-title">Data Analytics Notes</div>
-            <div class="file-meta">CS-503 &bull; 7.4 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-button" aria-label="Download Data Analytics Notes">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Data Analytics Assignment1 CS-503 " data-course="CS-503">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Data Analytics Assignment1</div>
-            <div class="file-meta">CS-503 &bull; 82.6 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Data_Analytics_assignment1.pdf">Preview</button>
-            <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-button" aria-label="Download Data Analytics Assignment1">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Digital Notes Dataanalytics CS-503 " data-course="CS-503">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
-        <div class="file-details">
-            <div class="file-title">Digital Notes Dataanalytics</div>
-            <div class="file-meta">CS-503 &bull; 568.1 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="Digital_Notes_DataAnalytics.epub" target="_blank" class="download-button" aria-label="Download Digital Notes Dataanalytics">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Finite Automata CS-501 " data-course="CS-501">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
-        <div class="file-details">
-            <div class="file-title">Finite Automata</div>
-            <div class="file-meta">CS-501 &bull; 9.7 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="Finite Automata .epub" target="_blank" class="download-button" aria-label="Download Finite Automata">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Iawt Assignment 4 Uncategorized " data-course="Uncategorized">
+    <div class="file-card file-row" data-keywords="Iawt Assignment 4 Uncategorized semester General" data-course="Uncategorized" data-semester="General">
         <div class="file-icon"><img src="image.png" alt=".png icon"></div>
         <div class="file-details">
             <div class="file-title">Iawt Assignment 4</div>
-            <div class="file-meta">Uncategorized &bull; 405.7 KB</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>405.7 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="IAWT-Assignment-4.png" target="_blank" class="download-button" aria-label="Download Iawt Assignment 4">View</a>
+            <a href="IAWT-Assignment-4.png" target="_blank" class="download-button" aria-label="Open Iawt Assignment 4">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Technology Notes CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Internet And Web Technology Notes</div>
-            <div class="file-meta">CS-504 &bull; 162.7 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Internet and web technology notes.pdf">Preview</button>
-            <a href="Internet and web technology notes.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Technology Notes">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Technology CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
-        <div class="file-details">
-            <div class="file-title">Internet And Web Technology</div>
-            <div class="file-meta">CS-504 &bull; 9.0 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="Internet and web technology.epub" target="_blank" class="download-button" aria-label="Download Internet And Web Technology">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Internet And Web Development Assignment</div>
-            <div class="file-meta">CS-504 &bull; 5.14 MB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Internet_and_Web_Development_Assignment.pdf">Preview</button>
-            <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 2 CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Internet And Web Development Assignment 2</div>
-            <div class="file-meta">CS-504 &bull; 176.8 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Internet_and_Web_development_assignment_2.pdf">Preview</button>
-            <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment 2">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 4 CS-504 " data-course="CS-504">
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 4 CS-504 semester 5" data-course="CS-504" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Internet And Web Development Assignment 4</div>
-            <div class="file-meta">CS-504 &bull; 159.1 KB</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>159.1 KB</span></div>
             
         </div>
         <div class="file-actions">
             <button class="preview-button" data-pdf-url="Internet_and_Web_development_assignment_4.pdf">Preview</button>
-            <a href="Internet_and_Web_development_assignment_4.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment 4">View</a>
+            <a href="Internet_and_Web_development_assignment_4.pdf" target="_blank" class="download-button" aria-label="Open Internet And Web Development Assignment 4">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Rdbms CS-502 " data-course="CS-502">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
+    <div class="file-card file-row" data-keywords="Cs(504) Assignment 3 Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
         <div class="file-details">
-            <div class="file-title">Rdbms</div>
-            <div class="file-meta">CS-502 &bull; 62.8 KB</div>
+            <div class="file-title">Cs(504) Assignment 3</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>43.1 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="RDBMS.epub" target="_blank" class="download-button" aria-label="Download Rdbms">View</a>
+            <a href="Cs(504) assignment_3.png" target="_blank" class="download-button" aria-label="Open Cs(504) Assignment 3">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Cs501 Assignment1 CS-501 " data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Assignment 3 CS-504 semester 5" data-course="CS-504" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
-            <div class="file-title">Toc Cs501 Assignment1</div>
-            <div class="file-meta">CS-501 &bull; 189.4 KB</div>
+            <div class="file-title">Assignment 3</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>105.8 KB</span></div>
             
         </div>
         <div class="file-actions">
-            <button class="preview-button" data-pdf-url="TOC_CS501_Assignment1.pdf">Preview</button>
-            <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Toc Cs501 Assignment1">View</a>
+            <button class="preview-button" data-pdf-url="Cs504_Assignment_3.pdf">Preview</button>
+            <a href="Cs504_Assignment_3.pdf" target="_blank" class="download-button" aria-label="Open Assignment 3">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Nfa Notes CS-501 " data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Digital Notes Dataanalytics CS-503 semester 5" data-course="CS-503" data-semester="5">
         <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
         <div class="file-details">
-            <div class="file-title">Toc Nfa Notes</div>
-            <div class="file-meta">CS-501 &bull; 8.0 KB</div>
+            <div class="file-title">Digital Notes Dataanalytics</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>568.1 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="TOC_NFA_notes.epub" target="_blank" class="download-button" aria-label="Download Toc Nfa Notes">View</a>
+            <a href="Digital_Notes_DataAnalytics.epub" target="_blank" class="download-button" aria-label="Open Digital Notes Dataanalytics">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Assignment Graph CS-501 " data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Internet And Web Technology Notes CS-504 semester 5" data-course="CS-504" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
-            <div class="file-title">Toc Assignment Graph</div>
-            <div class="file-meta">CS-501 &bull; 3.48 MB</div>
+            <div class="file-title">Internet And Web Technology Notes</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>162.7 KB</span></div>
             
         </div>
         <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Toc_Assignment_Graph.pdf">Preview</button>
-            <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-button" aria-label="Download Toc Assignment Graph">View</a>
+            <button class="preview-button" data-pdf-url="Internet and web technology notes.pdf">Preview</button>
+            <a href="Internet and web technology notes.pdf" target="_blank" class="download-button" aria-label="Open Internet And Web Technology Notes">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Notes CS-501 " data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Jpeg Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Jpeg</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>1.19 MB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="jpeg.png" target="_blank" class="download-button" aria-label="Open Jpeg">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Jpg Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Jpg</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>787.4 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="jpg.png" target="_blank" class="download-button" aria-label="Open Jpg">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Txt Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Txt</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>860.0 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="txt.png" target="_blank" class="download-button" aria-label="Open Txt">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Image Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Image</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>646.7 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="image.png" target="_blank" class="download-button" aria-label="Open Image">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Notes Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Notes</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>933.0 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="notes.png" target="_blank" class="download-button" aria-label="Open Notes">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Pdf Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Pdf</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>648.5 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="pdf.png" target="_blank" class="download-button" aria-label="Open Pdf">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="App Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">App</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>672.8 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="app.png" target="_blank" class="download-button" aria-label="Open App">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Shiro Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Shiro</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>616.5 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="shiro.png" target="_blank" class="download-button" aria-label="Open Shiro">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Cyber Security Assignment 2 CS-503 semester 5" data-course="CS-503" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Cyber Security Assignment 2</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>169.3 KB</span></div>
+            <div class="contributor-credit">Added by <a href="https://github.com/shiroonigami23-ui" target="_blank">@shiroonigami23-ui</a></div>
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="CS_503_Cyber_Security_assignment_2.pdf">Preview</button>
+            <a href="CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-button" aria-label="Open Cyber Security Assignment 2">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 2 CS-504 semester 5" data-course="CS-504" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Internet And Web Development Assignment 2</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>176.8 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Internet_and_Web_development_assignment_2.pdf">Preview</button>
+            <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-button" aria-label="Open Internet And Web Development Assignment 2">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Dbms Notes Unit 1 CS-502 semester 5" data-course="CS-502" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Dbms Notes Unit 1</div>
+            <div class="file-meta"><span>CS-502</span><span>Sem 5</span><span>88.4 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_notes_unit_1.pdf">Preview</button>
+            <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-button" aria-label="Open Dbms Notes Unit 1">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Dbms Notes Unit 2 CS-502 semester 5" data-course="CS-502" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Dbms Notes Unit 2</div>
+            <div class="file-meta"><span>CS-502</span><span>Sem 5</span><span>85.2 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_notes_unit_2.pdf">Preview</button>
+            <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-button" aria-label="Open Dbms Notes Unit 2">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Toc Notes CS-501 semester 5" data-course="CS-501" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Notes</div>
-            <div class="file-meta">CS-501 &bull; 107.9 KB</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>107.9 KB</span></div>
             
         </div>
         <div class="file-actions">
             <button class="preview-button" data-pdf-url="Toc_notes.pdf">Preview</button>
-            <a href="Toc_notes.pdf" target="_blank" class="download-button" aria-label="Download Toc Notes">View</a>
+            <a href="Toc_notes.pdf" target="_blank" class="download-button" aria-label="Open Toc Notes">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="App Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+    <div class="file-card file-row" data-keywords="Toc Nfa Notes CS-501 semester 5" data-course="CS-501" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
         <div class="file-details">
-            <div class="file-title">App</div>
-            <div class="file-meta">Uncategorized &bull; 672.8 KB</div>
+            <div class="file-title">Toc Nfa Notes</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>8.0 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="app.png" target="_blank" class="download-button" aria-label="Download App">View</a>
+            <a href="TOC_NFA_notes.epub" target="_blank" class="download-button" aria-label="Open Toc Nfa Notes">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Image Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+    <div class="file-card file-row" data-keywords="Data Analytics Assignment1 CS-503 semester 5" data-course="CS-503" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
-            <div class="file-title">Image</div>
-            <div class="file-meta">Uncategorized &bull; 646.7 KB</div>
+            <div class="file-title">Data Analytics Assignment1</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>82.6 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Data_Analytics_assignment1.pdf">Preview</button>
+            <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-button" aria-label="Open Data Analytics Assignment1">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Data Analytics CS-503 semester 5" data-course="CS-503" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
+        <div class="file-details">
+            <div class="file-title">Data Analytics</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>9.4 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="image.png" target="_blank" class="download-button" aria-label="Download Image">View</a>
+            <a href="Data Analytics .epub" target="_blank" class="download-button" aria-label="Open Data Analytics">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Jpeg Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+    <div class="file-card file-row" data-keywords="Finite Automata CS-501 semester 5" data-course="CS-501" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
         <div class="file-details">
-            <div class="file-title">Jpeg</div>
-            <div class="file-meta">Uncategorized &bull; 1.19 MB</div>
+            <div class="file-title">Finite Automata</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>9.7 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="jpeg.png" target="_blank" class="download-button" aria-label="Download Jpeg">View</a>
+            <a href="Finite Automata .epub" target="_blank" class="download-button" aria-label="Open Finite Automata">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Jpg Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+    <div class="file-card file-row" data-keywords="Internet And Web Technology CS-504 semester 5" data-course="CS-504" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
         <div class="file-details">
-            <div class="file-title">Jpg</div>
-            <div class="file-meta">Uncategorized &bull; 787.4 KB</div>
+            <div class="file-title">Internet And Web Technology</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>9.0 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="jpg.png" target="_blank" class="download-button" aria-label="Download Jpg">View</a>
+            <a href="Internet and web technology.epub" target="_blank" class="download-button" aria-label="Open Internet And Web Technology">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Notes Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+    <div class="file-card file-row" data-keywords="Rdbms CS-502 semester 5" data-course="CS-502" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
         <div class="file-details">
-            <div class="file-title">Notes</div>
-            <div class="file-meta">Uncategorized &bull; 933.0 KB</div>
+            <div class="file-title">Rdbms</div>
+            <div class="file-meta"><span>CS-502</span><span>Sem 5</span><span>62.8 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="notes.png" target="_blank" class="download-button" aria-label="Download Notes">View</a>
+            <a href="RDBMS.epub" target="_blank" class="download-button" aria-label="Open Rdbms">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Pdf Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+    <div class="file-card file-row" data-keywords="Toc Assignment Graph CS-501 semester 5" data-course="CS-501" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
-            <div class="file-title">Pdf</div>
-            <div class="file-meta">Uncategorized &bull; 648.5 KB</div>
+            <div class="file-title">Toc Assignment Graph</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>3.48 MB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Toc_Assignment_Graph.pdf">Preview</button>
+            <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-button" aria-label="Open Toc Assignment Graph">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Dbms Assignment1 CS-502 semester 5" data-course="CS-502" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Dbms Assignment1</div>
+            <div class="file-meta"><span>CS-502</span><span>Sem 5</span><span>2.09 MB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_Assignment1.pdf">Preview</button>
+            <a href="DBMS_Assignment1.pdf" target="_blank" class="download-button" aria-label="Open Dbms Assignment1">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Toc Cs501 Assignment1 CS-501 semester 5" data-course="CS-501" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Toc Cs501 Assignment1</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>189.4 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="TOC_CS501_Assignment1.pdf">Preview</button>
+            <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-button" aria-label="Open Toc Cs501 Assignment1">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Data Analytics Notes CS-503 semester 5" data-course="CS-503" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
+        <div class="file-details">
+            <div class="file-title">Data Analytics Notes</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>7.4 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="pdf.png" target="_blank" class="download-button" aria-label="Download Pdf">View</a>
+            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-button" aria-label="Open Data Analytics Notes">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Shiro Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment CS-504 semester 5" data-course="CS-504" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
-            <div class="file-title">Shiro</div>
-            <div class="file-meta">Uncategorized &bull; 616.5 KB</div>
+            <div class="file-title">Internet And Web Development Assignment</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>5.14 MB</span></div>
             
         </div>
         <div class="file-actions">
-            
-            <a href="shiro.png" target="_blank" class="download-button" aria-label="Download Shiro">View</a>
+            <button class="preview-button" data-pdf-url="Internet_and_Web_Development_Assignment.pdf">Preview</button>
+            <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-button" aria-label="Open Internet And Web Development Assignment">View</a>
         </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Txt Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
-        <div class="file-details">
-            <div class="file-title">Txt</div>
-            <div class="file-meta">Uncategorized &bull; 860.0 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="txt.png" target="_blank" class="download-button" aria-label="Download Txt">View</a>
-        </div>
-    </div></div></div><div id="Documents" class="tab-content"><div class="file-grid">
-    <div class="file-card file-row" data-keywords="503 Cyber Security CS-503 " data-course="CS-503">
+    </div></div></div><div id="Documents" class="tab-content" style="display: none;"><div class="file-grid">
+    <div class="file-card file-row" data-keywords="503 Cyber Security CS-503 semester 5" data-course="CS-503" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">503 Cyber Security</div>
-            <div class="file-meta">CS-503 &bull; 61.9 KB</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>61.9 KB</span></div>
             
         </div>
         <div class="file-actions">
             <button class="preview-button" data-pdf-url="503_Cyber_Security.pdf">Preview</button>
-            <a href="503_Cyber_Security.pdf" target="_blank" class="download-button" aria-label="Download 503 Cyber Security">View</a>
+            <a href="503_Cyber_Security.pdf" target="_blank" class="download-button" aria-label="Open 503 Cyber Security">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Cyber Security Assignment 2 CS-503 " data-course="CS-503">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Cyber Security Assignment 2</div>
-            <div class="file-meta">CS-503 &bull; 169.3 KB</div>
-            <div class="contributor-credit">Added by <a href="https://github.com/shiroonigami23-ui" target="_blank">@shiroonigami23-ui</a></div>
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="CS_503_Cyber_Security_assignment_2.pdf">Preview</button>
-            <a href="CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Cyber Security Assignment 2">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Cs504 Assignment 3 CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Cs504 Assignment 3</div>
-            <div class="file-meta">CS-504 &bull; 105.8 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Cs504_Assignment_3.pdf">Preview</button>
-            <a href="Cs504_Assignment_3.pdf" target="_blank" class="download-button" aria-label="Download Cs504 Assignment 3">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Dbms Assignment1 CS-502 " data-course="CS-502">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Dbms Assignment1</div>
-            <div class="file-meta">CS-502 &bull; 2.09 MB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="DBMS_Assignment1.pdf">Preview</button>
-            <a href="DBMS_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Assignment1">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Dbms Notes Unit 1 CS-502 " data-course="CS-502">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Dbms Notes Unit 1</div>
-            <div class="file-meta">CS-502 &bull; 88.4 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="DBMS_notes_unit_1.pdf">Preview</button>
-            <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 1">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Dbms Notes Unit 2 CS-502 " data-course="CS-502">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Dbms Notes Unit 2</div>
-            <div class="file-meta">CS-502 &bull; 85.2 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="DBMS_notes_unit_2.pdf">Preview</button>
-            <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-button" aria-label="Download Dbms Notes Unit 2">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Data Analytics Assignment1 CS-503 " data-course="CS-503">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Data Analytics Assignment1</div>
-            <div class="file-meta">CS-503 &bull; 82.6 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Data_Analytics_assignment1.pdf">Preview</button>
-            <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-button" aria-label="Download Data Analytics Assignment1">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Technology Notes CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Internet And Web Technology Notes</div>
-            <div class="file-meta">CS-504 &bull; 162.7 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Internet and web technology notes.pdf">Preview</button>
-            <a href="Internet and web technology notes.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Technology Notes">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Internet And Web Development Assignment</div>
-            <div class="file-meta">CS-504 &bull; 5.14 MB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Internet_and_Web_Development_Assignment.pdf">Preview</button>
-            <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 2 CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
-        <div class="file-details">
-            <div class="file-title">Internet And Web Development Assignment 2</div>
-            <div class="file-meta">CS-504 &bull; 176.8 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Internet_and_Web_development_assignment_2.pdf">Preview</button>
-            <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment 2">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 4 CS-504 " data-course="CS-504">
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 4 CS-504 semester 5" data-course="CS-504" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Internet And Web Development Assignment 4</div>
-            <div class="file-meta">CS-504 &bull; 159.1 KB</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>159.1 KB</span></div>
             
         </div>
         <div class="file-actions">
             <button class="preview-button" data-pdf-url="Internet_and_Web_development_assignment_4.pdf">Preview</button>
-            <a href="Internet_and_Web_development_assignment_4.pdf" target="_blank" class="download-button" aria-label="Download Internet And Web Development Assignment 4">View</a>
+            <a href="Internet_and_Web_development_assignment_4.pdf" target="_blank" class="download-button" aria-label="Open Internet And Web Development Assignment 4">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Cs501 Assignment1 CS-501 " data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Assignment 3 CS-504 semester 5" data-course="CS-504" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
-            <div class="file-title">Toc Cs501 Assignment1</div>
-            <div class="file-meta">CS-501 &bull; 189.4 KB</div>
+            <div class="file-title">Assignment 3</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>105.8 KB</span></div>
             
         </div>
         <div class="file-actions">
-            <button class="preview-button" data-pdf-url="TOC_CS501_Assignment1.pdf">Preview</button>
-            <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-button" aria-label="Download Toc Cs501 Assignment1">View</a>
+            <button class="preview-button" data-pdf-url="Cs504_Assignment_3.pdf">Preview</button>
+            <a href="Cs504_Assignment_3.pdf" target="_blank" class="download-button" aria-label="Open Assignment 3">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Assignment Graph CS-501 " data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Internet And Web Technology Notes CS-504 semester 5" data-course="CS-504" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
-            <div class="file-title">Toc Assignment Graph</div>
-            <div class="file-meta">CS-501 &bull; 3.48 MB</div>
+            <div class="file-title">Internet And Web Technology Notes</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>162.7 KB</span></div>
             
         </div>
         <div class="file-actions">
-            <button class="preview-button" data-pdf-url="Toc_Assignment_Graph.pdf">Preview</button>
-            <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-button" aria-label="Download Toc Assignment Graph">View</a>
+            <button class="preview-button" data-pdf-url="Internet and web technology notes.pdf">Preview</button>
+            <a href="Internet and web technology notes.pdf" target="_blank" class="download-button" aria-label="Open Internet And Web Technology Notes">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Toc Notes CS-501 " data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Cyber Security Assignment 2 CS-503 semester 5" data-course="CS-503" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Cyber Security Assignment 2</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>169.3 KB</span></div>
+            <div class="contributor-credit">Added by <a href="https://github.com/shiroonigami23-ui" target="_blank">@shiroonigami23-ui</a></div>
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="CS_503_Cyber_Security_assignment_2.pdf">Preview</button>
+            <a href="CS_503_Cyber_Security_assignment_2.pdf" target="_blank" class="download-button" aria-label="Open Cyber Security Assignment 2">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment 2 CS-504 semester 5" data-course="CS-504" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Internet And Web Development Assignment 2</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>176.8 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Internet_and_Web_development_assignment_2.pdf">Preview</button>
+            <a href="Internet_and_Web_development_assignment_2.pdf" target="_blank" class="download-button" aria-label="Open Internet And Web Development Assignment 2">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Dbms Notes Unit 1 CS-502 semester 5" data-course="CS-502" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Dbms Notes Unit 1</div>
+            <div class="file-meta"><span>CS-502</span><span>Sem 5</span><span>88.4 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_notes_unit_1.pdf">Preview</button>
+            <a href="DBMS_notes_unit_1.pdf" target="_blank" class="download-button" aria-label="Open Dbms Notes Unit 1">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Dbms Notes Unit 2 CS-502 semester 5" data-course="CS-502" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Dbms Notes Unit 2</div>
+            <div class="file-meta"><span>CS-502</span><span>Sem 5</span><span>85.2 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_notes_unit_2.pdf">Preview</button>
+            <a href="DBMS_notes_unit_2.pdf" target="_blank" class="download-button" aria-label="Open Dbms Notes Unit 2">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Toc Notes CS-501 semester 5" data-course="CS-501" data-semester="5">
         <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Notes</div>
-            <div class="file-meta">CS-501 &bull; 107.9 KB</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>107.9 KB</span></div>
             
         </div>
         <div class="file-actions">
             <button class="preview-button" data-pdf-url="Toc_notes.pdf">Preview</button>
-            <a href="Toc_notes.pdf" target="_blank" class="download-button" aria-label="Download Toc Notes">View</a>
+            <a href="Toc_notes.pdf" target="_blank" class="download-button" aria-label="Open Toc Notes">View</a>
         </div>
-    </div></div></div><div id="Images" class="tab-content"><div class="file-grid">
-    <div class="file-card file-row" data-keywords="Cs(504) Assignment 3 Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+    </div>
+    <div class="file-card file-row" data-keywords="Data Analytics Assignment1 CS-503 semester 5" data-course="CS-503" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
         <div class="file-details">
-            <div class="file-title">Cs(504) Assignment 3</div>
-            <div class="file-meta">Uncategorized &bull; 43.1 KB</div>
+            <div class="file-title">Data Analytics Assignment1</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>82.6 KB</span></div>
             
         </div>
         <div class="file-actions">
-            
-            <a href="Cs(504) assignment_3.png" target="_blank" class="download-button" aria-label="Download Cs(504) Assignment 3">View</a>
+            <button class="preview-button" data-pdf-url="Data_Analytics_assignment1.pdf">Preview</button>
+            <a href="Data_Analytics_assignment1.pdf" target="_blank" class="download-button" aria-label="Open Data Analytics Assignment1">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Iawt Assignment 4 Uncategorized " data-course="Uncategorized">
+    <div class="file-card file-row" data-keywords="Toc Assignment Graph CS-501 semester 5" data-course="CS-501" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Toc Assignment Graph</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>3.48 MB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Toc_Assignment_Graph.pdf">Preview</button>
+            <a href="Toc_Assignment_Graph.pdf" target="_blank" class="download-button" aria-label="Open Toc Assignment Graph">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Dbms Assignment1 CS-502 semester 5" data-course="CS-502" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Dbms Assignment1</div>
+            <div class="file-meta"><span>CS-502</span><span>Sem 5</span><span>2.09 MB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="DBMS_Assignment1.pdf">Preview</button>
+            <a href="DBMS_Assignment1.pdf" target="_blank" class="download-button" aria-label="Open Dbms Assignment1">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Toc Cs501 Assignment1 CS-501 semester 5" data-course="CS-501" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Toc Cs501 Assignment1</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>189.4 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="TOC_CS501_Assignment1.pdf">Preview</button>
+            <a href="TOC_CS501_Assignment1.pdf" target="_blank" class="download-button" aria-label="Open Toc Cs501 Assignment1">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Internet And Web Development Assignment CS-504 semester 5" data-course="CS-504" data-semester="5">
+        <div class="file-icon"><img src="pdf.png" alt=".pdf icon"></div>
+        <div class="file-details">
+            <div class="file-title">Internet And Web Development Assignment</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>5.14 MB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            <button class="preview-button" data-pdf-url="Internet_and_Web_Development_Assignment.pdf">Preview</button>
+            <a href="Internet_and_Web_Development_Assignment.pdf" target="_blank" class="download-button" aria-label="Open Internet And Web Development Assignment">View</a>
+        </div>
+    </div></div></div><div id="Images" class="tab-content" style="display: none;"><div class="file-grid">
+    <div class="file-card file-row" data-keywords="Iawt Assignment 4 Uncategorized semester General" data-course="Uncategorized" data-semester="General">
         <div class="file-icon"><img src="image.png" alt=".png icon"></div>
         <div class="file-details">
             <div class="file-title">Iawt Assignment 4</div>
-            <div class="file-meta">Uncategorized &bull; 405.7 KB</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>405.7 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="IAWT-Assignment-4.png" target="_blank" class="download-button" aria-label="Download Iawt Assignment 4">View</a>
+            <a href="IAWT-Assignment-4.png" target="_blank" class="download-button" aria-label="Open Iawt Assignment 4">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="App Uncategorized " data-course="Uncategorized">
+    <div class="file-card file-row" data-keywords="Cs(504) Assignment 3 Uncategorized semester General" data-course="Uncategorized" data-semester="General">
         <div class="file-icon"><img src="image.png" alt=".png icon"></div>
         <div class="file-details">
-            <div class="file-title">App</div>
-            <div class="file-meta">Uncategorized &bull; 672.8 KB</div>
+            <div class="file-title">Cs(504) Assignment 3</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>43.1 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="app.png" target="_blank" class="download-button" aria-label="Download App">View</a>
+            <a href="Cs(504) assignment_3.png" target="_blank" class="download-button" aria-label="Open Cs(504) Assignment 3">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Image Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
-        <div class="file-details">
-            <div class="file-title">Image</div>
-            <div class="file-meta">Uncategorized &bull; 646.7 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="image.png" target="_blank" class="download-button" aria-label="Download Image">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Jpeg Uncategorized " data-course="Uncategorized">
+    <div class="file-card file-row" data-keywords="Jpeg Uncategorized semester General" data-course="Uncategorized" data-semester="General">
         <div class="file-icon"><img src="image.png" alt=".png icon"></div>
         <div class="file-details">
             <div class="file-title">Jpeg</div>
-            <div class="file-meta">Uncategorized &bull; 1.19 MB</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>1.19 MB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="jpeg.png" target="_blank" class="download-button" aria-label="Download Jpeg">View</a>
+            <a href="jpeg.png" target="_blank" class="download-button" aria-label="Open Jpeg">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Jpg Uncategorized " data-course="Uncategorized">
+    <div class="file-card file-row" data-keywords="Jpg Uncategorized semester General" data-course="Uncategorized" data-semester="General">
         <div class="file-icon"><img src="image.png" alt=".png icon"></div>
         <div class="file-details">
             <div class="file-title">Jpg</div>
-            <div class="file-meta">Uncategorized &bull; 787.4 KB</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>787.4 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="jpg.png" target="_blank" class="download-button" aria-label="Download Jpg">View</a>
+            <a href="jpg.png" target="_blank" class="download-button" aria-label="Open Jpg">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Notes Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
-        <div class="file-details">
-            <div class="file-title">Notes</div>
-            <div class="file-meta">Uncategorized &bull; 933.0 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="notes.png" target="_blank" class="download-button" aria-label="Download Notes">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Pdf Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
-        <div class="file-details">
-            <div class="file-title">Pdf</div>
-            <div class="file-meta">Uncategorized &bull; 648.5 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="pdf.png" target="_blank" class="download-button" aria-label="Download Pdf">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Shiro Uncategorized " data-course="Uncategorized">
-        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
-        <div class="file-details">
-            <div class="file-title">Shiro</div>
-            <div class="file-meta">Uncategorized &bull; 616.5 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="shiro.png" target="_blank" class="download-button" aria-label="Download Shiro">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Txt Uncategorized " data-course="Uncategorized">
+    <div class="file-card file-row" data-keywords="Txt Uncategorized semester General" data-course="Uncategorized" data-semester="General">
         <div class="file-icon"><img src="image.png" alt=".png icon"></div>
         <div class="file-details">
             <div class="file-title">Txt</div>
-            <div class="file-meta">Uncategorized &bull; 860.0 KB</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>860.0 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="txt.png" target="_blank" class="download-button" aria-label="Download Txt">View</a>
-        </div>
-    </div></div></div><div id="Notes" class="tab-content"><div class="file-grid">
-    <div class="file-card file-row" data-keywords="Data Analytics CS-503 " data-course="CS-503">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
-        <div class="file-details">
-            <div class="file-title">Data Analytics</div>
-            <div class="file-meta">CS-503 &bull; 9.4 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="Data Analytics .epub" target="_blank" class="download-button" aria-label="Download Data Analytics">View</a>
+            <a href="txt.png" target="_blank" class="download-button" aria-label="Open Txt">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Data Analytics Notes CS-503 " data-course="CS-503">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
+    <div class="file-card file-row" data-keywords="Image Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
         <div class="file-details">
-            <div class="file-title">Data Analytics Notes</div>
-            <div class="file-meta">CS-503 &bull; 7.4 KB</div>
+            <div class="file-title">Image</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>646.7 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-button" aria-label="Download Data Analytics Notes">View</a>
+            <a href="image.png" target="_blank" class="download-button" aria-label="Open Image">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Digital Notes Dataanalytics CS-503 " data-course="CS-503">
+    <div class="file-card file-row" data-keywords="Notes Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Notes</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>933.0 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="notes.png" target="_blank" class="download-button" aria-label="Open Notes">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Pdf Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Pdf</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>648.5 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="pdf.png" target="_blank" class="download-button" aria-label="Open Pdf">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="App Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">App</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>672.8 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="app.png" target="_blank" class="download-button" aria-label="Open App">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Shiro Uncategorized semester General" data-course="Uncategorized" data-semester="General">
+        <div class="file-icon"><img src="image.png" alt=".png icon"></div>
+        <div class="file-details">
+            <div class="file-title">Shiro</div>
+            <div class="file-meta"><span>Uncategorized</span><span>Sem General</span><span>616.5 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="shiro.png" target="_blank" class="download-button" aria-label="Open Shiro">View</a>
+        </div>
+    </div></div></div><div id="Notes" class="tab-content" style="display: none;"><div class="file-grid">
+    <div class="file-card file-row" data-keywords="Digital Notes Dataanalytics CS-503 semester 5" data-course="CS-503" data-semester="5">
         <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Digital Notes Dataanalytics</div>
-            <div class="file-meta">CS-503 &bull; 568.1 KB</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>568.1 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="Digital_Notes_DataAnalytics.epub" target="_blank" class="download-button" aria-label="Download Digital Notes Dataanalytics">View</a>
+            <a href="Digital_Notes_DataAnalytics.epub" target="_blank" class="download-button" aria-label="Open Digital Notes Dataanalytics">View</a>
         </div>
     </div>
-    <div class="file-card file-row" data-keywords="Finite Automata CS-501 " data-course="CS-501">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
-        <div class="file-details">
-            <div class="file-title">Finite Automata</div>
-            <div class="file-meta">CS-501 &bull; 9.7 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="Finite Automata .epub" target="_blank" class="download-button" aria-label="Download Finite Automata">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Internet And Web Technology CS-504 " data-course="CS-504">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
-        <div class="file-details">
-            <div class="file-title">Internet And Web Technology</div>
-            <div class="file-meta">CS-504 &bull; 9.0 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="Internet and web technology.epub" target="_blank" class="download-button" aria-label="Download Internet And Web Technology">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Rdbms CS-502 " data-course="CS-502">
-        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
-        <div class="file-details">
-            <div class="file-title">Rdbms</div>
-            <div class="file-meta">CS-502 &bull; 62.8 KB</div>
-            
-        </div>
-        <div class="file-actions">
-            
-            <a href="RDBMS.epub" target="_blank" class="download-button" aria-label="Download Rdbms">View</a>
-        </div>
-    </div>
-    <div class="file-card file-row" data-keywords="Toc Nfa Notes CS-501 " data-course="CS-501">
+    <div class="file-card file-row" data-keywords="Toc Nfa Notes CS-501 semester 5" data-course="CS-501" data-semester="5">
         <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
         <div class="file-details">
             <div class="file-title">Toc Nfa Notes</div>
-            <div class="file-meta">CS-501 &bull; 8.0 KB</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>8.0 KB</span></div>
             
         </div>
         <div class="file-actions">
             
-            <a href="TOC_NFA_notes.epub" target="_blank" class="download-button" aria-label="Download Toc Nfa Notes">View</a>
+            <a href="TOC_NFA_notes.epub" target="_blank" class="download-button" aria-label="Open Toc Nfa Notes">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Data Analytics CS-503 semester 5" data-course="CS-503" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
+        <div class="file-details">
+            <div class="file-title">Data Analytics</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>9.4 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="Data Analytics .epub" target="_blank" class="download-button" aria-label="Open Data Analytics">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Finite Automata CS-501 semester 5" data-course="CS-501" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
+        <div class="file-details">
+            <div class="file-title">Finite Automata</div>
+            <div class="file-meta"><span>CS-501</span><span>Sem 5</span><span>9.7 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="Finite Automata .epub" target="_blank" class="download-button" aria-label="Open Finite Automata">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Internet And Web Technology CS-504 semester 5" data-course="CS-504" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
+        <div class="file-details">
+            <div class="file-title">Internet And Web Technology</div>
+            <div class="file-meta"><span>CS-504</span><span>Sem 5</span><span>9.0 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="Internet and web technology.epub" target="_blank" class="download-button" aria-label="Open Internet And Web Technology">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Rdbms CS-502 semester 5" data-course="CS-502" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
+        <div class="file-details">
+            <div class="file-title">Rdbms</div>
+            <div class="file-meta"><span>CS-502</span><span>Sem 5</span><span>62.8 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="RDBMS.epub" target="_blank" class="download-button" aria-label="Open Rdbms">View</a>
+        </div>
+    </div>
+    <div class="file-card file-row" data-keywords="Data Analytics Notes CS-503 semester 5" data-course="CS-503" data-semester="5">
+        <div class="file-icon"><img src="notes.png" alt=".epub icon"></div>
+        <div class="file-details">
+            <div class="file-title">Data Analytics Notes</div>
+            <div class="file-meta"><span>CS-503</span><span>Sem 5</span><span>7.4 KB</span></div>
+            
+        </div>
+        <div class="file-actions">
+            
+            <a href="Data_Analytics_Notes.epub" target="_blank" class="download-button" aria-label="Open Data Analytics Notes">View</a>
         </div>
     </div></div></div>
+        <p id="no-results-message" class="no-results-message hidden" aria-live="polite">No files match your semester or search. Try a different semester or keyword.</p>
     </main>
+
     <footer class="site-footer">
         <div class="footer-content">
-            <div class="footer-section"><h4>Share this Site</h4><p>Scan the QR code with your phone.</p><img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://shiroonigami23-ui.github.io/class-solutions/" alt="QR Code for site"/></div>
-            <div class="footer-section"><h4>Feedback & Requests</h4><p>Have a suggestion or need a file?</p><a href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank" class="feedback-button">Let Us Know</a></div>
+            <div class="footer-section"><h4>Share this Site</h4><p>Scan and open on mobile.</p><img class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://shiroonigami23-ui.github.io/class-solutions/" alt="QR Code for site"/></div>
+            <div class="footer-section"><h4>Feedback & Requests</h4><p>Need a file or fix?</p><a href="https://docs.google.com/forms/d/e/1FAIpQLSedLRFNBdVoLSR0xfGk0iPJLp3UpRNEXlEhFrt9do0OYJf5_w/viewform?usp=header" target="_blank" class="feedback-button">Let Us Know</a></div>
         </div>
-        <div class="footer-bottom"><p>&copy; 2025 Aryan Singh Chandel | Enhanced Edition</p></div>
+        <div class="footer-bottom"><p>&copy; 2026 CSE Student Hub</p></div>
     </footer>
 
-    <!-- Profile Modal with Video Background -->
     <div id="profileModal" class="modal-overlay">
         <div class="modal-content">
-            <!-- PROFILE VIDEO BACKGROUND -->
             <video autoplay loop muted playsinline class="profile-bg-video-full">
                 <source src="profile-bg.mp4" type="video/mp4">
             </video>
@@ -790,7 +810,7 @@
 
             <div class="profile-modal-header">
                 <div class="modal-profile-pic-wrapper">
-                    <img src="https://placehold.co/200x200/7c3aed/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic" class="modal-profile-pic">
+                    <img src="https://placehold.co/200x200/0b7285/FFFFFF?text=U" alt="User Profile" id="modal-profile-pic" class="modal-profile-pic">
                     <div class="modal-pic-overlay"><span>Click to Upload</span></div>
                 </div>
                 <input type="file" id="modal-pic-upload" accept="image/*" style="display: none;">
@@ -826,7 +846,6 @@
         </div>
     </div>
 
-    <!-- PDF Preview Modal -->
     <div id="pdfPreviewModal" class="modal-overlay pdf-preview-modal">
         <div class="pdf-modal-content">
             <button class="close-modal-btn" id="closePdfModalBtn">&times;</button>
@@ -835,18 +854,14 @@
         </div>
     </div>
 
-    <script> window.contributorsData = {"TOC_Assignment_Graph.pdf": "shiroonigami23-ui", "CS_503_Cyber_Security_assignment_2.pdf": "shiroonigami23-ui", "Internet_and_web_technology_notes.pdf_": "Aryan-singh19", "Digital_Notes_Dataanalytics.pdf_": "Aryan-singh19", "theroy-of-computation_note.pdf_": "Aryan-singh19"}; </script>
+    <script>window.contributorsData = {"TOC_Assignment_Graph.pdf": "shiroonigami23-ui", "CS_503_Cyber_Security_assignment_2.pdf": "shiroonigami23-ui", "Internet_and_web_technology_notes.pdf_": "Aryan-singh19", "Digital_Notes_Dataanalytics.pdf_": "Aryan-singh19", "theroy-of-computation_note.pdf_": "Aryan-singh19"};</script>
     <script src="script.js" defer></script>
     <script src="profile.js" defer></script>
     <script src="preview.js" defer></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
             });
         }
     </script>
