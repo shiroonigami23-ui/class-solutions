@@ -22,16 +22,6 @@ jobs:
         with:
           python-version: '3.10'
 
-      # --- NEW DEBUG STEP ---
-      # This will print the issue body to the action logs
-      - name: '!!! DEBUG: Print Issue Body !!!'
-        run: |
-          echo "Dumping issue body to see what the action sees:"
-          echo "--------------------------------------------------"
-          echo "${{ github.event.issue.body }}"
-          echo "--------------------------------------------------"
-          echo "--- End of Issue Body ---"
-
       - name: 'Extract Info and Sanitize Filename'
         id: extract_info
         run: |
@@ -66,8 +56,14 @@ jobs:
           curl -L -o "${{ env.FILENAME }}" "${{ env.FILE_URL }}"
           echo "Download complete."
 
+      - name: 'Route file into organized folders'
+        run: |
+          ROUTED_PATH=$(python scripts/file_router.py --file "${{ env.FILENAME }}")
+          echo "ROUTED_PATH=$ROUTED_PATH" >> $GITHUB_ENV
+          echo "Routed to $ROUTED_PATH"
+
       - name: 'Update contributors.json'
-        run: python update_contributors.py "${{ env.FILENAME }}" "${{ env.USERNAME }}"
+        run: python update_contributors.py "${{ env.ROUTED_PATH }}" "${{ env.USERNAME }}"
         
       - name: 'Regenerate index.html'
         run: python "generate_index.py"
@@ -77,12 +73,12 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          git add "${{ env.FILENAME }}" contributors.json index.html
+          git add contributors.json index.html content
           
           if git diff --staged --quiet; then
             echo "No new changes to commit. (Check generate_index.py)"
           else
-            git commit -m "feat(bot): Add ${{ env.FILENAME }} from @${{ env.USERNAME }}"
+            git commit -m "feat(bot): Add ${{ env.ROUTED_PATH }} from @${{ env.USERNAME }}"
             git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/shiroonigami23-ui/class-solutions.git HEAD:main
           fi
           

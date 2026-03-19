@@ -26,6 +26,19 @@ IGNORE_FILES = {
     "update_contributors.py",
     "subjects.yaml",
 }
+IGNORE_DIRS = {".git", ".github", "scripts", "node_modules"}
+ROOT_ASSET_FILES = {
+    "app.png",
+    "image.png",
+    "pdf.png",
+    "notes.png",
+    "jpg.png",
+    "jpeg.png",
+    "txt.png",
+    "bg.mp4",
+    "profile-bg.mp4",
+    "shiro.png",
+}
 
 FILE_TYPE_MAP = {
     ".pdf": {"category": "Documents", "icon": "pdf.png"},
@@ -129,7 +142,11 @@ def get_file_size(filepath: str) -> str:
 
 
 def format_title(filename: str) -> str:
-    title = os.path.splitext(filename)[0].replace("_", " ").replace("-", " ")
+    stem = os.path.splitext(os.path.basename(filename))[0]
+    routed = re.match(r"^(sem\d+|general)_(cs-\d+|general)_[a-z-]+_(.+)$", stem, re.IGNORECASE)
+    if routed:
+        stem = routed.group(3)
+    title = stem.replace("_", " ").replace("-", " ")
     title = re.sub(r"^(cs\s*\d+\s*)", "", title, flags=re.IGNORECASE).strip()
     return title.title()
 
@@ -204,7 +221,7 @@ def extract_keywords(file_info: Dict, file_override: Dict) -> str:
 
 def generate_file_html(file_info: Dict, contributors: Dict[str, str], file_override: Dict) -> str:
     title = file_override.get("title") or format_title(file_info["name"])
-    contributor_name = contributors.get(file_info["name"])
+    contributor_name = contributors.get(file_info["name"]) or contributors.get(file_info.get("path", ""))
 
     base_keywords = f"{title} {file_info['course']} semester {file_info['semester']}"
     content_keywords = extract_keywords(file_info, file_override)
@@ -220,9 +237,9 @@ def generate_file_html(file_info: Dict, contributors: Dict[str, str], file_overr
 
     preview_button_html = ""
     if file_info["ext"] == ".pdf":
-        preview_button_html = f'<button class="preview-button" data-pdf-url="{html.escape(file_info["name"])}">Preview</button>'
+        preview_button_html = f'<button class="preview-button" data-pdf-url="{html.escape(file_info.get("path", file_info["name"]))}">Preview</button>'
 
-    file_name = html.escape(file_info["name"])
+    file_name = html.escape(file_info.get("path", file_info["name"]))
     safe_title = html.escape(title)
     safe_keywords = html.escape(all_keywords)
     safe_course = html.escape(file_info["course"])
@@ -232,7 +249,7 @@ def generate_file_html(file_info: Dict, contributors: Dict[str, str], file_overr
     ext = html.escape(file_info["ext"])
 
     return f"""
-    <div class="file-card file-row" data-keywords="{safe_keywords}" data-course="{safe_course}" data-semester="{safe_semester}">
+    <div class="file-card file-row" data-keywords="{safe_keywords}" data-course="{safe_course}" data-semester="{safe_semester}" data-type="{html.escape(file_info['ext'].lstrip('.'))}" data-date="{html.escape(file_info['date'].isoformat())}">
         <div class="file-icon"><img src="{icon}" alt="{ext} icon"></div>
         <div class="file-details">
             <div class="file-title">{safe_title}</div>
@@ -265,26 +282,45 @@ def main() -> None:
     file_overrides = config["file_overrides"]
 
     all_files = []
-    for filename in sorted(os.listdir(".")):
-        ext = os.path.splitext(filename)[1].lower()
-        if ext not in SUPPORTED_EXTENSIONS or filename in IGNORE_FILES or filename.startswith("."):
-            continue
+    for root, dirs, files in os.walk("."):
+        dirs[:] = [d for d in dirs if d not in IGNORE_DIRS]
+        for filename in files:
+            rel_path = os.path.relpath(os.path.join(root, filename), ".").replace("\\", "/")
+            ext = os.path.splitext(filename)[1].lower()
+            if ext not in SUPPORTED_EXTENSIONS:
+                continue
+            if filename in IGNORE_FILES or filename.startswith("."):
+                continue
+            if root == "." and filename in ROOT_ASSET_FILES:
+                continue
 
-        override = file_overrides.get(filename.lower(), {})
-        course = resolve_course(filename, courses, override)
-        semester = resolve_semester(filename, course, courses, override)
+            override = file_overrides.get(filename.lower(), {}) or file_overrides.get(rel_path.lower(), {})
+            path_tokens = rel_path.split("/")
+            path_course = None
+            path_semester = None
+            for token in path_tokens:
+                if re.fullmatch(r"cs-\d{3}", token.lower()):
+                    path_course = token.upper()
+                if re.fullmatch(r"sem\d+", token.lower()):
+                    path_semester = token[3:]
 
-        all_files.append(
-            {
-                "name": filename,
-                "ext": ext,
-                "size": get_file_size(filename),
-                "date": get_file_creation_date(filename),
-                "course": course,
-                "semester": semester,
-                "override": override,
-            }
-        )
+            course = path_course or resolve_course(filename, courses, override)
+            semester = str(path_semester) if path_semester else resolve_semester(filename, course, courses, override)
+            if semester.lower() == "general":
+                semester = "General"
+
+            all_files.append(
+                {
+                    "name": filename,
+                    "path": rel_path,
+                    "ext": ext,
+                    "size": get_file_size(rel_path),
+                    "date": get_file_creation_date(rel_path),
+                    "course": course,
+                    "semester": semester,
+                    "override": override,
+                }
+            )
 
     all_files.sort(key=lambda item: item["date"], reverse=True)
 
@@ -369,6 +405,24 @@ def main() -> None:
                 <span class=\"search-icon\" aria-hidden=\"true\">⌕</span>
                 <input class=\"search-input\" type=\"text\" placeholder=\"Filter by file name, course code, or keyword...\" id=\"searchBox\" autocomplete=\"off\">
             </div>
+            <details class=\"advanced-filters\">
+                <summary>Advanced Filters</summary>
+                <div class=\"filter-grid\">
+                    <select id=\"courseFilter\">
+                        <option value=\"all\">All Courses</option>
+                        {''.join(f'<option value="{html.escape(c)}">{html.escape(c)}</option>' for c in sorted(set(i["course"] for i in all_files)))}
+                    </select>
+                    <select id=\"typeFilter\">
+                        <option value=\"all\">All Types</option>
+                        {''.join(f'<option value="{t}">{t.upper()}</option>' for t in sorted(set(i["ext"].lstrip(".") for i in all_files)))}
+                    </select>
+                    <select id=\"sortFilter\">
+                        <option value=\"newest\">Newest First</option>
+                        <option value=\"oldest\">Oldest First</option>
+                        <option value=\"name\">Name A-Z</option>
+                    </select>
+                </div>
+            </details>
             <div class=\"tabs\" role=\"tablist\">{tabs_html}</div>
         </section>
 

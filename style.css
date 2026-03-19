@@ -249,6 +249,35 @@ body.lightmode .semester-selector.semester-hero {
     gap: 0.5rem;
 }
 
+.advanced-filters {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    padding: 0.5rem 0.75rem;
+}
+
+.advanced-filters summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.filter-grid {
+    margin-top: 0.7rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+}
+
+.filter-grid select {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-strong);
+    color: var(--text);
+    font: inherit;
+    padding: 0.55rem 0.6rem;
+}
+
 .tab-link {
     border: 1px solid var(--border);
     background: var(--surface);
@@ -809,5 +838,9 @@ body.contribution-page {
 
     .modal-tabs {
         flex-direction: column;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
     }
 }

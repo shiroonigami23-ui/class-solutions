@@ -1,1 +1,8 @@
 sync_assignments.sh
+node_modules/
+android/
+www/
+assets/
+package.json
+package-lock.json
+capacitor.config.ts
